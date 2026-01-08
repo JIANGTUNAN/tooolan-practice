@@ -1,5 +1,0 @@
-com\tooolan\practice\ddd\domain\repository\BaseRepository.class
-com\tooolan\practice\ddd\domain\model\valueobject\ValueObject.class
-com\tooolan\practice\ddd\domain\model\entity\BaseEntity.class
-com\tooolan\practice\ddd\domain\event\DomainEvent.class
-com\tooolan\practice\ddd\domain\model\aggregate\AggregateRoot.class
