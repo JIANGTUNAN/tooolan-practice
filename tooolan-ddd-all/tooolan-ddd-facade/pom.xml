@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.tooolan.practice</groupId>
+        <artifactId>tooolan-ddd-all</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>tooolan-ddd-facade</artifactId>
+    <packaging>jar</packaging>
+
+    <name>DDD门面层</name>
+    <description>API接口定义、DTO对象、请求响应对象</description>
+
+    <dependencies>
+        <!-- Validation API -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

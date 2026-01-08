@@ -1,0 +1,5 @@
+D:\project\tooolan-practice\tooolan-ddd-all\tooolan-ddd-domain\src\main\java\com\tooolan\practice\ddd\domain\event\DomainEvent.java
+D:\project\tooolan-practice\tooolan-ddd-all\tooolan-ddd-domain\src\main\java\com\tooolan\practice\ddd\domain\model\aggregate\AggregateRoot.java
+D:\project\tooolan-practice\tooolan-ddd-all\tooolan-ddd-domain\src\main\java\com\tooolan\practice\ddd\domain\model\entity\BaseEntity.java
+D:\project\tooolan-practice\tooolan-ddd-all\tooolan-ddd-domain\src\main\java\com\tooolan\practice\ddd\domain\model\valueobject\ValueObject.java
+D:\project\tooolan-practice\tooolan-ddd-all\tooolan-ddd-domain\src\main\java\com\tooolan\practice\ddd\domain\repository\BaseRepository.java

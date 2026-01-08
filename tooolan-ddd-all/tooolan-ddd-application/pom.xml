@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.tooolan.practice</groupId>
+        <artifactId>tooolan-ddd-all</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>tooolan-ddd-application</artifactId>
+    <packaging>jar</packaging>
+
+    <name>DDD应用层</name>
+    <description>应用服务、业务编排、DTO转换</description>
+
+    <dependencies>
+        <!-- 依赖 Facade 层 -->
+        <dependency>
+            <groupId>com.tooolan.practice</groupId>
+            <artifactId>tooolan-ddd-facade</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 依赖 Domain 层 -->
+        <dependency>
+            <groupId>com.tooolan.practice</groupId>
+            <artifactId>tooolan-ddd-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Spring Boot Starter for @Service, @Transactional -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- MapStruct for DTO mapping -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,0 +1,5 @@
+com\tooolan\practice\ddd\infrastructure\config\MyBatisPlusConfig.class
+com\tooolan\practice\ddd\infrastructure\po\BasePO.class
+com\tooolan\practice\ddd\infrastructure\repository\impl\BaseRepositoryImpl.class
+com\tooolan\practice\ddd\DddApplication.class
+com\tooolan\practice\ddd\infrastructure\common\handler\MyMetaObjectHandler.class
