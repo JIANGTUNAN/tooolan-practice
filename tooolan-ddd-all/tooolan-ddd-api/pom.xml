@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tooolan-ddd-facade</artifactId>
+    <artifactId>tooolan-ddd-api</artifactId>
     <packaging>jar</packaging>
 
     <name>DDD门面层</name>

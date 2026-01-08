@@ -16,10 +16,10 @@
     <description>基于用户-小组-部门三层业务结构的DDD实践</description>
 
     <modules>
-        <module>tooolan-ddd-facade</module>
-        <module>tooolan-ddd-application</module>
+        <module>tooolan-ddd-api</module>
+        <module>tooolan-ddd-app</module>
         <module>tooolan-ddd-domain</module>
-        <module>tooolan-ddd-infrastructure</module>
+        <module>tooolan-ddd-infra</module>
     </modules>
 
     <properties>

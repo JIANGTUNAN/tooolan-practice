@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tooolan-ddd-application</artifactId>
+    <artifactId>tooolan-ddd-app</artifactId>
     <packaging>jar</packaging>
 
     <name>DDD应用层</name>
@@ -20,7 +20,7 @@
         <!-- 依赖 Facade 层 -->
         <dependency>
             <groupId>com.tooolan.practice</groupId>
-            <artifactId>tooolan-ddd-facade</artifactId>
+            <artifactId>tooolan-ddd-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
