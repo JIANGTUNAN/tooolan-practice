@@ -17,10 +17,18 @@
     <description>API接口定义、DTO对象、请求响应对象</description>
 
     <dependencies>
-        <!-- Validation API -->
+        <!-- ddd-app: 应用层 -->
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <groupId>com.tooolan.practice</groupId>
+            <artifactId>tooolan-ddd-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- ddd-infra: 基础设施层 -->
+        <dependency>
+            <groupId>com.tooolan.practice</groupId>
+            <artifactId>tooolan-ddd-infra</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

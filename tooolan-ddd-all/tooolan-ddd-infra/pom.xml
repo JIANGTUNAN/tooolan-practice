@@ -17,61 +17,12 @@
     <description>仓储实现、数据访问、外部服务集成</description>
 
     <dependencies>
-        <!-- 依赖 Domain 层 -->
+        <!-- DDD Domain: 领域层 -->
         <dependency>
             <groupId>com.tooolan.practice</groupId>
             <artifactId>tooolan-ddd-domain</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- 依赖 Application 层 (依赖注入需要) -->
-        <dependency>
-            <groupId>com.tooolan.practice</groupId>
-            <artifactId>tooolan-ddd-app</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- Spring Boot Starter Web (用于启动应用) -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- MyBatis-Plus -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-
-        <!-- MySQL Driver -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <!-- Druid Data Source -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- Validation -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.tooolan.practice.ddd.DddApplication</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

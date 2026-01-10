@@ -17,17 +17,7 @@
     <description>实体、值对象、领域服务、仓储接口</description>
 
     <dependencies>
-        <!-- Spring Context for @Service, @Component -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-
-        <!-- Validation -->
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
+        <!-- Zero dependence -->
     </dependencies>
 
 </project>
