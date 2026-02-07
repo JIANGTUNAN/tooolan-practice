@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: webhook-ddns
+
+# DDNS配置
+ddns:
+  # 主力IP（默认使用）
+  primary-ip: ${PRIMARY_IP:}
+  # 容灾IP（主力IP宕机时切换）
+  backup-ip: ${BACKUP_IP:}
+
+logging:
+  level:
+    com.tooolan.practice: DEBUG
+    org.springframework.web: INFO
