@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  webhook-ddns:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: webhook-ddns
+    ports:
+      - "8080:8080"
+    environment:
+      - PRIMARY_IP=${PRIMARY_IP}
+      - BACKUP_IP=${BACKUP_IP}
+    restart: unless-stopped
