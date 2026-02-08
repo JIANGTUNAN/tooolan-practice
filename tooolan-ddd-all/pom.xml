@@ -26,54 +26,36 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- 依赖版本管理 -->
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <mysql.version>8.0.33</mysql.version>
-        <druid.version>1.2.18</druid.version>
     </properties>
-
-    <dependencies>
-        <!-- 所有子模块共享的依赖 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
 
     <dependencyManagement>
         <dependencies>
-            <!-- MapStruct -->
+            <!-- ddd-api: 门面层 -->
             <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>${mapstruct.version}</version>
-                <scope>provided</scope>
+                <groupId>com.tooolan.practice</groupId>
+                <artifactId>tooolan-ddd-api</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
-            <!-- MySQL Driver -->
+            <!-- ddd-app: 应用层 -->
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.version}</version>
+                <groupId>com.tooolan.practice</groupId>
+                <artifactId>tooolan-ddd-app</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
-            <!-- Druid Data Source -->
+            <!-- ddd-domain: 领域层 -->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid.version}</version>
+                <groupId>com.tooolan.practice</groupId>
+                <artifactId>tooolan-ddd-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- ddd-infra: 基础设施层 -->
+            <dependency>
+                <groupId>com.tooolan.practice</groupId>
+                <artifactId>tooolan-ddd-infra</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

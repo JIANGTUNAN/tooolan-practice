@@ -17,35 +17,11 @@
     <description>应用服务、业务编排、DTO转换</description>
 
     <dependencies>
-        <!-- 依赖 Facade 层 -->
-        <dependency>
-            <groupId>com.tooolan.practice</groupId>
-            <artifactId>tooolan-ddd-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- 依赖 Domain 层 -->
+        <!-- DDD Domain: 领域层 -->
         <dependency>
             <groupId>com.tooolan.practice</groupId>
             <artifactId>tooolan-ddd-domain</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <!-- Spring Boot Starter for @Service, @Transactional -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- MapStruct for DTO mapping -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
