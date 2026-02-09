@@ -1,5 +1,5 @@
 # 多阶段构建 - 构建阶段
-FROM maven:3.9-eclipse-temurin-11 AS builder
+FROM maven:3.9-eclipse-temurin-21 AS builder
 
 WORKDIR /build
 
@@ -15,7 +15,7 @@ RUN cd /build/tooolan-webhook-all/webhook-ddns && \
     cp target/*.jar /app/application.jar
 
 # 运行阶段 - 使用支持ARM的镜像
-FROM eclipse-temurin:11-jre
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
