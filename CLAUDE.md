@@ -166,3 +166,213 @@ cmd.exe /c "cd /d D:\project\tooolan-practice && C:\Progra~1\Java\jdk-21\bin\jav
 **重要提示**:
 - 必须使用 JDK 21 直接运行 Maven，不能依赖 `mvn.cmd`（它会使用系统默认的 Java 8）
 - 路径使用 8.3 短格式（`C:\Progra~1` 代替 `C:\Program Files`）以避免空格问题
+
+## 编码规范
+
+### Java 注释规范
+
+本项目遵循统一的 Java 注释规范，确保代码可读性和可维护性。
+
+**核心原则**：使用简洁的纯文本，不使用 HTML 标签（如 `<p>`、`<ul>` 等）。
+
+#### 类注释（Class Comments）
+
+所有公共类必须包含 Javadoc 类注释，格式如下：
+
+```java
+/**
+ * 类的简短描述（一句话说明）
+ * 类的详细描述，可多行，说明主要功能和职责
+ *
+ * @author 作者名
+ * @since 创建日期（格式：YYYY年M月D日）
+ */
+public class ExampleClass {
+    // ...
+}
+```
+
+**规则**：
+- 第一行：类的简短描述
+- 第二行：详细描述（可多行，但不要使用 HTML 标签）
+- 最后：`@author` 和 `@since` 标签
+- 避免使用无意义的占位符（如 "xxxxx"）
+
+#### 方法注释（Method Comments）
+
+所有公共方法必须包含 Javadoc 方法注释：
+
+```java
+/**
+ * 方法的简短描述（一句话说明）
+ * 方法的详细描述，可多行，说明方法的作用、业务逻辑、注意事项等
+ *
+ * @param paramName 参数说明
+ * @return 返回值说明（void 方法无需此标签）
+ * @throws ExceptionType 异常说明（如无异常则省略）
+ */
+public ExampleResult exampleMethod(ExampleParam param) {
+    // ...
+}
+```
+
+**规则**：
+- 第一行：方法的简短描述
+- 第二行：详细描述（可多行）
+- `@param`：每个参数一行，说明参数用途
+- `@return`：说明返回值的含义
+- `@throws`：说明可能抛出的异常及原因
+
+#### 字段注释（Field Comments）
+
+重要的字段应包含注释：
+
+```java
+/**
+ * 字段说明
+ */
+private ExampleType fieldName;
+
+// 或者对于简单字段，使用单行注释
+private int timeout; // 超时时间（秒）
+```
+
+#### 代码内联注释（Inline Comments）
+
+复杂的业务逻辑应添加注释说明：
+
+```java
+// 计算折扣后的价格
+double finalPrice = originalPrice * discountRate;
+
+// 或使用多行注释说明复杂逻辑
+/*
+ * 这里使用三次重试机制：
+ * 1. 第一次：正常请求
+ * 2. 第二次：延迟 1 秒后重试
+ * 3. 第三次：延迟 3 秒后重试
+ * 如果三次都失败，则抛出异常
+ */
+for (int i = 0; i < MAX_RETRY; i++) {
+    // ...
+}
+```
+
+#### 注释原则
+
+1. **Why 而非 What**：注释应说明"为什么这样做"，而非"做了什么"
+2. **保持同步**：代码修改时同步更新注释
+3. **避免废话**：如 `i++; // i 加 1` 这种注释是无意义的
+4. **中文优先**：注释使用中文，便于团队理解
+5. **及时更新**：过时的注释比没有注释更糟糕
+
+#### 注释示例
+
+**好的注释**：
+```java
+/**
+ * 日志级别颜色转换器
+ * 为不同日志级别配置柔和的 ANSI 颜色，提升控制台日志可读性
+ *
+ * 颜色方案：
+ * - ERROR: 红色 (31m)
+ * - WARN: 黄色 (33m)
+ * - INFO: 青色 (36m)
+ * - DEBUG: 绿色 (32m)
+ * - TRACE: 灰色 (90m)
+ *
+ * @author tooolan
+ * @since 2026年2月9日
+ */
+public class ColorLevelConverter extends CompositeConverter<ILoggingEvent> {
+    // ...
+}
+```
+
+**不好的注释**：
+```java
+/**
+ * xxxxx
+ * xxxxxxxxxxx
+ *
+ * @author tooolan
+ * @since 2026年2月9日
+ */
+public class BadExample {
+    /**
+     * xxxxx
+     *
+     * @param args xxx
+     */
+    public static void main(String[] args) {
+        // ...
+    }
+}
+```
+
+### 日志配置规范
+
+#### 日志级别颜色方案
+
+本项目使用自定义的日志颜色转换器（`ColorLevelConverter`），采用柔和的 ANSI 颜色：
+
+| 日志级别 | 颜色 | ANSI 码 | 说明 |
+|---------|------|--------|------|
+| ERROR   | 红色 | `[31m`  | 错误信息，醒目但不过分刺眼 |
+| WARN    | 黄色 | `[33m`  | 警告信息，需要注意但不致命 |
+| INFO    | 青色 | `[36m`  | 一般信息，柔和舒适 |
+| DEBUG   | 绿色 | `[32m`  | 调试信息，清爽明亮 |
+| TRACE   | 灰色 | `[90m`  | 追踪信息，低调显示 |
+
+#### 日志格式
+
+开发环境日志格式：
+```
+{时间戳} [{线程名}] {日志级别} [{类名}] {消息}
+```
+
+示例：
+```
+17:49:08.021 [main] INFO  [o.s.b.StartupInfoLogger] Starting DddApplication using Java 21.0.10
+```
+
+#### MyBatis 日志配置
+
+**重要**：MyBatis 必须使用 SLF4J 日志框架，而非 StdOutImpl：
+
+```yaml
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl  # ✅ 正确
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # ❌ 错误
+```
+
+**原因**：
+- SLF4J 与项目日志配置统一，支持自定义颜色
+- StdOutImpl 直接输出到 System.out，绕过了日志框架
+- SLF4J 支持日志级别控制和文件输出
+
+#### 日志级别配置
+
+在 `logback-spring.xml` 中配置日志级别：
+
+```xml
+<!-- Spring Boot 框架日志 -->
+<logger name="org.springframework" level="INFO"/>
+
+<!-- MyBatis Plus 框架日志 -->
+<logger name="com.baomidou.mybatisplus" level="INFO"/>
+
+<!-- MyBatis SQL 日志 -->
+<logger name="org.mybatis" level="INFO"/>
+
+<!-- 项目业务日志 -->
+<logger name="com.tooolan.practice" level="DEBUG"/>
+```
+
+**日志级别选择建议**：
+- **ERROR**：需要立即处理的错误
+- **WARN**：潜在问题，需要关注但不影响运行
+- **INFO**：重要的业务流程节点
+- **DEBUG**：调试信息，生产环境关闭
+- **TRACE**：详细的执行轨迹，仅开发调试使用
