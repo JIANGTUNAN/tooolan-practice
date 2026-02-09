@@ -20,13 +20,29 @@
         <module>tooolan-ddd-app</module>
         <module>tooolan-ddd-domain</module>
         <module>tooolan-ddd-infra</module>
+        <module>tooolan-ddd-start</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <!-- 使用 release 参数代替 source/target，避免编译警告 -->
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <plugins>
+            <!-- Maven Compiler Plugin: 使用 release 参数避免 JDK 9+ 编译警告 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>21</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>
@@ -55,6 +71,13 @@
             <dependency>
                 <groupId>com.tooolan.practice</groupId>
                 <artifactId>tooolan-ddd-infra</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- ddd-start: 启动模块 -->
+            <dependency>
+                <groupId>com.tooolan.practice</groupId>
+                <artifactId>tooolan-ddd-start</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

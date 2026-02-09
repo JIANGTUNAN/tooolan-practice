@@ -17,7 +17,19 @@
     <description>实体、值对象、领域服务、仓储接口</description>
 
     <dependencies>
-        <!-- Zero dependence -->
+        <!-- MyBatis Plus Annotation -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
