@@ -10,21 +10,19 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <name>ddd-api</name>
     <artifactId>tooolan-ddd-api</artifactId>
-    <packaging>jar</packaging>
-
-    <name>DDD门面层</name>
     <description>API接口定义、DTO对象、请求响应对象</description>
 
     <dependencies>
-        <!-- Lombok -->
+        <!-- Lombok: 简化Java代码注解工具 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
 
-        <!-- Validation -->
+        <!-- Validation: 数据验证框架 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>

@@ -10,21 +10,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <name>ddd-domain</name>
     <artifactId>tooolan-ddd-domain</artifactId>
-    <packaging>jar</packaging>
-
-    <name>DDD领域层</name>
     <description>实体、值对象、领域服务、仓储接口</description>
 
     <dependencies>
-        <!-- MyBatis Plus Annotation -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-annotation</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Lombok -->
+        <!-- Lombok: 简化Java代码注解工具 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

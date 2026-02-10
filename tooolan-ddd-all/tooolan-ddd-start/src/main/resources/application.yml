@@ -31,9 +31,12 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+      # 逻辑删除字段名
       logic-delete-field: deleted
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+      # 逻辑已删除值（Boolean 类型使用 true/false）
+      logic-delete-value: true
+      # 逻辑未删除值
+      logic-not-delete-value: false
   mapper-locations: classpath*:mapper/**/*Mapper.xml
 
 # 服务端口

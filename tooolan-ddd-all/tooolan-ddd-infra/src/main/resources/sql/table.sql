@@ -32,6 +32,12 @@ ON COLUMN department.created_at IS '创建时间';
 COMMENT
 ON COLUMN department.updated_at IS '更新时间';
 
+-- 部门表添加审计字段
+ALTER TABLE department ADD COLUMN created_by VARCHAR(50) COMMENT '创建人';
+ALTER TABLE department ADD COLUMN updated_by VARCHAR(50) COMMENT '更新人';
+ALTER TABLE department ADD COLUMN deleted TINYINT(1) DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）';
+ALTER TABLE department ADD COLUMN remark VARCHAR(500) COMMENT '备注信息';
+
 
 -- =============================================
 -- 2. 小组表 (Team Group)
@@ -61,6 +67,12 @@ COMMENT
 ON COLUMN team_group.created_at IS '创建时间';
 COMMENT
 ON COLUMN team_group.updated_at IS '更新时间';
+
+-- 小组表添加审计字段
+ALTER TABLE team_group ADD COLUMN created_by VARCHAR(50) COMMENT '创建人';
+ALTER TABLE team_group ADD COLUMN updated_by VARCHAR(50) COMMENT '更新人';
+ALTER TABLE team_group ADD COLUMN deleted TINYINT(1) DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）';
+ALTER TABLE team_group ADD COLUMN remark VARCHAR(500) COMMENT '备注信息';
 
 
 -- =============================================
@@ -94,3 +106,9 @@ COMMENT
 ON COLUMN app_user.created_at IS '创建时间';
 COMMENT
 ON COLUMN app_user.updated_at IS '更新时间';
+
+-- 用户表添加审计字段
+ALTER TABLE app_user ADD COLUMN created_by VARCHAR(50) COMMENT '创建人';
+ALTER TABLE app_user ADD COLUMN updated_by VARCHAR(50) COMMENT '更新人';
+ALTER TABLE app_user ADD COLUMN deleted TINYINT(1) DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）';
+ALTER TABLE app_user ADD COLUMN remark VARCHAR(500) COMMENT '备注信息';

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 注册自定义日志级别颜色转换器 -->
-    <conversionRule conversionWord="coloredLevel" class="com.tooolan.practice.ddd.config.ColorLevelConverter"/>
+    <conversionRule conversionWord="coloredLevel" class="com.tooolan.ddd.config.ColorLevelConverter"/>
 
     <!-- 日志输出格式 - 丰富的颜色配置 -->
     <!-- ERROR: 亮红色粗体, WARN: 亮黄色粗体, INFO: 亮青色, DEBUG: 亮绿色, TRACE: 灰色 -->

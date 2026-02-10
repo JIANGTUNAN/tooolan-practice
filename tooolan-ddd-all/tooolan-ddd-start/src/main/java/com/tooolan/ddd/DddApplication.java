@@ -1,6 +1,5 @@
 package com.tooolan.ddd;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,8 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author tooolan
  * @since 2026年2月9日
  */
-@SpringBootApplication(scanBasePackages = "com.tooolan.ddd")
-@MapperScan("com.tooolan.ddd.infra.mapper")
+@SpringBootApplication
 public class DddApplication {
 
     /**
