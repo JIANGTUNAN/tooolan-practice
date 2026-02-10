@@ -34,10 +34,10 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Hutool: Java工具类库 -->
+        <!-- jsqlparser: SQL解析器 -->
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
         </dependency>
 
         <!-- Lombok: 简化Java代码注解工具 -->
@@ -45,12 +45,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- jsqlparser: SQL解析器 -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
         </dependency>
     </dependencies>
 
