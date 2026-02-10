@@ -1,4 +1,4 @@
-package com.tooolan.ddd.infra.entity;
+package com.tooolan.ddd.infra.common.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

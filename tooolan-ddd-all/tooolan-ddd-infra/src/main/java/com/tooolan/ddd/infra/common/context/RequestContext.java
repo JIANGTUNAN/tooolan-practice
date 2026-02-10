@@ -1,4 +1,4 @@
-package com.tooolan.ddd.infra.config;
+package com.tooolan.ddd.infra.common.context;
 
 import lombok.extern.slf4j.Slf4j;
 

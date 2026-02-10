@@ -1,4 +1,4 @@
-package com.tooolan.ddd.infra.config;
+package com.tooolan.ddd.infra.common.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2026年2月10日
  */
 @Configuration
-@MapperScan("com.tooolan.ddd.infra.mapper")
+@MapperScan("com.tooolan.ddd.infra.persistence.*.mapper")
 public class MyBatisPlusConfig {
 
     /**

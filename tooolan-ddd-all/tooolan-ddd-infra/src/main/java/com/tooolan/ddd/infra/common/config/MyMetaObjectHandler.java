@@ -1,7 +1,8 @@
-package com.tooolan.ddd.infra.config;
+package com.tooolan.ddd.infra.common.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.tooolan.ddd.infra.entity.BaseEntity;
+import com.tooolan.ddd.infra.common.entity.BaseEntity;
+import com.tooolan.ddd.infra.common.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -20,15 +21,14 @@ import java.time.LocalDateTime;
 public class MyMetaObjectHandler implements MetaObjectHandler {
 
     /**
-     * xxx
-     * xxxxxx
+     * 插入时自动填充
      *
-     * @param metaObject xxx
+     * @param metaObject 元对象
      */
     @Override
     public void insertFill(MetaObject metaObject) {
         LocalDateTime now = LocalDateTime.now();
-        String currentUserId = RequestContext.getCurrentUserId();
+        String currentUserId = getCurrentUserId();
 
         this.strictInsertFill(metaObject, BaseEntity.Fields.createdBy, String.class, currentUserId);
         this.strictInsertFill(metaObject, BaseEntity.Fields.createdAt, LocalDateTime.class, now);
@@ -37,14 +37,13 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     }
 
     /**
-     * xxx
-     * xxxxxx
+     * 更新时自动填充
      *
-     * @param metaObject xxx
+     * @param metaObject 元对象
      */
     @Override
     public void updateFill(MetaObject metaObject) {
-        String currentUserId = RequestContext.getCurrentUserId();
+        String currentUserId = getCurrentUserId();
         this.strictUpdateFill(metaObject, BaseEntity.Fields.updatedBy, String.class, currentUserId);
         this.strictUpdateFill(metaObject, BaseEntity.Fields.updatedAt, LocalDateTime.class, LocalDateTime.now());
     }

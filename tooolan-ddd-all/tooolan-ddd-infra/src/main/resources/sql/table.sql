@@ -1,114 +1,74 @@
 -- =============================================
--- DDD三层组织结构表设计（极简版）
+-- DDD三层组织结构表设计（MySQL 8.5）
 -- 用户 -> 小组 -> 部门
--- 兼容 PostgreSQL 和 MySQL
 -- =============================================
 
 -- =============================================
--- 1. 部门表 (Department)
+-- 1. 系统部门表
 -- =============================================
-CREATE TABLE department
-(
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,  -- 主键，自增
-    name       VARCHAR(100) NOT NULL,              -- 部门名称
-    code       VARCHAR(50)  NOT NULL UNIQUE,       -- 部门编码
-    parent_id  BIGINT,                             -- 父部门ID
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,-- 创建时间
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 更新时间
-);
+DROP TABLE IF EXISTS `sys_dept`;
 
-COMMENT
-ON TABLE department IS '部门表';
-COMMENT
-ON COLUMN department.id IS '主键ID';
-COMMENT
-ON COLUMN department.name IS '部门名称';
-COMMENT
-ON COLUMN department.code IS '部门编码，唯一';
-COMMENT
-ON COLUMN department.parent_id IS '父部门ID，支持层级';
-COMMENT
-ON COLUMN department.created_at IS '创建时间';
-COMMENT
-ON COLUMN department.updated_at IS '更新时间';
-
--- 部门表添加审计字段
-ALTER TABLE department ADD COLUMN created_by VARCHAR(50) COMMENT '创建人';
-ALTER TABLE department ADD COLUMN updated_by VARCHAR(50) COMMENT '更新人';
-ALTER TABLE department ADD COLUMN deleted TINYINT(1) DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）';
-ALTER TABLE department ADD COLUMN remark VARCHAR(500) COMMENT '备注信息';
+CREATE TABLE `sys_dept` (
+    `id`          BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `name`        VARCHAR(100) NOT NULL COMMENT '部门名称',
+    `code`        VARCHAR(50) NOT NULL COMMENT '部门编码，唯一',
+    `parent_id`   BIGINT DEFAULT NULL COMMENT '父部门ID，支持层级',
+    `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `created_by`  VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+    `updated_by`  VARCHAR(50) DEFAULT NULL COMMENT '更新人',
+    `deleted`     TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）',
+    `remark`      VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_sys_dept_code` (`code`),
+    KEY `idx_sys_dept_parent_id` (`parent_id`),
+    KEY `idx_sys_dept_deleted` (`deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统部门信息表';
 
 
 -- =============================================
--- 2. 小组表 (Team Group)
+-- 2. 系统小组表
 -- =============================================
-CREATE TABLE team_group
-(
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,  -- 主键，自增
-    dept_id    BIGINT       NOT NULL,              -- 所属部门ID
-    name       VARCHAR(100) NOT NULL,              -- 小组名称
-    code       VARCHAR(50)  NOT NULL,              -- 小组编码
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,-- 创建时间
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,-- 更新时间
-    FOREIGN KEY (dept_id) REFERENCES department (id)
-);
+DROP TABLE IF EXISTS `sys_team`;
 
-COMMENT
-ON TABLE team_group IS '小组表';
-COMMENT
-ON COLUMN team_group.id IS '主键ID';
-COMMENT
-ON COLUMN team_group.dept_id IS '所属部门ID';
-COMMENT
-ON COLUMN team_group.name IS '小组名称';
-COMMENT
-ON COLUMN team_group.code IS '小组编码';
-COMMENT
-ON COLUMN team_group.created_at IS '创建时间';
-COMMENT
-ON COLUMN team_group.updated_at IS '更新时间';
-
--- 小组表添加审计字段
-ALTER TABLE team_group ADD COLUMN created_by VARCHAR(50) COMMENT '创建人';
-ALTER TABLE team_group ADD COLUMN updated_by VARCHAR(50) COMMENT '更新人';
-ALTER TABLE team_group ADD COLUMN deleted TINYINT(1) DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）';
-ALTER TABLE team_group ADD COLUMN remark VARCHAR(500) COMMENT '备注信息';
+CREATE TABLE `sys_team` (
+    `id`          BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `dept_id`     BIGINT NOT NULL COMMENT '所属部门ID',
+    `name`        VARCHAR(100) NOT NULL COMMENT '小组名称',
+    `code`        VARCHAR(50) NOT NULL COMMENT '小组编码',
+    `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `created_by`  VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+    `updated_by`  VARCHAR(50) DEFAULT NULL COMMENT '更新人',
+    `deleted`     TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）',
+    `remark`      VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_sys_team_code` (`code`),
+    KEY `idx_sys_team_dept_id` (`dept_id`),
+    KEY `idx_sys_team_deleted` (`deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统小组信息表';
 
 
 -- =============================================
--- 3. 用户表 (User)
+-- 3. 系统用户表
 -- =============================================
-CREATE TABLE app_user
-(
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,  -- 主键，自增
-    group_id   BIGINT      NOT NULL,               -- 所属小组ID
-    username   VARCHAR(50) NOT NULL UNIQUE,        -- 用户名
-    real_name  VARCHAR(50) NOT NULL,               -- 真实姓名
-    email      VARCHAR(100),                       -- 邮箱
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,-- 创建时间
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,-- 更新时间
-    FOREIGN KEY (group_id) REFERENCES team_group (id)
-);
+DROP TABLE IF EXISTS `sys_user`;
 
-COMMENT
-ON TABLE app_user IS '用户表';
-COMMENT
-ON COLUMN app_user.id IS '主键ID';
-COMMENT
-ON COLUMN app_user.group_id IS '所属小组ID';
-COMMENT
-ON COLUMN app_user.username IS '用户名，唯一';
-COMMENT
-ON COLUMN app_user.real_name IS '真实姓名';
-COMMENT
-ON COLUMN app_user.email IS '邮箱';
-COMMENT
-ON COLUMN app_user.created_at IS '创建时间';
-COMMENT
-ON COLUMN app_user.updated_at IS '更新时间';
-
--- 用户表添加审计字段
-ALTER TABLE app_user ADD COLUMN created_by VARCHAR(50) COMMENT '创建人';
-ALTER TABLE app_user ADD COLUMN updated_by VARCHAR(50) COMMENT '更新人';
-ALTER TABLE app_user ADD COLUMN deleted TINYINT(1) DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）';
-ALTER TABLE app_user ADD COLUMN remark VARCHAR(500) COMMENT '备注信息';
+CREATE TABLE `sys_user` (
+    `id`          BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `team_id`     BIGINT NOT NULL COMMENT '所属小组ID',
+    `username`    VARCHAR(50) NOT NULL COMMENT '用户名，唯一',
+    `real_name`   VARCHAR(50) NOT NULL COMMENT '真实姓名',
+    `email`       VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
+    `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `created_by`  VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+    `updated_by`  VARCHAR(50) DEFAULT NULL COMMENT '更新人',
+    `deleted`     TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）',
+    `remark`      VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_sys_user_username` (`username`),
+    KEY `idx_sys_user_team_id` (`team_id`),
+    KEY `idx_sys_user_email` (`email`),
+    KEY `idx_sys_user_deleted` (`deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统用户信息表';
