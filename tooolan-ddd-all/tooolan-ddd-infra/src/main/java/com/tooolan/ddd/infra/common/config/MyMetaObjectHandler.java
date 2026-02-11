@@ -3,6 +3,7 @@ package com.tooolan.ddd.infra.common.config;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.tooolan.ddd.infra.common.entity.BaseEntity;
 import com.tooolan.ddd.infra.common.context.RequestContext;
+import com.tooolan.ddd.infra.common.enums.DeletedStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         LocalDateTime now = LocalDateTime.now();
         String currentUserId = getCurrentUserId();
 
+        this.strictInsertFill(metaObject, BaseEntity.Fields.deleted, Boolean.class, DeletedStatusEnum.NORMAL.getValue());
         this.strictInsertFill(metaObject, BaseEntity.Fields.createdBy, String.class, currentUserId);
         this.strictInsertFill(metaObject, BaseEntity.Fields.createdAt, LocalDateTime.class, now);
         this.strictInsertFill(metaObject, BaseEntity.Fields.updatedBy, String.class, currentUserId);

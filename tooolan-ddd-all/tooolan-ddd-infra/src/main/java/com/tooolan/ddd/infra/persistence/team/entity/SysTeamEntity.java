@@ -9,10 +9,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 系统小组信息表 实体类
+ * 系统小组信息 实体类
  *
  * @author tooolan
- * @since 2026年2月10日
+ * @since 2026年2月11日
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -22,25 +22,25 @@ public class SysTeamEntity extends BaseEntity {
     /**
      * 主键ID
      */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "team_id", type = IdType.AUTO)
+    private Integer teamId;
 
     /**
      * 所属部门ID
      */
     @TableField(value = "dept_id")
-    private Long deptId;
+    private Integer deptId;
 
     /**
      * 小组名称
      */
-    @TableField(value = "name")
-    private String name;
+    @TableField(value = "team_name")
+    private String teamName;
 
     /**
      * 小组编码
      */
-    @TableField(value = "code")
-    private String code;
+    @TableField(value = "team_code")
+    private String teamCode;
 
 }

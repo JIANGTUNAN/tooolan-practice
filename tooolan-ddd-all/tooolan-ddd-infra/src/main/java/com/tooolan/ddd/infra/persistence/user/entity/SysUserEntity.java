@@ -9,39 +9,39 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 系统用户信息表 实体类
+ * 系统用户信息 实体类
  *
  * @author tooolan
  * @since 2026年2月10日
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_user")
+@EqualsAndHashCode(callSuper = true)
 public class SysUserEntity extends BaseEntity {
 
     /**
      * 主键ID
      */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Integer userId;
 
     /**
      * 所属小组ID
      */
     @TableField(value = "team_id")
-    private Long teamId;
+    private Integer teamId;
 
     /**
-     * 用户名，唯一
+     * 用户账户
      */
-    @TableField(value = "username")
-    private String username;
+    @TableField(value = "user_name")
+    private String userName;
 
     /**
-     * 真实姓名
+     * 用户昵称
      */
-    @TableField(value = "real_name")
-    private String realName;
+    @TableField(value = "nick_name")
+    private String nickName;
 
     /**
      * 邮箱

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tooolan.ddd.infra.persistence.user.mapper.SysUserMapper">
-  <resultMap id="BaseResultMap" type="com.tooolan.ddd.infra.persistence.user.entity.SysUserEntity">
+<mapper namespace="com.tooolan.ddd.infra.persistence.team.mapper.SysTeamMapper">
+  <resultMap id="BaseResultMap" type="com.tooolan.ddd.infra.persistence.team.entity.SysTeamEntity">
     <!--@mbg.generated-->
-    <!--@Table sys_user-->
-    <id column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="team_id" jdbcType="INTEGER" property="teamId" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
+    <!--@Table sys_team-->
+    <id column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="team_name" jdbcType="VARCHAR" property="teamName" />
+    <result column="team_code" jdbcType="VARCHAR" property="teamCode" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="deleted" jdbcType="BOOLEAN" property="deleted" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
@@ -18,7 +17,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    user_id, team_id, user_name, nick_name, email, remark, deleted, created_at, created_by, 
+    team_id, dept_id, team_name, team_code, remark, deleted, created_at, created_by, 
     updated_at, updated_by
   </sql>
 </mapper>

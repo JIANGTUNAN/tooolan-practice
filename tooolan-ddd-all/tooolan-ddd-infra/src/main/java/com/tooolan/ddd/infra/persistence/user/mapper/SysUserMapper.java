@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tooolan.ddd.infra.persistence.user.entity.SysUserEntity;
 
 /**
- * 系统用户信息表 Mapper
+ * 系统用户信息 Mapper
  *
  * @author tooolan
  * @since 2026年2月10日

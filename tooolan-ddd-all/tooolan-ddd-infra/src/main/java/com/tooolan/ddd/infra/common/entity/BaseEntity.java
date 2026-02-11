@@ -3,6 +3,7 @@ package com.tooolan.ddd.infra.common.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.tooolan.ddd.infra.common.enums.DeletedStatusEnum;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
@@ -32,7 +33,7 @@ public abstract class BaseEntity implements Serializable {
     private String remark;
 
     /**
-     * 逻辑删除标记
+     * 逻辑删除（false:正常,true:已删除）
      */
     @TableLogic
     @TableField("deleted")
