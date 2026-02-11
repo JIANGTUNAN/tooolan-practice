@@ -15,6 +15,19 @@
     <description>API接口定义、DTO对象、请求响应对象</description>
 
     <dependencies>
+        <!-- DDD App: 应用层 -->
+        <dependency>
+            <groupId>com.tooolan.practice</groupId>
+            <artifactId>tooolan-ddd-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Spring Web: Web MVC 框架 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!-- Validation: 数据验证框架 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

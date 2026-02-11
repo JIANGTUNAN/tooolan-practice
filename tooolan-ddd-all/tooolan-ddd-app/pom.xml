@@ -28,6 +28,12 @@
             <artifactId>spring-context</artifactId>
         </dependency>
 
+        <!-- Spring Transaction: 事务管理 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
         <!-- Lombok: 简化Java代码注解工具 -->
         <dependency>
             <groupId>org.projectlombok</groupId>

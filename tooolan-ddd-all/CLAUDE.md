@@ -16,24 +16,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # 完整构建（从父项目目录）
-cmd.exe /c "cd /d D:\project\tooolan-practice && mvn clean install"
+cmd.exe /c "mvn clean install"
 
 # 仅构建当前模块
-cmd.exe /c "cd /d D:\project\tooolan-practice\tooolan-ddd-all && mvn clean install"
+cmd.exe /c "mvn clean install"
 
 # 运行应用（开发环境）
-cmd.exe /c "cd /d D:\project\tooolan-practice\tooolan-ddd-all\tooolan-ddd-start && mvn spring-boot:run"
+cmd.exe /c "mvn spring-boot:run"
 
 # 打包应用
-cmd.exe /c "cd /d D:\project\tooolan-practice\tooolan-ddd-all && mvn clean package"
+cmd.exe /c "mvn clean package"
 
 # 运行打包后的 JAR
-cmd.exe /c "cd /d D:\project\tooolan-practice\tooolan-ddd-all\tooolan-ddd-start && java -jar target\tooolan-ddd-start-1.0-SNAPSHOT.jar"
+cmd.exe /c "java -jar target\tooolan-ddd-start-1.0-SNAPSHOT.jar"
 ```
-
-**路径说明**：
-- WSL 路径：`/mnt/d/project/tooolan-practice/tooolan-ddd-all`
-- Windows 路径：`D:\project\tooolan-practice\tooolan-ddd-all`
 
 ### Maven 依赖说明
 

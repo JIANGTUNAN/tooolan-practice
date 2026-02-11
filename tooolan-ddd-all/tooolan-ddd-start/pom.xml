@@ -21,6 +21,12 @@
             <artifactId>tooolan-ddd-api</artifactId>
         </dependency>
 
+        <!-- DDD App: 应用层 -->
+        <dependency>
+            <groupId>com.tooolan.practice</groupId>
+            <artifactId>tooolan-ddd-app</artifactId>
+        </dependency>
+
         <!-- DDD Infra: 基础设施层 -->
         <dependency>
             <groupId>com.tooolan.practice</groupId>
