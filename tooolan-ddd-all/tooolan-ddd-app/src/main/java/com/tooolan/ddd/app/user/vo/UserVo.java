@@ -47,23 +47,4 @@ public class UserVo {
      */
     String remark;
 
-    /**
-     * 创建人
-     */
-    String createdBy;
-
-    /**
-     * 创建时间
-     */
-    String createdAt;
-
-    /**
-     * 更新人
-     */
-    String updatedBy;
-
-    /**
-     * 更新时间
-     */
-    String updatedAt;
 }

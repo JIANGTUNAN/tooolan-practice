@@ -36,4 +36,5 @@ public class DeptQueryBO {
      * 每页大小
      */
     private Integer pageSize = 10;
+
 }

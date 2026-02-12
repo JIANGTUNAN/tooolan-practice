@@ -16,4 +16,5 @@ public class DeptMoveBO {
      * 目标父部门ID（null 表示移动到根节点）
      */
     private Integer targetParentId;
+
 }

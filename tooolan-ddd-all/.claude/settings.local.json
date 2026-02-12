@@ -5,7 +5,8 @@
       "Bash(cmd.exe /c \"mvn clean compile -q\")",
       "WebSearch",
       "Bash(ls:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(cmd.exe:*)"
     ]
   }
 }

@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
  * 统一响应包装类
  * 封装所有 API 接口的返回格式，包含响应码、消息和数据
  *
+ * @param <T> 数据类型
  * @author tooolan
  * @since 2026年2月11日
- * @param <T> 数据类型
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultVO<T> {
+public class ResultVo<T> {
 
     /**
      * 响应码
@@ -38,8 +38,8 @@ public class ResultVO<T> {
      * @param <T> 数据类型
      * @return 成功响应对象
      */
-    public static <T> ResultVO<T> success() {
-        return new ResultVO<>(200, "操作成功", null);
+    public static <T> ResultVo<T> success() {
+        return new ResultVo<>(200, "操作成功", null);
     }
 
     /**
@@ -49,8 +49,8 @@ public class ResultVO<T> {
      * @param <T>  数据类型
      * @return 成功响应对象
      */
-    public static <T> ResultVO<T> success(T data) {
-        return new ResultVO<>(200, "操作成功", data);
+    public static <T> ResultVo<T> success(T data) {
+        return new ResultVo<>(200, "操作成功", data);
     }
 
     /**
@@ -61,7 +61,8 @@ public class ResultVO<T> {
      * @param <T>     数据类型
      * @return 成功响应对象
      */
-    public static <T> ResultVO<T> success(String message, T data) {
-        return new ResultVO<>(200, message, data);
+    public static <T> ResultVo<T> success(String message, T data) {
+        return new ResultVo<>(200, message, data);
     }
+
 }
