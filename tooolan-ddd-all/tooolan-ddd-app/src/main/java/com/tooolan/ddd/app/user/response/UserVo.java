@@ -1,6 +1,6 @@
-package com.tooolan.ddd.app.user.vo;
+package com.tooolan.ddd.app.user.response;
 
-import lombok.Value;
+import lombok.Data;
 
 /**
  * 用户视图对象
@@ -9,7 +9,7 @@ import lombok.Value;
  * @author tooolan
  * @since 2026年2月11日
  */
-@Value
+@Data
 public class UserVo {
 
     /**

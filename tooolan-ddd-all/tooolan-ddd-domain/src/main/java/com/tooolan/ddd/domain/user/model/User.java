@@ -39,4 +39,9 @@ public class User {
      */
     private Integer teamId;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
 }

@@ -1,4 +1,4 @@
-package com.tooolan.ddd.app.config;
+package com.tooolan.ddd.app.common.config;
 
 import com.tooolan.ddd.domain.common.annotation.DomainService;
 import org.springframework.context.annotation.ComponentScan;

@@ -1,4 +1,4 @@
-package com.tooolan.ddd.api.common;
+package com.tooolan.ddd.api.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -63,6 +63,29 @@ public class ResultVo<T> {
      */
     public static <T> ResultVo<T> success(String message, T data) {
         return new ResultVo<>(200, message, data);
+    }
+
+    /**
+     * 创建错误响应
+     *
+     * @param code    错误码
+     * @param message 错误消息
+     * @param <T>     数据类型
+     * @return 错误响应对象
+     */
+    public static <T> ResultVo<T> error(Integer code, String message) {
+        return new ResultVo<>(code, message, null);
+    }
+
+    /**
+     * 创建错误响应（默认错误码）
+     *
+     * @param message 错误消息
+     * @param <T>     数据类型
+     * @return 错误响应对象
+     */
+    public static <T> ResultVo<T> error(String message) {
+        return new ResultVo<>(500, message, null);
     }
 
 }

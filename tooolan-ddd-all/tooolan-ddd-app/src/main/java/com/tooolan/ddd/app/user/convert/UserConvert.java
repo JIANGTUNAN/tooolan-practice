@@ -1,0 +1,93 @@
+package com.tooolan.ddd.app.user.convert;
+
+import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.user.request.PageUserBo;
+import com.tooolan.ddd.app.user.response.UserVo;
+import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.user.model.User;
+import com.tooolan.ddd.domain.user.repository.param.PageUserParam;
+
+import java.util.List;
+
+/**
+ * 用户转换器
+ * 负责跨层对象转换
+ *
+ * @author tooolan
+ * @since 2026年2月12日
+ */
+public class UserConvert {
+
+    /**
+     * 将领域模型转换为视图对象
+     * teamName 暂时设置为 null
+     *
+     * @param user 领域模型
+     * @return 视图对象
+     */
+    public static UserVo toVo(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserVo vo = new UserVo();
+        vo.setUserId(user.getId());
+        vo.setUsername(user.getUsername());
+        vo.setNickName(user.getNickName());
+        vo.setEmail(user.getEmail());
+        vo.setTeamId(user.getTeamId());
+        vo.setTeamName(null);
+        vo.setRemark(user.getRemark());
+        return vo;
+    }
+
+    /**
+     * 将 BO 转换为 Param
+     *
+     * @param bo BO 对象
+     * @return Param 对象
+     */
+    public static PageUserParam toParam(PageUserBo bo) {
+        if (bo == null) {
+            return null;
+        }
+        PageUserParam param = new PageUserParam();
+        param.setPageNum(bo.getPageNum() != null ? bo.getPageNum() : 1);
+        param.setPageSize(bo.getPageSize() != null ? bo.getPageSize() : 10);
+        param.setUsername(bo.getUsername());
+        param.setNickName(bo.getNickName());
+        param.setEmail(bo.getEmail());
+        param.setRemark(bo.getRemark());
+        param.setCreatedAtStart(bo.getCreatedAtStart());
+        param.setCreatedAtEnd(bo.getCreatedAtEnd());
+        return param;
+    }
+
+    /**
+     * 将分页查询结果转换为分页视图对象
+     *
+     * @param result 分页查询结果
+     * @return 分页视图对象
+     */
+    public static PageVo<UserVo> toPageVo(PageQueryResult<User> result) {
+        if (result == null) {
+            PageVo<UserVo> vo = new PageVo<>();
+            vo.setPageNum(0);
+            vo.setPageSize(0);
+            vo.setPages(0);
+            vo.setTotal(0);
+            vo.setRecords(List.of());
+            return vo;
+        }
+        List<UserVo> vos = result.getRecords().stream()
+                .map(UserConvert::toVo)
+                .toList();
+        PageVo<UserVo> vo = new PageVo<>();
+        vo.setPageNum(result.getPageNum());
+        vo.setPageSize(result.getPageSize());
+        vo.setPages(result.getPages());
+        vo.setTotal(result.getTotal());
+        vo.setRecords(vos);
+        return vo;
+    }
+
+}
