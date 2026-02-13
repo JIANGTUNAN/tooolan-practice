@@ -43,4 +43,16 @@ public class SysTeamEntity extends BaseEntity {
     @TableField(value = "team_code")
     private String teamCode;
 
+    /**
+     * 小组状态（0:正常,1:停用,2:满员）
+     */
+    @TableField(value = "status")
+    private Integer status;
+
+    /**
+     * 小组人数上限（0表示不限制）
+     */
+    @TableField(value = "max_members")
+    private Integer maxMembers;
+
 }

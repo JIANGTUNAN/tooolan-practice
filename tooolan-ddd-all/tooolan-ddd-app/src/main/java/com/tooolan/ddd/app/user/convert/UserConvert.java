@@ -65,14 +65,15 @@ public class UserConvert {
      *
      * @param bo BO 对象
      * @return Param 对象
+     * @throws IllegalStateException 当分页参数为 null 时抛出
      */
     public static PageUserParam toParam(PageUserBo bo) {
         if (bo == null) {
             return null;
         }
         PageUserParam param = new PageUserParam();
-        param.setPageNum(bo.getPageNum() != null ? bo.getPageNum() : 1);
-        param.setPageSize(bo.getPageSize() != null ? bo.getPageSize() : 10);
+        param.setPageNum(bo.getPageNum());
+        param.setPageSize(bo.getPageSize());
         param.setUsername(bo.getUsername());
         param.setNickName(bo.getNickName());
         param.setEmail(bo.getEmail());

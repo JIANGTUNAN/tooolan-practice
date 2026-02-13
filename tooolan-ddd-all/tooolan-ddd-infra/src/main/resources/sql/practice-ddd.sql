@@ -47,6 +47,8 @@ CREATE TABLE `sys_team`  (
   `dept_id` int NOT NULL COMMENT '所属部门ID',
   `team_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '小组名称',
   `team_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '小组编码',
+  `status`      tinyint NOT NULL DEFAULT 0 COMMENT '小组状态（0:正常,1:停用,2:满员）',
+  `max_members` int     NOT NULL DEFAULT 0 COMMENT '小组人数上限（0表示不限制）',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注信息',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -56,7 +58,8 @@ CREATE TABLE `sys_team`  (
   PRIMARY KEY (`team_id`) USING BTREE,
   UNIQUE INDEX `uk_sys_team_code`(`team_code` ASC) USING BTREE,
   INDEX `idx_sys_team_dept_id`(`dept_id` ASC) USING BTREE,
-  INDEX `idx_sys_team_deleted`(`deleted` ASC) USING BTREE
+  INDEX `idx_sys_team_deleted` (`deleted` ASC) USING BTREE,
+  INDEX `idx_sys_team_status` (`status` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统小组信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------

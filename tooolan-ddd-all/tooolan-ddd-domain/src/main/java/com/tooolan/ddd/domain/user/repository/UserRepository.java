@@ -50,4 +50,12 @@ public interface UserRepository {
      */
     boolean save(User user);
 
+    /**
+     * 统计指定小组的用户数量
+     *
+     * @param teamId 小组ID
+     * @return 用户数量
+     */
+    long countByTeamId(Integer teamId);
+
 }

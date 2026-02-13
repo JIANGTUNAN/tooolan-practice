@@ -8,6 +8,8 @@
     <result column="dept_id" jdbcType="INTEGER" property="deptId" />
     <result column="team_name" jdbcType="VARCHAR" property="teamName" />
     <result column="team_code" jdbcType="VARCHAR" property="teamCode" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="max_members" jdbcType="INTEGER" property="maxMembers" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="deleted" jdbcType="BOOLEAN" property="deleted" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
@@ -17,7 +19,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    team_id, dept_id, team_name, team_code, remark, deleted, created_at, created_by, 
-    updated_at, updated_by
+    team_id, dept_id, team_name, team_code, status, max_members, remark, deleted, created_at,
+    created_by, updated_at, updated_by
   </sql>
 </mapper>

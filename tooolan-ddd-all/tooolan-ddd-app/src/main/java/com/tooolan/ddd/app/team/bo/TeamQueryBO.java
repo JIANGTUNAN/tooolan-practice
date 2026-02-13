@@ -30,10 +30,10 @@ public class TeamQueryBO {
     /**
      * 当前页码
      */
-    private Integer pageNum = 1;
+    private Integer pageNum;
 
     /**
      * 每页大小
      */
-    private Integer pageSize = 10;
+    private Integer pageSize;
 }
