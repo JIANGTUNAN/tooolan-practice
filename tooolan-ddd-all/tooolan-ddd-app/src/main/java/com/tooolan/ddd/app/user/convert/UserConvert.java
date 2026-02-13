@@ -2,6 +2,7 @@ package com.tooolan.ddd.app.user.convert;
 
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.user.request.PageUserBo;
+import com.tooolan.ddd.app.user.request.SaveUserBo;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import com.tooolan.ddd.domain.user.model.User;
@@ -17,6 +18,25 @@ import java.util.List;
  * @since 2026年2月12日
  */
 public class UserConvert {
+
+    /**
+     * 将 SaveUserBo 转换为 User 领域模型
+     *
+     * @param bo 保存用户 BO
+     * @return 用户领域模型
+     */
+    public static User toDomain(SaveUserBo bo) {
+        if (bo == null) {
+            return null;
+        }
+        User user = new User();
+        user.setUsername(bo.getUsername());
+        user.setNickName(bo.getNickName());
+        user.setEmail(bo.getEmail());
+        user.setTeamId(bo.getTeamId());
+        user.setRemark(bo.getRemark());
+        return user;
+    }
 
     /**
      * 将领域模型转换为视图对象

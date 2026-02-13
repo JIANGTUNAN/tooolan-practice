@@ -1,5 +1,7 @@
 package com.tooolan.ddd.infra.persistence.team.converter;
 
+import com.tooolan.ddd.domain.team.model.Team;
+import com.tooolan.ddd.infra.persistence.team.entity.SysTeamEntity;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,5 +13,23 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TeamConverter {
+
+    /**
+     * 将数据库实体转换为领域模型
+     *
+     * @param entity 数据库实体
+     * @return 领域模型
+     */
+    public static Team toDomain(SysTeamEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        Team team = new Team();
+        team.setId(entity.getTeamId());
+        team.setDeptId(entity.getDeptId());
+        team.setTeamName(entity.getTeamName());
+        team.setTeamCode(entity.getTeamCode());
+        return team;
+    }
 
 }

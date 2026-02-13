@@ -64,4 +64,35 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
         return pageQueryResult;
     }
 
+    /**
+     * 根据用户名查询用户
+     *
+     * @param username 用户名
+     * @return 用户信息，不存在时返回空
+     */
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        return super.lambdaQuery()
+                .eq(SysUserEntity::getUserName, username)
+                .oneOpt()
+                .map(UserConverter::toDomain);
+    }
+
+    /**
+     * 保存用户（新增）
+     * 保存成功后会将生成的 ID 回填到 user 对象中
+     *
+     * @param user 用户领域模型
+     * @return 是否保存成功
+     */
+    @Override
+    public boolean save(User user) {
+        SysUserEntity entity = UserConverter.toEntity(user);
+        boolean saved = super.save(entity);
+        if (saved) {
+            user.setId(entity.getUserId());
+        }
+        return saved;
+    }
+
 }

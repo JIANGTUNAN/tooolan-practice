@@ -2,15 +2,13 @@ package com.tooolan.ddd.api.user;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.user.request.PageUserDTO;
+import com.tooolan.ddd.api.user.request.SaveUserDTO;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.app.user.service.UserApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 系统用户信息管理 控制器
@@ -50,6 +48,18 @@ public class UserController {
     public ResultVo<PageVo<UserVo>> page(@Validated PageUserDTO dto) {
         PageVo<UserVo> pageVo = userApplicationService.pageUser(dto);
         return ResultVo.success(pageVo);
+    }
+
+    /**
+     * 新增用户
+     *
+     * @param dto 用户信息
+     * @return 操作结果
+     */
+    @PostMapping("/save")
+    public ResultVo<Void> save(@Validated @RequestBody SaveUserDTO dto) {
+        userApplicationService.saveUser(dto);
+        return ResultVo.success();
     }
 
 }

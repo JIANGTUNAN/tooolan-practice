@@ -33,4 +33,21 @@ public interface UserRepository {
      */
     PageQueryResult<User> pageUser(PageUserParam pageUserParam);
 
+    /**
+     * 根据用户名查询用户
+     *
+     * @param username 用户名
+     * @return 用户信息，不存在时返回空
+     */
+    Optional<User> getUserByUsername(String username);
+
+    /**
+     * 保存用户
+     * 保存成功后会将生成的 ID 回填到 user 对象中
+     *
+     * @param user 用户领域模型
+     * @return 是否保存成功
+     */
+    boolean save(User user);
+
 }
