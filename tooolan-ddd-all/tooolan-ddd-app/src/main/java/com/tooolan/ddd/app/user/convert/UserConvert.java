@@ -1,8 +1,10 @@
 package com.tooolan.ddd.app.user.convert;
 
+import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.user.request.PageUserBo;
 import com.tooolan.ddd.app.user.request.SaveUserBo;
+import com.tooolan.ddd.app.user.request.UpdateUserBo;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import com.tooolan.ddd.domain.user.model.User;
@@ -35,6 +37,35 @@ public class UserConvert {
         user.setEmail(bo.getEmail());
         user.setTeamId(bo.getTeamId());
         user.setRemark(bo.getRemark());
+        return user;
+    }
+
+    /**
+     * 将 UpdateUserBo 转换为 User 领域模型（用于更新）
+     * 采用部分更新策略：只覆盖传入的字段，未传入的字段保持原值
+     *
+     * @param bo           更新用户 BO
+     * @param existingUser 现有用户数据（用于合并）
+     * @return 用户领域模型
+     */
+    public static User toUpdateDomain(UpdateUserBo bo, User existingUser) {
+        if (bo == null) {
+            return null;
+        }
+        if (existingUser == null) {
+            throw new IllegalArgumentException("现有用户数据不能为空");
+        }
+
+        User user = new User();
+        user.setId(bo.getUserId());
+        user.setUsername(existingUser.getUsername()); // 保持原用户名
+
+        // 部分更新：只覆盖传入的字段（非 null）
+        user.setNickName(ObjUtil.defaultIfBlank(bo.getNickName(), existingUser.getNickName()));
+        user.setEmail(ObjUtil.defaultIfBlank(bo.getEmail(), existingUser.getEmail()));
+        user.setTeamId(ObjUtil.defaultIfNull(bo.getTeamId(), existingUser.getTeamId()));
+        user.setRemark(ObjUtil.defaultIfBlank(bo.getRemark(), existingUser.getRemark()));
+
         return user;
     }
 

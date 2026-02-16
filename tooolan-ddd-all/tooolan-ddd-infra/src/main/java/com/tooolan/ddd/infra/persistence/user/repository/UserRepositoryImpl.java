@@ -108,4 +108,20 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
                 .count();
     }
 
+    /**
+     * 根据用户ID更新用户信息
+     * 仅更新非 null 字段，部分更新策略
+     *
+     * @param user 用户领域模型
+     * @return 是否更新成功
+     */
+    @Override
+    public boolean updateById(User user) {
+        if (ObjUtil.hasNull(user, user.getId())) {
+            return false;
+        }
+        SysUserEntity entity = UserConverter.toEntity(user);
+        return super.updateById(entity);
+    }
+
 }

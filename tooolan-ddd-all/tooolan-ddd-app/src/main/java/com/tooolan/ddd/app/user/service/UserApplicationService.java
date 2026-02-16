@@ -5,13 +5,16 @@ import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.user.convert.UserConvert;
 import com.tooolan.ddd.app.user.request.PageUserBo;
 import com.tooolan.ddd.app.user.request.SaveUserBo;
+import com.tooolan.ddd.app.user.request.UpdateUserBo;
 import com.tooolan.ddd.app.user.response.UserVo;
+import com.tooolan.ddd.domain.common.constant.FieldClearValues;
 import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
+import com.tooolan.ddd.domain.user.event.UserUpdatedEvent;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
 import com.tooolan.ddd.domain.user.repository.param.PageUserParam;
@@ -82,12 +85,64 @@ public class UserApplicationService {
             team = teamRepository.getTeam(bo.getTeamId())
                     .orElseThrow(() -> new NotFoundException("指定的小组不存在"));
         }
-
         // 调用领域服务保存用户（主键会通过引用回填）
         userDomainService.saveUser(user, team);
-
         // 发布用户创建事件
         eventPublisher.publishEvent(UserCreatedEvent.of(user));
+    }
+
+    /**
+     * 更新用户
+     * 支持部分字段更新和字段清空功能
+     *
+     * @param bo 更新用户 BO
+     * @throws NotFoundException     用户不存在或目标小组不存在时抛出
+     * @throws BusinessRuleException 用户名被修改、小组不可用或小组已满员时抛出
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void updateUser(UpdateUserBo bo) throws BusinessRuleException {
+        // 1. 查询现有用户
+        User existingUser = userRepository.getUser(bo.getUserId())
+                .orElseThrow(() -> new NotFoundException("用户不存在"));
+        // 2. 转换为领域模型（传入现有用户实现部分更新）
+        User updatedUser = UserConvert.toUpdateDomain(bo, existingUser);
+        // 3. 处理字段清空
+        this.processClearFields(updatedUser);
+
+        // 4. 如果修改了小组，校验小组存在性
+        Team newTeam = null;
+        Integer oldTeamId = existingUser.getTeamId();
+        Integer newTeamId = updatedUser.getTeamId();
+        boolean teamChanged = ObjUtil.notEqual(oldTeamId, newTeamId);
+
+        if (teamChanged && newTeamId != null) {
+            newTeam = teamRepository.getTeam(newTeamId)
+                    .orElseThrow(() -> new NotFoundException("指定的小组不存在"));
+        }
+
+        // 5. 调用领域服务
+        userDomainService.updateUser(existingUser, updatedUser, newTeam);
+
+        // 6. 发布用户更新事件
+        eventPublisher.publishEvent(UserUpdatedEvent.of(updatedUser));
+    }
+
+    /**
+     * 处理字段清空逻辑
+     * 将约定值转换为 null
+     *
+     * @param user 用户领域模型
+     */
+    private void processClearFields(User user) {
+        if (ObjUtil.isNotNull(user.getEmail())) {
+            user.setEmail(FieldClearValues.processField(user.getEmail()));
+        }
+        if (ObjUtil.isNotNull(user.getTeamId())) {
+            user.setTeamId(FieldClearValues.processField(user.getTeamId()));
+        }
+        if (ObjUtil.isNotNull(user.getRemark())) {
+            user.setRemark(FieldClearValues.processField(user.getRemark()));
+        }
     }
 
 }

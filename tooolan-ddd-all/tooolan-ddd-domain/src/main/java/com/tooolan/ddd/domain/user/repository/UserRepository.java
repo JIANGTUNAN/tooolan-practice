@@ -58,4 +58,13 @@ public interface UserRepository {
      */
     long countByTeamId(Integer teamId);
 
+    /**
+     * 根据用户ID更新用户信息
+     * 仅更新非 null 字段，部分更新策略
+     *
+     * @param user 用户领域模型
+     * @return 是否更新成功
+     */
+    boolean updateById(User user);
+
 }

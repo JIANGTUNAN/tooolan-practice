@@ -1,5 +1,6 @@
 package com.tooolan.ddd.domain.user.service;
 
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.domain.common.annotation.DomainService;
 import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
@@ -57,8 +58,50 @@ public class UserDomainService {
 
         // 保存用户，失败时抛出异常触发事务回滚
         boolean saved = userRepository.save(user);
-        if (!saved) {
+        if (BooleanUtil.isFalse(saved)) {
             throw new BusinessRuleException("保存用户失败");
+        }
+    }
+
+    /**
+     * 更新用户
+     * 支持部分字段更新和小组转移
+     *
+     * @param existingUser 现有用户信息
+     * @param updatedUser  更新后的用户信息
+     * @param newTeam      新小组（仅在小组转移时传入，否则为 null）
+     * @throws BusinessRuleException 用户名被修改时抛出
+     * @throws BusinessRuleException 目标小组不可用时抛出
+     * @throws BusinessRuleException 目标小组已满员时抛出
+     * @throws BusinessRuleException 更新失败时抛出
+     */
+    public void updateUser(User existingUser, User updatedUser, Team newTeam) throws BusinessRuleException {
+        // 1. 校验用户名不可变性
+        if (ObjUtil.notEqual(existingUser.getUsername(), updatedUser.getUsername())) {
+            throw new BusinessRuleException("用户名不允许修改");
+        }
+
+        // 2. 如果修改了小组，校验新小组
+        Integer oldTeamId = existingUser.getTeamId();
+        Integer newTeamId = updatedUser.getTeamId();
+        boolean teamChanged = ObjUtil.notEqual(oldTeamId, newTeamId);
+
+        if (teamChanged && ObjUtil.isNotNull(newTeam)) {
+            if (BooleanUtil.isFalse(newTeam.isAvailable())) {
+                throw new BusinessRuleException("目标小组不可用");
+            }
+            if (BooleanUtil.isTrue(newTeam.hasMemberLimit())) {
+                long currentCount = userRepository.countByTeamId(newTeamId);
+                if (currentCount >= newTeam.getMaxMembers()) {
+                    throw new BusinessRuleException("目标小组已满员");
+                }
+            }
+        }
+
+        // 3. 执行更新
+        boolean updated = userRepository.updateById(updatedUser);
+        if (BooleanUtil.isFalse(updated)) {
+            throw new BusinessRuleException("更新用户失败");
         }
     }
 

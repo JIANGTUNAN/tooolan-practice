@@ -3,6 +3,7 @@ package com.tooolan.ddd.api.user;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.user.request.PageUserDTO;
 import com.tooolan.ddd.api.user.request.SaveUserDTO;
+import com.tooolan.ddd.api.user.request.UpdateUserDTO;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.app.user.service.UserApplicationService;
@@ -59,6 +60,19 @@ public class UserController {
     @PostMapping("/save")
     public ResultVo<Void> save(@Validated @RequestBody SaveUserDTO dto) {
         userApplicationService.saveUser(dto);
+        return ResultVo.success();
+    }
+
+    /**
+     * 更新用户
+     * 支持部分字段更新和字段清空功能
+     *
+     * @param dto 用户信息
+     * @return 操作结果
+     */
+    @PutMapping("/update")
+    public ResultVo<Void> update(@Validated @RequestBody UpdateUserDTO dto) {
+        userApplicationService.updateUser(dto);
         return ResultVo.success();
     }
 
