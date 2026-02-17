@@ -30,6 +30,11 @@ public class User {
     private String nickName;
 
     /**
+     * 密码（BCrypt 加密）
+     */
+    private String password;
+
+    /**
      * 邮箱
      */
     private String email;

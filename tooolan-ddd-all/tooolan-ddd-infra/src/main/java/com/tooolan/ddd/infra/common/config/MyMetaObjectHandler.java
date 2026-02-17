@@ -1,8 +1,8 @@
 package com.tooolan.ddd.infra.common.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.infra.common.entity.BaseEntity;
-import com.tooolan.ddd.infra.common.context.RequestContext;
 import com.tooolan.ddd.infra.common.enums.DeletedStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
@@ -55,7 +55,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
      */
     private String getCurrentUserId() {
         try {
-            return RequestContext.getCurrentUserId();
+            Integer userId = ContextHolder.getUserId();
+            return userId != null ? String.valueOf(userId) : "system";
         } catch (Exception e) {
             log.warn("获取当前用户ID失败，使用默认值: {}", e.getMessage());
             return "system";

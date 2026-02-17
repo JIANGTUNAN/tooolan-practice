@@ -40,6 +40,12 @@
             <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
         </dependency>
 
+        <!-- Sa-Token: Java 权限认证框架 -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+        </dependency>
+
         <!-- Lombok: 简化Java代码注解工具 -->
         <dependency>
             <groupId>org.projectlombok</groupId>

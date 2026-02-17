@@ -44,6 +44,12 @@ public class SysUserEntity extends BaseEntity {
     private String nickName;
 
     /**
+     * 密码（BCrypt 加密）
+     */
+    @TableField(value = "password")
+    private String password;
+
+    /**
      * 邮箱
      */
     @TableField(value = "email")

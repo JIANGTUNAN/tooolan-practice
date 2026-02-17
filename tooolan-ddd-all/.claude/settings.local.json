@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cmd.exe /c \"mvn clean compile\")"
+      "Bash(cmd.exe /c \"mvn clean compile\")",
+      "Bash(cmd.exe /c \"mvn clean install -DskipTests\")",
+      "WebSearch",
+      "mcp__web-search-prime__webSearchPrime"
     ]
   }
 }

@@ -34,6 +34,7 @@
         <mysql-connector.version>8.0.33</mysql-connector.version>
         <lombok.version>1.18.42</lombok.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
+        <sa-token.version>1.39.0</sa-token.version>
     </properties>
 
     <dependencyManagement>
@@ -87,6 +88,20 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- Sa-Token: Java 权限认证框架 -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <!-- Spring Security Crypto: 密码加密工具 -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-crypto</artifactId>
+                <version>6.4.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

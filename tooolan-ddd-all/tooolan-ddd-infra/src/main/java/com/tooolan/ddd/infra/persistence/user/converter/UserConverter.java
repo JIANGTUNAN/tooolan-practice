@@ -26,6 +26,7 @@ public class UserConverter {
         user.setId(entity.getUserId());
         user.setUsername(entity.getUserName());
         user.setNickName(entity.getNickName());
+        user.setPassword(entity.getPassword());
         user.setEmail(entity.getEmail());
         user.setTeamId(entity.getTeamId());
         user.setRemark(entity.getRemark());
@@ -46,6 +47,7 @@ public class UserConverter {
         entity.setUserId(user.getId());
         entity.setUserName(user.getUsername());
         entity.setNickName(user.getNickName());
+        entity.setPassword(user.getPassword());
         entity.setEmail(user.getEmail());
         entity.setTeamId(user.getTeamId());
         entity.setRemark(user.getRemark());
