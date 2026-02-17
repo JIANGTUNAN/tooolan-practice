@@ -49,6 +49,18 @@ server:
 logging:
   config: classpath:logback-spring.xml
 
+# 鉴权配置
+security:
+  auth:
+    # 是否启用登录校验（开发环境可关闭）
+    enabled: true
+    # 公开路径白名单（不需要登录）
+    public-paths:
+      - /session/login
+      - /session/status
+      - /error
+      - /favicon.ico
+
 # Sa-Token 配置
 sa-token:
   # token 名称（同时也是 cookie 名称）
