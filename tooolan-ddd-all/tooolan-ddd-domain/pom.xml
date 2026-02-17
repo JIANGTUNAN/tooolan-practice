@@ -21,6 +21,12 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
+        <!-- TransmittableThreadLocal: 阿里 TTL，支持线程池上下文传递 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+        </dependency>
+
         <!-- Lombok: 简化Java代码注解工具 -->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -79,7 +79,6 @@ public class SessionApplicationService {
      * @throws SessionException 未登录时抛出
      */
     public LoginStatusVo getCurrentUser() {
-        ContextHolder.requireUserId();
         Integer userId = ContextHolder.getUserId();
         User user = userRepository.getUser(userId)
                 .orElseThrow(() -> new SessionException(SessionErrorCode.LOGIN_FAILED));

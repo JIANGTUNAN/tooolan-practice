@@ -23,7 +23,12 @@ public enum SessionErrorCode implements ErrorCode {
     /**
      * 密码错误
      */
-    PASSWORD_MISMATCH("用户名或密码错误");
+    PASSWORD_MISMATCH("用户名或密码错误"),
+
+    /**
+     * 用户未登录
+     */
+    NOT_LOGIN("用户未登录，请先登录");
 
     private final String message;
 

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.infra.common.entity.BaseEntity;
 import com.tooolan.ddd.infra.common.enums.DeletedStatusEnum;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
  * @author tooolan
  * @since 2026年2月10日
  */
-@Slf4j
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 
@@ -52,15 +50,11 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     /**
      * 获取当前用户ID
+     * 严格模式：未登录时抛出异常
      */
     private String getCurrentUserId() {
-        try {
-            Integer userId = ContextHolder.getUserId();
-            return userId != null ? String.valueOf(userId) : "system";
-        } catch (Exception e) {
-            log.warn("获取当前用户ID失败，使用默认值: {}", e.getMessage());
-            return "system";
-        }
+        Integer userId = ContextHolder.getUserId();
+        return String.valueOf(userId);
     }
 
 }
