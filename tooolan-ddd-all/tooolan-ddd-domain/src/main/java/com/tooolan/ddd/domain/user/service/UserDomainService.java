@@ -3,6 +3,7 @@ package com.tooolan.ddd.domain.user.service;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.domain.common.annotation.DomainService;
+import com.tooolan.ddd.domain.common.constant.StatusCode;
 import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
@@ -40,26 +41,26 @@ public class UserDomainService {
         // 校验用户名唯一性
         userRepository.getUserByUsername(user.getUsername())
                 .ifPresent(u -> {
-                    throw new BusinessRuleException("用户名已存在");
+                    throw new BusinessRuleException(StatusCode.USER_USERNAME_EXISTS, "用户名已存在");
                 });
 
         // 校验小组状态
-        if (ObjUtil.isNotNull(team) && team.isAvailable()) {
-            throw new BusinessRuleException("小组不可用，无法添加用户");
+        if (ObjUtil.isNotNull(team) && !team.isAvailable()) {
+            throw new BusinessRuleException(StatusCode.TEAM_UNAVAILABLE, "小组不可用，无法添加用户");
         }
 
         // 校验小组容量
         if (ObjUtil.isNotNull(team) && team.hasMemberLimit()) {
             long currentCount = userRepository.countByTeamId(user.getTeamId());
             if (currentCount >= team.getMaxMembers()) {
-                throw new BusinessRuleException("小组已满员");
+                throw new BusinessRuleException(StatusCode.TEAM_FULL, "小组已满员");
             }
         }
 
         // 保存用户，失败时抛出异常触发事务回滚
         boolean saved = userRepository.save(user);
         if (BooleanUtil.isFalse(saved)) {
-            throw new BusinessRuleException("保存用户失败");
+            throw new BusinessRuleException(StatusCode.USER_SAVE_FAILED, "保存用户失败");
         }
     }
 
@@ -78,7 +79,7 @@ public class UserDomainService {
     public void updateUser(User existingUser, User updatedUser, Team newTeam) throws BusinessRuleException {
         // 1. 校验用户名不可变性
         if (ObjUtil.notEqual(existingUser.getUsername(), updatedUser.getUsername())) {
-            throw new BusinessRuleException("用户名不允许修改");
+            throw new BusinessRuleException(StatusCode.USER_USERNAME_IMMUTABLE, "用户名不允许修改");
         }
 
         // 2. 如果修改了小组，校验新小组
@@ -88,12 +89,12 @@ public class UserDomainService {
 
         if (teamChanged && ObjUtil.isNotNull(newTeam)) {
             if (BooleanUtil.isFalse(newTeam.isAvailable())) {
-                throw new BusinessRuleException("目标小组不可用");
+                throw new BusinessRuleException(StatusCode.TEAM_UNAVAILABLE, "目标小组不可用");
             }
             if (BooleanUtil.isTrue(newTeam.hasMemberLimit())) {
                 long currentCount = userRepository.countByTeamId(newTeamId);
                 if (currentCount >= newTeam.getMaxMembers()) {
-                    throw new BusinessRuleException("目标小组已满员");
+                    throw new BusinessRuleException(StatusCode.TEAM_FULL, "目标小组已满员");
                 }
             }
         }
@@ -101,7 +102,7 @@ public class UserDomainService {
         // 3. 执行更新
         boolean updated = userRepository.updateById(updatedUser);
         if (BooleanUtil.isFalse(updated)) {
-            throw new BusinessRuleException("更新用户失败");
+            throw new BusinessRuleException(StatusCode.USER_UPDATE_FAILED, "更新用户失败");
         }
     }
 

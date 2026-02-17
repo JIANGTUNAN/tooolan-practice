@@ -1,5 +1,7 @@
 package com.tooolan.ddd.domain.common.exception;
 
+import com.tooolan.ddd.domain.common.constant.StatusCode;
+
 /**
  * 业务规则异常
  * 表示业务规则验证失败
@@ -15,7 +17,7 @@ public class BusinessRuleException extends DomainException {
      * @param message 错误消息
      */
     public BusinessRuleException(String message) {
-        super("BUSINESS_RULE_ERROR", message);
+        super(StatusCode.BUSINESS_RULE_ERROR, message);
     }
 
     /**

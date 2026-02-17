@@ -1,5 +1,7 @@
 package com.tooolan.ddd.domain.common.exception;
 
+import com.tooolan.ddd.domain.common.constant.StatusCode;
+
 /**
  * 资源不存在异常
  * 表示请求的资源未找到
@@ -15,7 +17,7 @@ public class NotFoundException extends DomainException {
      * @param message 错误消息
      */
     public NotFoundException(String message) {
-        super("NOT_FOUND", message);
+        super(StatusCode.NOT_FOUND, message);
     }
 
     /**

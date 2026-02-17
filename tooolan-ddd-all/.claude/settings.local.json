@@ -1,12 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "mcp__web-search-prime__webSearchPrime",
-      "Bash(cmd.exe /c \"mvn clean compile -q\")",
-      "WebSearch",
-      "Bash(ls:*)",
-      "Bash(done)",
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe /c \"mvn clean compile\")"
     ]
   }
 }

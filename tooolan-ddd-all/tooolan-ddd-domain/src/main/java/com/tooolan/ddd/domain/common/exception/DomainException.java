@@ -1,5 +1,6 @@
 package com.tooolan.ddd.domain.common.exception;
 
+import com.tooolan.ddd.domain.common.constant.StatusCode;
 import lombok.Getter;
 
 /**
@@ -24,7 +25,7 @@ public class DomainException extends RuntimeException {
      */
     public DomainException(String message) {
         super(message);
-        this.errorCode = "DOMAIN_ERROR";
+        this.errorCode = StatusCode.DOMAIN_ERROR;
     }
 
     /**
@@ -35,7 +36,7 @@ public class DomainException extends RuntimeException {
      */
     public DomainException(String message, Throwable cause) {
         super(message, cause);
-        this.errorCode = "DOMAIN_ERROR";
+        this.errorCode = StatusCode.DOMAIN_ERROR;
     }
 
     /**
