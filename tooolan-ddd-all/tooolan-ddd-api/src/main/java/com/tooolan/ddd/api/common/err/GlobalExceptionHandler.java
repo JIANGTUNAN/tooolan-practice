@@ -2,7 +2,7 @@ package com.tooolan.ddd.api.common.err;
 
 import com.tooolan.ddd.api.common.constant.ResponseCode;
 import com.tooolan.ddd.api.common.response.ResultVo;
-import com.tooolan.ddd.domain.common.constant.StatusCode;
+import com.tooolan.ddd.domain.common.constant.CommonErrorCode;
 import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
 import com.tooolan.ddd.domain.common.exception.DomainException;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
         log.warn("参数校验失败: {} - {}", request.getRequestURI(), errorMessage);
-        ResultVo<Void> result = ResultVo.error(ResponseCode.VALIDATION_FAILED, StatusCode.PARAM_VALIDATION_FAILED, errorMessage);
+        ResultVo<Void> result = ResultVo.error(ResponseCode.VALIDATION_FAILED, CommonErrorCode.PARAM_VALIDATION_FAILED.getCode(), errorMessage);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -102,7 +102,7 @@ public class GlobalExceptionHandler {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining(", "));
         log.warn("参数约束违反: {} - {}", request.getRequestURI(), errorMessage);
-        ResultVo<Void> result = ResultVo.error(ResponseCode.VALIDATION_FAILED, StatusCode.PARAM_CONSTRAINT_VIOLATION, errorMessage);
+        ResultVo<Void> result = ResultVo.error(ResponseCode.VALIDATION_FAILED, CommonErrorCode.PARAM_CONSTRAINT_VIOLATION.getCode(), errorMessage);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ResultVo<Void>> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
         log.error("非法参数: {} - {}", request.getRequestURI(), e.getMessage(), e);
-        ResultVo<Void> result = ResultVo.error(ResponseCode.BAD_REQUEST, StatusCode.ILLEGAL_ARGUMENT, "参数错误，请检查输入");
+        ResultVo<Void> result = ResultVo.error(ResponseCode.BAD_REQUEST, CommonErrorCode.ILLEGAL_ARGUMENT.getCode(), CommonErrorCode.ILLEGAL_ARGUMENT.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -132,7 +132,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ResultVo<Void>> handleIllegalStateException(IllegalStateException e, HttpServletRequest request) {
         log.error("非法状态: {} - {}", request.getRequestURI(), e.getMessage(), e);
-        ResultVo<Void> result = ResultVo.error(ResponseCode.INTERNAL_ERROR, StatusCode.ILLEGAL_STATE, "系统繁忙，请稍后再试");
+        ResultVo<Void> result = ResultVo.error(ResponseCode.INTERNAL_ERROR, CommonErrorCode.ILLEGAL_STATE.getCode(), CommonErrorCode.ILLEGAL_STATE.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -147,7 +147,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResultVo<Void>> handleException(Exception e, HttpServletRequest request) {
         log.error("系统异常: {} - {}", request.getRequestURI(), e.getMessage(), e);
-        ResultVo<Void> result = ResultVo.error(ResponseCode.INTERNAL_ERROR, StatusCode.SYSTEM_ERROR, "系统繁忙，请稍后再试");
+        ResultVo<Void> result = ResultVo.error(ResponseCode.INTERNAL_ERROR, CommonErrorCode.SYSTEM_ERROR.getCode(), CommonErrorCode.SYSTEM_ERROR.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

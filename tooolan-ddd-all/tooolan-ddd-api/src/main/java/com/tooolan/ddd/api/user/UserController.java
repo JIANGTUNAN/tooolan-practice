@@ -7,8 +7,8 @@ import com.tooolan.ddd.api.user.request.UpdateUserDTO;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.app.user.service.UserApplicationService;
-import com.tooolan.ddd.domain.common.constant.StatusCode;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
+import com.tooolan.ddd.domain.user.constant.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +37,7 @@ public class UserController {
     @GetMapping("/get/{userId}")
     public ResultVo<UserVo> get(@PathVariable Integer userId) {
         UserVo user = userApplicationService.getUserById(userId)
-                .orElseThrow(() -> new NotFoundException(StatusCode.USER_NOT_FOUND, "用户不存在"));
+                .orElseThrow(() -> new NotFoundException(UserErrorCode.NOT_FOUND));
         return ResultVo.success(user);
     }
 

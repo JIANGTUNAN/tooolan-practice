@@ -1,6 +1,6 @@
 package com.tooolan.ddd.domain.common.exception;
 
-import com.tooolan.ddd.domain.common.constant.StatusCode;
+import com.tooolan.ddd.domain.common.constant.ErrorCode;
 
 /**
  * 业务规则异常
@@ -12,21 +12,21 @@ import com.tooolan.ddd.domain.common.constant.StatusCode;
 public class BusinessRuleException extends DomainException {
 
     /**
-     * 构造业务规则异常
+     * 使用错误码枚举构造业务规则异常
      *
-     * @param message 错误消息
+     * @param errorCode 错误码枚举
      */
-    public BusinessRuleException(String message) {
-        super(StatusCode.BUSINESS_RULE_ERROR, message);
+    public BusinessRuleException(ErrorCode errorCode) {
+        super(errorCode);
     }
 
     /**
-     * 构造业务规则异常
+     * 使用错误码枚举和自定义消息构造业务规则异常
      *
-     * @param errorCode 错误码
-     * @param message   错误消息
+     * @param errorCode 错误码枚举
+     * @param message   自定义错误消息
      */
-    public BusinessRuleException(String errorCode, String message) {
+    public BusinessRuleException(ErrorCode errorCode, String message) {
         super(errorCode, message);
     }
 
