@@ -1,7 +1,7 @@
 package com.tooolan.ddd.infra.common.security;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.tooolan.ddd.domain.common.context.UserContextBean;
+import com.tooolan.ddd.domain.common.context.UserBean;
 import com.tooolan.ddd.domain.session.service.SecurityContext;
 import com.tooolan.ddd.domain.user.model.User;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,8 @@ public class SecurityContextImpl implements SecurityContext {
     @Override
     public String registerLogin(User user) {
         StpUtil.login(user.getId());
-        StpUtil.getSession().set(UserContextBean.Fields.username, user.getUsername());
-        StpUtil.getSession().set(UserContextBean.Fields.nickname, user.getNickName());
+        StpUtil.getSession().set(UserBean.Fields.username, user.getUsername());
+        StpUtil.getSession().set(UserBean.Fields.nickname, user.getNickName());
         return StpUtil.getTokenValue();
     }
 

@@ -21,7 +21,8 @@ public class ContextHolder {
     /**
      * TTL 存储，自动传递到子线程
      */
-    private final TransmittableThreadLocal<UserContextBean> CONTEXT_HOLDER = new TransmittableThreadLocal<>();
+    private final TransmittableThreadLocal<UserBean> CONTEXT_HOLDER = new TransmittableThreadLocal<>();
+
 
     /**
      * 获取当前用户ID
@@ -30,7 +31,7 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public Integer getUserId() {
-        UserContextBean context = getContextInternal();
+        UserBean context = getContextInternal();
         if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getUserId())) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
@@ -44,7 +45,7 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public String getUsername() {
-        UserContextBean context = getContextInternal();
+        UserBean context = getContextInternal();
         if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getUsername())) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
@@ -58,7 +59,7 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public String getNickname() {
-        UserContextBean context = getContextInternal();
+        UserBean context = getContextInternal();
         if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getNickname())) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
@@ -72,7 +73,7 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public String getSessionId() {
-        UserContextBean context = getContextInternal();
+        UserBean context = getContextInternal();
         if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getSessionId())) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
@@ -85,8 +86,22 @@ public class ContextHolder {
      * @return true 已登录，false 未登录
      */
     public boolean isLoggedIn() {
-        UserContextBean context = getContextInternal();
+        UserBean context = getContextInternal();
         return ObjUtil.isNotNull(context);
+    }
+
+    /**
+     * 获取当前用户上下文
+     *
+     * @return 用户上下文
+     * @throws SessionException 如果未登录
+     */
+    public UserBean getUserBean() {
+        UserBean context = getContextInternal();
+        if (ObjUtil.isNull(context)) {
+            throw new SessionException(SessionErrorCode.NOT_LOGIN);
+        }
+        return context;
     }
 
     /**
@@ -94,7 +109,7 @@ public class ContextHolder {
      * 用于定时任务、消息队列消费者等非用户触发的场景
      */
     public void initSystemContext() {
-        UserContextBean systemContext = new UserContextBean(-1, "system", "系统任务", null);
+        UserBean systemContext = new UserBean(-1, "system", "系统任务", null);
         CONTEXT_HOLDER.set(systemContext);
     }
 
@@ -103,7 +118,7 @@ public class ContextHolder {
      *
      * @param context 用户上下文
      */
-    public void setContext(UserContextBean context) {
+    public void setContext(UserBean context) {
         CONTEXT_HOLDER.set(context);
     }
 
@@ -119,7 +134,7 @@ public class ContextHolder {
      *
      * @return 用户上下文，未登录返回 null
      */
-    private UserContextBean getContextInternal() {
+    private UserBean getContextInternal() {
         return CONTEXT_HOLDER.get();
     }
 

@@ -16,7 +16,7 @@ import lombok.experimental.FieldNameConstants;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldNameConstants
-public class UserContextBean {
+public class UserBean {
 
     /**
      * 用户ID

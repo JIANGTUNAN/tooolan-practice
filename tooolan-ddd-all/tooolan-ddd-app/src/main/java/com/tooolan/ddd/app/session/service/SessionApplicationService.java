@@ -1,13 +1,16 @@
 package com.tooolan.ddd.app.session.service;
 
+import cn.hutool.core.util.BooleanUtil;
 import com.tooolan.ddd.app.session.convert.SessionConvert;
 import com.tooolan.ddd.app.session.request.LoginBo;
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
+import com.tooolan.ddd.domain.common.context.UserBean;
 import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
 import com.tooolan.ddd.domain.session.event.UserLoginEvent;
+import com.tooolan.ddd.domain.session.service.SecurityContext;
 import com.tooolan.ddd.domain.session.service.SessionDomainService;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class SessionApplicationService {
 
     private final UserRepository userRepository;
+    private final SecurityContext securityContext;
     private final SessionDomainService sessionDomainService;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -55,7 +59,7 @@ public class SessionApplicationService {
      * 用户登出
      */
     public void logout() {
-        sessionDomainService.logout();
+        securityContext.unregisterLogin();
     }
 
     /**
@@ -64,25 +68,11 @@ public class SessionApplicationService {
      * @return 登录状态
      */
     public LoginStatusVo getStatus() {
-        if (!ContextHolder.isLoggedIn()) {
+        if (BooleanUtil.isFalse(ContextHolder.isLoggedIn())) {
             return SessionConvert.toNotLoggedInVo();
         }
-        Integer userId = ContextHolder.getUserId();
-        User user = userRepository.getUser(userId).orElse(null);
-        return SessionConvert.toStatusVo(user, ContextHolder.getSessionId());
-    }
-
-    /**
-     * 获取当前用户信息
-     *
-     * @return 当前用户信息
-     * @throws SessionException 未登录时抛出
-     */
-    public LoginStatusVo getCurrentUser() {
-        Integer userId = ContextHolder.getUserId();
-        User user = userRepository.getUser(userId)
-                .orElseThrow(() -> new SessionException(SessionErrorCode.LOGIN_FAILED));
-        return SessionConvert.toStatusVo(user, ContextHolder.getSessionId());
+        UserBean userBean = ContextHolder.getUserBean();
+        return SessionConvert.toStatusVo(userBean);
     }
 
 }

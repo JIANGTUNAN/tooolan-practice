@@ -2,6 +2,7 @@ package com.tooolan.ddd.app.session.convert;
 
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
+import com.tooolan.ddd.domain.common.context.UserBean;
 import com.tooolan.ddd.domain.user.model.User;
 
 /**
@@ -49,6 +50,22 @@ public class SessionConvert {
         vo.setUsername(user.getUsername());
         vo.setNickname(user.getNickName());
         vo.setSessionId(sessionId);
+        return vo;
+    }
+
+    /**
+     * 从用户上下文转换为登录状态 VO（无需查询数据库）
+     *
+     * @param userBean 用户上下文
+     * @return 登录状态 VO
+     */
+    public static LoginStatusVo toStatusVo(UserBean userBean) {
+        LoginStatusVo vo = new LoginStatusVo();
+        vo.setLoggedIn(true);
+        vo.setUserId(userBean.getUserId());
+        vo.setUsername(userBean.getUsername());
+        vo.setNickname(userBean.getNickname());
+        vo.setSessionId(userBean.getSessionId());
         return vo;
     }
 

@@ -5,7 +5,7 @@ import com.tooolan.ddd.api.common.config.SecurityAuthProperties;
 import com.tooolan.ddd.api.common.constant.ResponseCode;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
-import com.tooolan.ddd.domain.common.context.UserContextBean;
+import com.tooolan.ddd.domain.common.context.UserBean;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
 import com.tooolan.ddd.domain.session.service.SecurityContextProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -102,7 +102,7 @@ public class ContextInterceptor implements HandlerInterceptor {
     private void setContextIfLoggedIn() {
         try {
             if (securityContextProvider.isLogin()) {
-                UserContextBean context = new UserContextBean(
+                UserBean context = new UserBean(
                         securityContextProvider.getUserId(),
                         securityContextProvider.getUsername(),
                         securityContextProvider.getNickname(),

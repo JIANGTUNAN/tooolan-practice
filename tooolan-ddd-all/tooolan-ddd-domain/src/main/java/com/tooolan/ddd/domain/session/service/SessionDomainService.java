@@ -44,11 +44,4 @@ public class SessionDomainService {
         return securityContext.registerLogin(user);
     }
 
-    /**
-     * 执行登出
-     */
-    public void logout() {
-        securityContext.unregisterLogin();
-    }
-
 }

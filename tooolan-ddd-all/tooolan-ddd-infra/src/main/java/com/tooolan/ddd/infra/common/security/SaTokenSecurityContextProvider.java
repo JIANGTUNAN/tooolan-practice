@@ -1,7 +1,7 @@
 package com.tooolan.ddd.infra.common.security;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.tooolan.ddd.domain.common.context.UserContextBean;
+import com.tooolan.ddd.domain.common.context.UserBean;
 import com.tooolan.ddd.domain.session.service.SecurityContextProvider;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +42,7 @@ public class SaTokenSecurityContextProvider implements SecurityContextProvider {
      */
     @Override
     public String getUsername() {
-        return (String) StpUtil.getSession().get(UserContextBean.Fields.username);
+        return (String) StpUtil.getSession().get(UserBean.Fields.username);
     }
 
     /**
@@ -52,7 +52,7 @@ public class SaTokenSecurityContextProvider implements SecurityContextProvider {
      */
     @Override
     public String getNickname() {
-        return (String) StpUtil.getSession().get(UserContextBean.Fields.nickname);
+        return (String) StpUtil.getSession().get(UserBean.Fields.nickname);
     }
 
     /**
