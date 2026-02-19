@@ -33,4 +33,10 @@ public class SaveUserDTO extends SaveUserBo {
         return super.getEmail();
     }
 
+    @Override
+    @NotBlank(message = "密码不能为空")
+    public String getPassword() {
+        return super.getPassword();
+    }
+
 }

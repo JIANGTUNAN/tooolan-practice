@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ResultVo<Void>> handleDomainException(DomainException e, HttpServletRequest request) {
-        log.warn("领域层异常: {} - {}", request.getRequestURI(), e.getMessage());
+        log.error("领域层异常: {} - {}", request.getRequestURI(), e.getMessage(), e);
         ResultVo<Void> result = ResultVo.error(ResponseCode.BAD_REQUEST, e.getErrorCode(), e.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

@@ -11,6 +11,7 @@ import com.tooolan.ddd.domain.common.constant.FieldClearValues;
 import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.session.service.PasswordEncryptor;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
@@ -41,6 +42,7 @@ public class UserApplicationService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final UserDomainService userDomainService;
+    private final PasswordEncryptor passwordEncryptor;
     private final ApplicationEventPublisher eventPublisher;
 
 
@@ -79,6 +81,12 @@ public class UserApplicationService {
     public void saveUser(SaveUserBo bo) throws BusinessRuleException {
         // 转换为领域模型
         User user = UserConvert.toDomain(bo);
+
+        // 处理密码：RSA 解密 + BCrypt 哈希
+        String sha256Password = passwordEncryptor.decryptPassword(bo.getPassword());
+        String encodedPassword = passwordEncryptor.encodePassword(sha256Password);
+        user.setPassword(encodedPassword);
+
         Team team = null;
         // 应用层校验：如果指定了小组，校验小组是否存在
         if (ObjUtil.isNotNull(bo.getTeamId())) {

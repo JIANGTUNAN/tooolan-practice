@@ -1,13 +1,17 @@
+# 服务端口
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
 spring:
   application:
     name: tooolan-ddd-all
-  profiles:
-    active: dev
 
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://ddns.tooolan.com:53306/practice-ddd?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://192.168.31.5:3306/practice-ddd?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: practice-ddd
     password: 6SZfcbxZmPhbzBjj
     hikari:
@@ -39,15 +43,12 @@ mybatis-plus:
       logic-not-delete-value: false
   mapper-locations: classpath*:mapper/**/*Mapper.xml
 
-# 服务端口
-server:
-  port: 8081
-  servlet:
-    context-path: /
-
 # 日志配置
 logging:
-  config: classpath:logback-spring.xml
+  level:
+    root: INFO
+    com.tooolan.practice: DEBUG
+    com.baomidou.mybatisplus: DEBUG
 
 # 鉴权配置
 security:
@@ -56,10 +57,30 @@ security:
     enabled: true
     # 公开路径白名单（不需要登录）
     public-paths:
-      - /session/login
-      - /session/status
-      - /error
-      - /favicon.ico
+      - /api/session/login
+      - /api/session/status
+      - /api/session/public-key
+      - /api/error
+      - /api/favicon.ico
+    # RSA 密钥配置（纯 Base64，无 PEM 头尾）
+    rsa:
+      private-key: 'MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIt0C
+      XO/K1IK+6BR+iNM3XHHsJ94ysLAE1nyhxI1FRwzfzBx8p3ykGNsdZHkVyLjXPNR3+c0
+      2lvOJGCqLEBS6LihuF510a9ZDHQRZNBCUGgV2ka3r9TS7mmi9s08LiqWRgE0U4kIAwQ
+      3WUrKI+dL9zVoxgM22DlWbrWu+SVpn5rhAgMBAAECgYARm9SttuVDdiY7zN4m+Ee7XE
+      RjKUoruTvi+bWF3l9iBjv4jrWHWDT/OOzHlUD4ziN93fLF1m3+yv2GRIv95fouAJqaY
+      FWH5SCsQPxQAklURJkjEs4M7LzwOugt6h4wUzjysbUjNo8RU6it9d/VDkR8AhmVffq3
+      XlfFmHgCjToL2QJBAKPoaIqCd8MYFybROO6sGDn1XwjGGeuLIMoX4yYWG9/nUZ7An36
+      uz2K2xG9ik3GmB1RrGgMJ25XKpNnNFoqLlNsCQQDZzjfyh9JYVZ9AjyWcUa1JLROyGH
+      Nl9W8rpBddzH/u5p5Cxou1bxpeZmCzDQyN2/fHwFRa7CqydTYCbq6KtZ3zAkB932gRH
+      pqMV37ID5qSJ9U/BUFjQob7TU/0Ax4szIPBkiorKTATIHohC8yU4XXrrB4q5UkHllVs
+      lj+9B3PNF95LAkAg4AOJ0/5n3uSetfyTT7C8LtWeOBqS9SzGhYoRWmClCqIwqg9EX3S
+      3cvR9kiam8uC/gcQ5xRPcw9xXGaW2whsJAkBQpFGk/yLthNz0jwKqvgnF5cea4ER9p1
+      5wIML5m/KIb/4lu/8A6pFQi5V0QT7lg89C/0o4vhfz4T3PoKWcUHCP'
+      public-key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCLdAlzvytSCvugUf
+      ojTN1xx7CfeMrCwBNZ8ocSNRUcM38wcfKd8pBjbHWR5Fci41zzUd/nNNpbziRgqixAU
+      ui4obheddGvWQx0EWTQQlBoFdpGt6/U0u5povbNPC4qlkYBNFOJCAMEN1lKyiPnS/c1
+      aMYDNtg5Vm61rvklaZ+a4QIDAQAB'
 
 # Sa-Token 配置
 sa-token:

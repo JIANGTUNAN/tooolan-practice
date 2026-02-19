@@ -30,4 +30,14 @@ public class SessionException extends DomainException {
         super(errorCode, message);
     }
 
+    /**
+     * 使用会话错误码和原因异常构造异常
+     *
+     * @param errorCode 会话错误码
+     * @param cause     原因异常
+     */
+    public SessionException(SessionErrorCode errorCode, Throwable cause) {
+        super(errorCode, cause);
+    }
+
 }

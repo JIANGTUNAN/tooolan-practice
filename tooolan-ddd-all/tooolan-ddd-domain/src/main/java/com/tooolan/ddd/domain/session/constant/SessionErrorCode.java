@@ -28,7 +28,17 @@ public enum SessionErrorCode implements ErrorCode {
     /**
      * 用户未登录
      */
-    NOT_LOGIN("用户未登录，请先登录");
+    NOT_LOGIN("用户未登录，请先登录"),
+
+    /**
+     * 密码不能为空
+     */
+    PASSWORD_REQUIRED("密码不能为空"),
+
+    /**
+     * 密码解密失败
+     */
+    PASSWORD_DECRYPT_FAILED("密码格式异常，请重新输入");
 
     private final String message;
 

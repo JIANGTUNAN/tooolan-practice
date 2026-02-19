@@ -36,4 +36,10 @@ public class SaveUserBo {
      */
     private String remark;
 
+    /**
+     * 密码（必填）
+     * RSA 加密的 SHA256 摘要
+     */
+    private String password;
+
 }

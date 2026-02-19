@@ -1,7 +1,6 @@
 package com.tooolan.ddd.domain.session.service;
 
 import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.crypto.digest.BCrypt;
 import com.tooolan.ddd.domain.common.annotation.DomainService;
 import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
@@ -20,20 +19,24 @@ import lombok.RequiredArgsConstructor;
 public class SessionDomainService {
 
     private final SecurityContext securityContext;
+    private final PasswordEncryptor passwordEncryptor;
 
 
     /**
      * 执行登录
      * 校验密码并注册安全上下文
      *
-     * @param user     登录用户
-     * @param password 明文密码
+     * @param user              登录用户
+     * @param encryptedPassword RSA 加密的密码
      * @return token
      * @throws SessionException 密码错误时抛出
      */
-    public String login(User user, String password) {
+    public String login(User user, String encryptedPassword) {
+        // RSA 解密获取 SHA256 摘要
+        String sha256Password = passwordEncryptor.decryptPassword(encryptedPassword);
+
         // 校验密码
-        if (BooleanUtil.isFalse(this.verifyPassword(password, user.getPassword()))) {
+        if (BooleanUtil.isFalse(passwordEncryptor.verifyPassword(sha256Password, user.getPassword()))) {
             throw new SessionException(SessionErrorCode.PASSWORD_MISMATCH);
         }
 
@@ -46,27 +49,6 @@ public class SessionDomainService {
      */
     public void logout() {
         securityContext.unregisterLogin();
-    }
-
-    /**
-     * 加密密码（用于用户创建/修改密码）
-     *
-     * @param rawPassword 明文密码
-     * @return 加密后的密码
-     */
-    public String encodePassword(String rawPassword) {
-        return BCrypt.hashpw(rawPassword, BCrypt.gensalt());
-    }
-
-    /**
-     * 验证密码
-     *
-     * @param rawPassword     明文密码
-     * @param encodedPassword 加密后的密码
-     * @return true-密码正确，false-密码错误
-     */
-    public boolean verifyPassword(String rawPassword, String encodedPassword) {
-        return BCrypt.checkpw(rawPassword, encodedPassword);
     }
 
 }

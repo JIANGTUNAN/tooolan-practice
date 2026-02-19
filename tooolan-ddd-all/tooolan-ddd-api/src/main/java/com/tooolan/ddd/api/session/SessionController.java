@@ -6,12 +6,15 @@ import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
 import com.tooolan.ddd.app.session.service.SessionApplicationService;
 import com.tooolan.ddd.domain.common.exception.DomainException;
+import com.tooolan.ddd.domain.session.service.RsaKeyProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
- * 会话 控制器
+ * 系统用户会话 控制器
  * 提供登录、登出、登录状态查询等接口
  *
  * @author tooolan
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class SessionController {
 
     private final SessionApplicationService sessionApplicationService;
+    private final RsaKeyProvider rsaKeyProvider;
 
 
     /**
@@ -69,6 +73,17 @@ public class SessionController {
     public ResultVo<LoginStatusVo> getCurrentUser() {
         LoginStatusVo vo = sessionApplicationService.getCurrentUser();
         return ResultVo.success(vo);
+    }
+
+    /**
+     * 获取 RSA 公钥
+     * 前端使用此公钥加密密码
+     *
+     * @return 公钥响应
+     */
+    @GetMapping("/public-key")
+    public ResultVo<Map<String, String>> getPublicKey() {
+        return ResultVo.success(Map.of("publicKey", rsaKeyProvider.getPublicKey()));
     }
 
 }
