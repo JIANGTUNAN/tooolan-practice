@@ -2,6 +2,7 @@ package com.tooolan.ddd.app.session.convert;
 
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
+import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.common.context.UserBean;
 import com.tooolan.ddd.domain.user.model.User;
 
@@ -36,11 +37,11 @@ public class SessionConvert {
     /**
      * 转换为登录状态 VO（已登录状态）
      *
-     * @param user      用户领域模型
-     * @param sessionId 会话ID
+     * @param user  用户领域模型
+     * @param token 身份令牌
      * @return 登录状态 VO
      */
-    public static LoginStatusVo toStatusVo(User user, String sessionId) {
+    public static LoginStatusVo toStatusVo(User user, String token) {
         if (user == null) {
             return toNotLoggedInVo();
         }
@@ -49,7 +50,7 @@ public class SessionConvert {
         vo.setUserId(user.getId());
         vo.setUsername(user.getUsername());
         vo.setNickname(user.getNickName());
-        vo.setSessionId(sessionId);
+        vo.setToken(token);
         return vo;
     }
 
@@ -65,7 +66,7 @@ public class SessionConvert {
         vo.setUserId(userBean.getUserId());
         vo.setUsername(userBean.getUsername());
         vo.setNickname(userBean.getNickname());
-        vo.setSessionId(userBean.getSessionId());
+        vo.setToken(ContextHolder.getToken());
         return vo;
     }
 

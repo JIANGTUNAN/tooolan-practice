@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.tooolan.practice</groupId>
             <artifactId>tooolan-ddd-app</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- Spring Web: Web MVC 框架 -->

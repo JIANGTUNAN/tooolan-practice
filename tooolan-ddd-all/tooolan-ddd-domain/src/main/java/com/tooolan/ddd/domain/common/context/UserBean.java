@@ -33,9 +33,4 @@ public class UserBean {
      */
     private String nickname;
 
-    /**
-     * 会话ID（Token）
-     */
-    private String sessionId;
-
 }

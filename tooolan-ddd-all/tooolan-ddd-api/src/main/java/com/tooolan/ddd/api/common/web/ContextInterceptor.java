@@ -5,6 +5,7 @@ import com.tooolan.ddd.api.common.config.SecurityAuthProperties;
 import com.tooolan.ddd.api.common.constant.ResponseCode;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
+import com.tooolan.ddd.domain.common.context.HttpContext;
 import com.tooolan.ddd.domain.common.context.UserBean;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
 import com.tooolan.ddd.domain.session.service.SecurityContextProvider;
@@ -21,7 +22,7 @@ import java.io.IOException;
 
 /**
  * 上下文拦截器
- * 负责登录校验和用户上下文传递
+ * 负责登录校验和上下文传递
  *
  * @author tooolan
  * @since 2026年2月17日
@@ -48,31 +49,40 @@ public class ContextInterceptor implements HandlerInterceptor {
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         String requestPath = request.getRequestURI();
 
-        // 1. 公开路径：只传递上下文，不校验登录
+        // 1. 创建并设置 HttpContext（每个请求都有）
+        HttpContext httpContext = new HttpContext();
+        httpContext.setRequest(request);
+        httpContext.setResponse(response);
+        if (securityContextProvider.isLogin()) {
+            httpContext.setToken(securityContextProvider.getToken());
+        }
+        ContextHolder.setHttpContext(httpContext);
+
+        // 2. 公开路径：只传递上下文，不校验登录
         if (isPublicPath(requestPath)) {
-            setContextIfLoggedIn();
+            setUserContextIfLoggedIn();
             return true;
         }
 
-        // 2. 校验未启用：只传递上下文，放行所有请求
+        // 3. 校验未启用：只传递上下文，放行所有请求
         if (!authProperties.isEnabled()) {
-            setContextIfLoggedIn();
+            setUserContextIfLoggedIn();
             return true;
         }
 
-        // 3. 校验登录状态
+        // 4. 校验登录状态
         if (!securityContextProvider.isLogin()) {
             writeUnauthorizedResponse(response);
             return false;
         }
 
-        // 4. 已登录：传递上下文
-        setContextIfLoggedIn();
+        // 5. 已登录：传递上下文
+        setUserContextIfLoggedIn();
         return true;
     }
 
     /**
-     * 请求完成后清理：清除用户上下文
+     * 请求完成后清理：清除所有上下文
      *
      * @param request  HTTP 请求
      * @param response HTTP 响应
@@ -99,14 +109,13 @@ public class ContextInterceptor implements HandlerInterceptor {
     /**
      * 如果用户已登录，设置用户上下文
      */
-    private void setContextIfLoggedIn() {
+    private void setUserContextIfLoggedIn() {
         try {
             if (securityContextProvider.isLogin()) {
                 UserBean context = new UserBean(
                         securityContextProvider.getUserId(),
                         securityContextProvider.getUsername(),
-                        securityContextProvider.getNickname(),
-                        securityContextProvider.getToken()
+                        securityContextProvider.getNickname()
                 );
                 ContextHolder.setContext(context);
             }

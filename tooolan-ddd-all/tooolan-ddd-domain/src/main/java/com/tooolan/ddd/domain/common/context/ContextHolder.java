@@ -4,12 +4,14 @@ import cn.hutool.core.util.ObjUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
 
 /**
  * 上下文持有者
  * <p>
- * 提供全局访问入口，基于 TTL（TransmittableThreadLocal）存储用户上下文，
+ * 提供全局访问入口，基于 TTL（TransmittableThreadLocal）存储用户上下文和 HTTP 请求上下文，
  * 自动传递到子线程和线程池。
  *
  * @author tooolan
@@ -19,10 +21,17 @@ import lombok.experimental.UtilityClass;
 public class ContextHolder {
 
     /**
-     * TTL 存储，自动传递到子线程
+     * 用户上下文 TTL 存储，自动传递到子线程
      */
-    private final TransmittableThreadLocal<UserBean> CONTEXT_HOLDER = new TransmittableThreadLocal<>();
+    private final TransmittableThreadLocal<UserBean> USER_CONTEXT_HOLDER = new TransmittableThreadLocal<>();
 
+    /**
+     * HTTP 请求上下文 TTL 存储，自动传递到子线程
+     */
+    private final TransmittableThreadLocal<HttpContext> HTTP_CONTEXT_HOLDER = new TransmittableThreadLocal<>();
+
+
+    // ==================== 用户上下文相关方法 ====================
 
     /**
      * 获取当前用户ID
@@ -31,7 +40,7 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public Integer getUserId() {
-        UserBean context = getContextInternal();
+        UserBean context = getUserContextInternal();
         if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getUserId())) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
@@ -45,7 +54,7 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public String getUsername() {
-        UserBean context = getContextInternal();
+        UserBean context = getUserContextInternal();
         if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getUsername())) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
@@ -59,25 +68,11 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public String getNickname() {
-        UserBean context = getContextInternal();
+        UserBean context = getUserContextInternal();
         if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getNickname())) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
         return context.getNickname();
-    }
-
-    /**
-     * 获取当前会话ID
-     *
-     * @return 会话ID
-     * @throws SessionException 如果未登录
-     */
-    public String getSessionId() {
-        UserBean context = getContextInternal();
-        if (ObjUtil.isNull(context) || ObjUtil.isNull(context.getSessionId())) {
-            throw new SessionException(SessionErrorCode.NOT_LOGIN);
-        }
-        return context.getSessionId();
     }
 
     /**
@@ -86,7 +81,7 @@ public class ContextHolder {
      * @return true 已登录，false 未登录
      */
     public boolean isLoggedIn() {
-        UserBean context = getContextInternal();
+        UserBean context = getUserContextInternal();
         return ObjUtil.isNotNull(context);
     }
 
@@ -97,7 +92,7 @@ public class ContextHolder {
      * @throws SessionException 如果未登录
      */
     public UserBean getUserBean() {
-        UserBean context = getContextInternal();
+        UserBean context = getUserContextInternal();
         if (ObjUtil.isNull(context)) {
             throw new SessionException(SessionErrorCode.NOT_LOGIN);
         }
@@ -109,8 +104,8 @@ public class ContextHolder {
      * 用于定时任务、消息队列消费者等非用户触发的场景
      */
     public void initSystemContext() {
-        UserBean systemContext = new UserBean(-1, "system", "系统任务", null);
-        CONTEXT_HOLDER.set(systemContext);
+        UserBean systemContext = new UserBean(-1, "system", "系统任务");
+        USER_CONTEXT_HOLDER.set(systemContext);
     }
 
     /**
@@ -119,14 +114,67 @@ public class ContextHolder {
      * @param context 用户上下文
      */
     public void setContext(UserBean context) {
-        CONTEXT_HOLDER.set(context);
+        USER_CONTEXT_HOLDER.set(context);
+    }
+
+    // ==================== HTTP 上下文相关方法 ====================
+
+    /**
+     * 获取 HTTP 请求上下文
+     *
+     * @return HTTP 请求上下文，可能为 null（非 HTTP 请求场景）
+     */
+    public HttpContext getHttpContext() {
+        return HTTP_CONTEXT_HOLDER.get();
     }
 
     /**
-     * 清空当前用户上下文
+     * 设置 HTTP 请求上下文
+     *
+     * @param httpContext HTTP 请求上下文
+     */
+    public void setHttpContext(HttpContext httpContext) {
+        HTTP_CONTEXT_HOLDER.set(httpContext);
+    }
+
+    /**
+     * 获取 HTTP 请求对象
+     *
+     * @return HTTP 请求对象，可能为 null
+     */
+    public HttpServletRequest getRequest() {
+        HttpContext httpContext = HTTP_CONTEXT_HOLDER.get();
+        return ObjUtil.isNotNull(httpContext) ? httpContext.getRequest() : null;
+    }
+
+    /**
+     * 获取 HTTP 响应对象
+     *
+     * @return HTTP 响应对象，可能为 null
+     */
+    public HttpServletResponse getResponse() {
+        HttpContext httpContext = HTTP_CONTEXT_HOLDER.get();
+        return ObjUtil.isNotNull(httpContext) ? httpContext.getResponse() : null;
+    }
+
+    /**
+     * 获取身份令牌
+     *
+     * @return 身份令牌，未登录时返回 null
+     */
+    public String getToken() {
+        HttpContext httpContext = HTTP_CONTEXT_HOLDER.get();
+        return ObjUtil.isNotNull(httpContext) ? httpContext.getToken() : null;
+    }
+
+    // ==================== 通用方法 ====================
+
+    /**
+     * 清空所有上下文
      */
     public void clearContext() {
-        CONTEXT_HOLDER.remove();
+        USER_CONTEXT_HOLDER.remove();
+        HTTP_CONTEXT_HOLDER.remove();
     }
 
     /**
@@ -134,8 +182,8 @@ public class ContextHolder {
      *
      * @return 用户上下文，未登录返回 null
      */
-    private UserBean getContextInternal() {
-        return CONTEXT_HOLDER.get();
+    private UserBean getUserContextInternal() {
+        return USER_CONTEXT_HOLDER.get();
     }
 
 }

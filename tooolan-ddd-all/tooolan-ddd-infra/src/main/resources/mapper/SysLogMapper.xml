@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tooolan.ddd.infra.persistence.log.mapper.SysLogMapper">
+  <resultMap id="BaseResultMap" type="com.tooolan.ddd.infra.persistence.log.entity.SysLogEntity">
+    <!--@mbg.generated-->
+    <!--@Table sys_log-->
+    <id column="log_id" jdbcType="BIGINT" property="logId" />
+    <result column="trace_id" jdbcType="VARCHAR" property="traceId" />
+    <result column="module" jdbcType="VARCHAR" property="module" />
+    <result column="action" jdbcType="VARCHAR" property="action" />
+    <result column="target_type" jdbcType="VARCHAR" property="targetType" />
+    <result column="target_id" jdbcType="VARCHAR" property="targetId" />
+    <result column="target_name" jdbcType="VARCHAR" property="targetName" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+    <result column="operator_ip" jdbcType="VARCHAR" property="operatorIp" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    log_id, trace_id, `module`, `action`, target_type, target_id, target_name, content, 
+    operator_id, operator_name, operator_ip, created_at
+  </sql>
+</mapper>

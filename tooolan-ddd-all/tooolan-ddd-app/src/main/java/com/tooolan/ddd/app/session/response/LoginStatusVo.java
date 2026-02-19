@@ -32,8 +32,8 @@ public class LoginStatusVo {
     private String nickname;
 
     /**
-     * 会话ID
+     * 身份令牌
      */
-    private String sessionId;
+    private String token;
 
 }

@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.tooolan.practice</groupId>
             <artifactId>tooolan-ddd-domain</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- Spring Context: Spring容器核心框架 -->
@@ -38,6 +37,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Servlet API: HTTP 请求响应对象（provided 作用域，运行时由容器提供） -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

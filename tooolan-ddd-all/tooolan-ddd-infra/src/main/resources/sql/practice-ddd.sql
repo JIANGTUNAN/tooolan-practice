@@ -71,7 +71,7 @@ CREATE TABLE `sys_user`  (
   `team_id` int NOT NULL COMMENT '所属小组ID',
   `user_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户账户',
   `nick_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户昵称',
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码（BCrypt加密）',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户密码',
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '邮箱',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注信息',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除（0:正常,1:已删除）',
@@ -85,5 +85,33 @@ CREATE TABLE `sys_user`  (
   INDEX `idx_sys_user_email`(`email` ASC) USING BTREE,
   INDEX `idx_sys_user_deleted`(`deleted` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统用户信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sys_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_log`;
+CREATE TABLE `sys_log`
+(
+    `log_id`        bigint                                                        NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `module`        varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '业务模块（user/team/dept/session）',
+    `action`        varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '操作类型（create/update/delete/login/logout）',
+    `target_type`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '目标对象类型',
+    `target_id`     varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '目标对象ID',
+    `target_name`   varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '目标对象名称',
+    `content`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '操作详情（JSON格式，记录变更前后对比）',
+    `operator_id`   int                                                           NULL     DEFAULT NULL COMMENT '操作人ID',
+    `operator_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '操作人账户',
+    `operator_ip`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '操作人IP地址',
+    `created_at`    datetime                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`log_id`) USING BTREE,
+    INDEX `idx_sys_log_module` (`module` ASC) USING BTREE,
+    INDEX `idx_sys_log_action` (`action` ASC) USING BTREE,
+    INDEX `idx_sys_log_operator_id` (`operator_id` ASC) USING BTREE,
+    INDEX `idx_sys_log_created_at` (`created_at` ASC) USING BTREE,
+    INDEX `idx_sys_log_target` (`target_type` ASC, `target_id` ASC) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '系统操作日志'
+  ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -33,6 +33,19 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Slf4j: 日志门面 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- Servlet API: HTTP 请求响应对象（provided 作用域，运行时由容器提供） -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
