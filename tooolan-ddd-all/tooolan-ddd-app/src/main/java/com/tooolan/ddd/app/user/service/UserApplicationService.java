@@ -3,6 +3,7 @@ package com.tooolan.ddd.app.user.service;
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.user.convert.UserConvert;
+import com.tooolan.ddd.app.user.request.DeleteUserBo;
 import com.tooolan.ddd.app.user.request.PageUserBo;
 import com.tooolan.ddd.app.user.request.SaveUserBo;
 import com.tooolan.ddd.app.user.request.UpdateUserBo;
@@ -15,6 +16,7 @@ import com.tooolan.ddd.domain.session.service.PasswordEncryptor;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
+import com.tooolan.ddd.domain.user.event.UserDeletedEvent;
 import com.tooolan.ddd.domain.user.event.UserUpdatedEvent;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
@@ -133,6 +135,20 @@ public class UserApplicationService {
 
         // 6. 发布用户更新事件
         eventPublisher.publishEvent(UserUpdatedEvent.of(updatedUser));
+    }
+
+    /**
+     * 批量删除用户
+     *
+     * @param bo 删除用户 BO
+     * @throws BusinessRuleException 包含管理员ID、用户不存在或删除失败时抛出
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void deleteUsers(DeleteUserBo bo) throws BusinessRuleException {
+        // 调用领域服务执行删除
+        userDomainService.deleteUsers(bo.getUserIds());
+        // 发布用户删除事件
+        eventPublisher.publishEvent(UserDeletedEvent.of(bo.getUserIds()));
     }
 
     /**

@@ -15,6 +15,7 @@ import com.tooolan.ddd.infra.persistence.user.entity.SysUserEntity;
 import com.tooolan.ddd.infra.persistence.user.mapper.SysUserMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -122,6 +123,30 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
         }
         SysUserEntity entity = UserConverter.toEntity(user);
         return super.updateById(entity);
+    }
+
+    /**
+     * 批量逻辑删除用户
+     *
+     * @param userIds 用户ID列表
+     * @return 删除的记录数
+     */
+    @Override
+    public int deleteByIds(List<Integer> userIds) {
+        return super.removeByIds(userIds) ? userIds.size() : 0;
+    }
+
+    /**
+     * 根据用户ID列表统计有效用户数量
+     *
+     * @param userIds 用户ID列表
+     * @return 有效用户数量
+     */
+    @Override
+    public long countByIds(List<Integer> userIds) {
+        return super.lambdaQuery()
+                .in(SysUserEntity::getUserId, userIds)
+                .count();
     }
 
 }

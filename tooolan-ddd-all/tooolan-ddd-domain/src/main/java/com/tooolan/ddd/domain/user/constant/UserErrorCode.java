@@ -38,7 +38,17 @@ public enum UserErrorCode implements ErrorCode {
     /**
      * 更新用户失败
      */
-    UPDATE_FAILED("更新用户失败，请联系管理员");
+    UPDATE_FAILED("更新用户失败，请联系管理员"),
+
+    /**
+     * 删除用户失败
+     */
+    DELETE_FAILED("删除用户失败，请联系管理员"),
+
+    /**
+     * 不能删除管理员账户
+     */
+    CANNOT_DELETE_ADMIN("不能删除管理员账户");
 
     private final String message;
 

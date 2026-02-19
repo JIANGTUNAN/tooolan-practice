@@ -4,6 +4,7 @@ import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.param.PageUserParam;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -66,5 +67,21 @@ public interface UserRepository {
      * @return 是否更新成功
      */
     boolean updateById(User user);
+
+    /**
+     * 批量逻辑删除用户
+     *
+     * @param userIds 用户ID列表
+     * @return 删除的记录数
+     */
+    int deleteByIds(List<Integer> userIds);
+
+    /**
+     * 根据用户ID列表统计有效用户数量
+     *
+     * @param userIds 用户ID列表
+     * @return 有效用户数量
+     */
+    long countByIds(List<Integer> userIds);
 
 }

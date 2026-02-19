@@ -1,6 +1,7 @@
 package com.tooolan.ddd.api.user;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
+import com.tooolan.ddd.api.user.request.DeleteUserDTO;
 import com.tooolan.ddd.api.user.request.PageUserDTO;
 import com.tooolan.ddd.api.user.request.SaveUserDTO;
 import com.tooolan.ddd.api.user.request.UpdateUserDTO;
@@ -75,6 +76,18 @@ public class UserController {
     @PutMapping("/update")
     public ResultVo<Void> update(@Validated @RequestBody UpdateUserDTO dto) {
         userApplicationService.updateUser(dto);
+        return ResultVo.success();
+    }
+
+    /**
+     * 批量删除用户
+     *
+     * @param dto 用户ID列表
+     * @return 操作结果
+     */
+    @DeleteMapping("/delete")
+    public ResultVo<Void> delete(@Validated @RequestBody DeleteUserDTO dto) {
+        userApplicationService.deleteUsers(dto);
         return ResultVo.success();
     }
 
