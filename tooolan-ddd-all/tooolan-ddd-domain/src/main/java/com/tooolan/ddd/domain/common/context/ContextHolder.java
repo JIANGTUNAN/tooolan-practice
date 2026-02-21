@@ -4,8 +4,6 @@ import cn.hutool.core.util.ObjUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -138,26 +136,6 @@ public class ContextHolder {
     }
 
     /**
-     * 获取 HTTP 请求对象
-     *
-     * @return HTTP 请求对象，可能为 null
-     */
-    public HttpServletRequest getRequest() {
-        HttpContext httpContext = HTTP_CONTEXT_HOLDER.get();
-        return ObjUtil.isNotNull(httpContext) ? httpContext.getRequest() : null;
-    }
-
-    /**
-     * 获取 HTTP 响应对象
-     *
-     * @return HTTP 响应对象，可能为 null
-     */
-    public HttpServletResponse getResponse() {
-        HttpContext httpContext = HTTP_CONTEXT_HOLDER.get();
-        return ObjUtil.isNotNull(httpContext) ? httpContext.getResponse() : null;
-    }
-
-    /**
      * 获取身份令牌
      *
      * @return 身份令牌，未登录时返回 null
@@ -165,6 +143,16 @@ public class ContextHolder {
     public String getToken() {
         HttpContext httpContext = HTTP_CONTEXT_HOLDER.get();
         return ObjUtil.isNotNull(httpContext) ? httpContext.getToken() : null;
+    }
+
+    /**
+     * 获取客户端 IP 地址
+     *
+     * @return 客户端 IP，无 HTTP 上下文时返回 null
+     */
+    public String getClientIp() {
+        HttpContext httpContext = HTTP_CONTEXT_HOLDER.get();
+        return ObjUtil.isNotNull(httpContext) ? httpContext.getClientIp() : null;
     }
 
     // ==================== 通用方法 ====================

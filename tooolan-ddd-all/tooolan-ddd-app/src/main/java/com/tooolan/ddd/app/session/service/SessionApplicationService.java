@@ -50,7 +50,11 @@ public class SessionApplicationService {
         // 2. 调用领域服务执行登录（密码校验、注册上下文）
         String token = sessionDomainService.login(user, bo.getPassword());
 
-        // 3. 发布事件、返回结果
+        // 3. 初始化用户上下文（供后续事件监听等使用）
+        UserBean userBean = new UserBean(user.getId(), user.getUsername(), user.getNickName());
+        ContextHolder.setContext(userBean);
+
+        // 4. 发布事件、返回结果
         eventPublisher.publishEvent(UserLoginEvent.of(user, token));
         return SessionConvert.toLoginVo(token, user);
     }

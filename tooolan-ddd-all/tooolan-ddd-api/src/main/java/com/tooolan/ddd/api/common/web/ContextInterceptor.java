@@ -49,14 +49,9 @@ public class ContextInterceptor implements HandlerInterceptor {
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         String requestPath = request.getRequestURI();
 
-        // 1. 创建并设置 HttpContext（每个请求都有）
-        HttpContext httpContext = new HttpContext();
-        httpContext.setRequest(request);
-        httpContext.setResponse(response);
-        if (securityContextProvider.isLogin()) {
-            httpContext.setToken(securityContextProvider.getToken());
-        }
-        ContextHolder.setHttpContext(httpContext);
+        // 1. 创建并设置 HttpContext 快照（每个请求都有）
+        String token = securityContextProvider.isLogin() ? securityContextProvider.getToken() : null;
+        ContextHolder.setHttpContext(HttpContext.snapshot(request, token));
 
         // 2. 公开路径：只传递上下文，不校验登录
         if (isPublicPath(requestPath)) {

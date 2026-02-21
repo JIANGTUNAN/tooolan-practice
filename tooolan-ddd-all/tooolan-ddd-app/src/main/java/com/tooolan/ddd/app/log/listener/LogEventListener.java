@@ -1,19 +1,16 @@
 package com.tooolan.ddd.app.log.listener;
 
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.extra.servlet.JakartaServletUtil;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
-import com.tooolan.ddd.domain.common.context.HttpContext;
 import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.LogRepository;
 import com.tooolan.ddd.domain.session.event.UserLoginEvent;
 import com.tooolan.ddd.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.format.DateTimeFormatter;
 
@@ -34,12 +31,11 @@ public class LogEventListener {
 
     /**
      * 监听用户登录事件
-     * 使用 AFTER_COMMIT 确保只有登录事务提交成功后才记录日志
      *
      * @param event 用户登录事件
      */
     @Async("systemTaskExecutor")
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void handleUserLoginEvent(UserLoginEvent event) {
         try {
             User user = event.getUser();
@@ -48,16 +44,15 @@ public class LogEventListener {
             Log logModel = new Log();
             logModel.setModule("session");
             logModel.setAction("login");
-            logModel.setTargetType("User");
+            logModel.setTargetType(user.getClass().getTypeName());
             logModel.setTargetId(user.getId().toString());
             logModel.setTargetName(user.getUsername());
             logModel.setOperatorId(user.getId());
             logModel.setOperatorName(user.getUsername());
 
-            // 从 HttpContext 获取客户端 IP
-            HttpContext httpContext = ContextHolder.getHttpContext();
-            if (ObjUtil.isNotNull(httpContext) && ObjUtil.isNotNull(httpContext.getRequest())) {
-                String clientIp = JakartaServletUtil.getClientIP(httpContext.getRequest());
+            // 从上下文获取客户端 IP
+            String clientIp = ContextHolder.getClientIp();
+            if (ObjUtil.isNotNull(clientIp)) {
                 logModel.setOperatorIp(clientIp);
             }
 
