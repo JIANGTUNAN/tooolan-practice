@@ -1,5 +1,6 @@
 package com.tooolan.ddd.app.log.listener;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.LogRepository;
@@ -10,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import java.time.format.DateTimeFormatter;
 
 /**
  * 日志事件监听器
@@ -25,8 +24,8 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class LogEventListener {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final LogRepository logRepository;
+
 
     /**
      * 监听用户登录事件
@@ -55,7 +54,7 @@ public class LogEventListener {
             boolean saved = logRepository.save(logModel);
             if (saved) {
                 log.info("用户登录日志记录成功: userId={}, username={}, ip={}, time={}",
-                        user.getId(), user.getUsername(), logModel.getOperatorIp(), DATE_FORMATTER.format(logModel.getCreatedAt()));
+                        user.getId(), user.getUsername(), logModel.getOperatorIp(), LocalDateTimeUtil.formatNormal(logModel.getCreatedAt()));
             } else {
                 log.warn("用户登录日志记录失败: userId={}, username={}", user.getId(), user.getUsername());
             }
