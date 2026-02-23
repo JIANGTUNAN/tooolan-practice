@@ -73,13 +73,7 @@ public class LogConvert {
      */
     public static PageVo<LogVo> toPageVo(PageQueryResult<Log> result) {
         if (result == null) {
-            PageVo<LogVo> vo = new PageVo<>();
-            vo.setPageNum(0);
-            vo.setPageSize(0);
-            vo.setPages(0);
-            vo.setTotal(0);
-            vo.setRecords(List.of());
-            return vo;
+            return PageVo.empty();
         }
         List<LogVo> vos = result.getRecords().stream()
                 .map(LogConvert::toVo)

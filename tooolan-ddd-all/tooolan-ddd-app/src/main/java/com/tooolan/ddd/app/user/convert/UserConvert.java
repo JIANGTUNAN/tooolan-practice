@@ -122,13 +122,7 @@ public class UserConvert {
      */
     public static PageVo<UserVo> toPageVo(PageQueryResult<User> result) {
         if (result == null) {
-            PageVo<UserVo> vo = new PageVo<>();
-            vo.setPageNum(0);
-            vo.setPageSize(0);
-            vo.setPages(0);
-            vo.setTotal(0);
-            vo.setRecords(List.of());
-            return vo;
+            return PageVo.empty();
         }
         List<UserVo> vos = result.getRecords().stream()
                 .map(UserConvert::toVo)

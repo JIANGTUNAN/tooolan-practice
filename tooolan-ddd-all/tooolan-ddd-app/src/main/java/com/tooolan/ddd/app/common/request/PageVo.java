@@ -40,4 +40,22 @@ public class PageVo<T> {
      */
     private List<T> records;
 
+
+    /**
+     * 创建空的分页视图对象
+     * 用于分页查询结果为 null 时快速构建空响应
+     *
+     * @param <T> 数据类型
+     * @return 空的分页视图对象
+     */
+    public static <T> PageVo<T> empty() {
+        PageVo<T> vo = new PageVo<>();
+        vo.setPageNum(0);
+        vo.setPageSize(0);
+        vo.setPages(0);
+        vo.setTotal(0);
+        vo.setRecords(List.of());
+        return vo;
+    }
+
 }
