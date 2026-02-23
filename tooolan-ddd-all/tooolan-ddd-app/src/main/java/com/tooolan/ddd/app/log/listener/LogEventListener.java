@@ -1,6 +1,5 @@
 package com.tooolan.ddd.app.log.listener;
 
-import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.LogRepository;
@@ -49,12 +48,8 @@ public class LogEventListener {
             logModel.setTargetName(user.getUsername());
             logModel.setOperatorId(user.getId());
             logModel.setOperatorName(user.getUsername());
-
             // 从上下文获取客户端 IP
-            String clientIp = ContextHolder.getClientIp();
-            if (ObjUtil.isNotNull(clientIp)) {
-                logModel.setOperatorIp(clientIp);
-            }
+            logModel.setOperatorIp(ContextHolder.getClientIp());
 
             // 保存日志
             boolean saved = logRepository.save(logModel);
