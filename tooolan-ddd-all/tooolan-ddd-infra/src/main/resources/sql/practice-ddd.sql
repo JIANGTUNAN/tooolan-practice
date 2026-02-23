@@ -93,8 +93,8 @@ DROP TABLE IF EXISTS `sys_log`;
 CREATE TABLE `sys_log`
 (
     `log_id`        bigint                                                        NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `module`        varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '业务模块（user/team/dept/session）',
-    `action`        varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '操作类型（create/update/delete/login/logout）',
+    `op_module` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '业务模块（user/team/dept/session）',
+    `op_type`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作类型（create/update/delete/login/logout）',
     `target_type`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '目标对象类型',
     `target_id`     varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '目标对象ID',
     `target_name`   varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL COMMENT '目标对象名称',
@@ -104,8 +104,8 @@ CREATE TABLE `sys_log`
     `operator_ip`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL     DEFAULT NULL COMMENT '操作人IP地址',
     `created_at`    datetime                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`log_id`) USING BTREE,
-    INDEX `idx_sys_log_module` (`module` ASC) USING BTREE,
-    INDEX `idx_sys_log_action` (`action` ASC) USING BTREE,
+    INDEX `idx_sys_log_op_module` (`op_module` ASC) USING BTREE,
+    INDEX `idx_sys_log_op_type` (`op_type` ASC) USING BTREE,
     INDEX `idx_sys_log_operator_id` (`operator_id` ASC) USING BTREE,
     INDEX `idx_sys_log_created_at` (`created_at` ASC) USING BTREE,
     INDEX `idx_sys_log_target` (`target_type` ASC, `target_id` ASC) USING BTREE

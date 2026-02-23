@@ -29,14 +29,14 @@ public class SysLogEntity implements Serializable {
     /**
      * 业务模块（user/team/dept/session）
      */
-    @TableField(value = "`module`")
-    private String module;
+    @TableField(value = "op_module")
+    private String opModule;
 
     /**
      * 操作类型（create/update/delete/login/logout）
      */
-    @TableField(value = "`action`")
-    private String action;
+    @TableField(value = "op_type")
+    private String opType;
 
     /**
      * 目标对象类型

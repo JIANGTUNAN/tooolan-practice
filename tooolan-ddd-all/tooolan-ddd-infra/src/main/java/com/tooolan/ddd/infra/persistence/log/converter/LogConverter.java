@@ -24,8 +24,8 @@ public class LogConverter {
         }
         Log log = new Log();
         log.setId(entity.getLogId());
-        log.setModule(entity.getModule());
-        log.setAction(entity.getAction());
+        log.setOpModule(entity.getOpModule());
+        log.setOpType(entity.getOpType());
         log.setTargetType(entity.getTargetType());
         log.setTargetId(entity.getTargetId());
         log.setTargetName(entity.getTargetName());
@@ -49,8 +49,8 @@ public class LogConverter {
         }
         SysLogEntity entity = new SysLogEntity();
         entity.setLogId(log.getId());
-        entity.setModule(log.getModule());
-        entity.setAction(log.getAction());
+        entity.setOpModule(log.getOpModule());
+        entity.setOpType(log.getOpType());
         entity.setTargetType(log.getTargetType());
         entity.setTargetId(log.getTargetId());
         entity.setTargetName(log.getTargetName());

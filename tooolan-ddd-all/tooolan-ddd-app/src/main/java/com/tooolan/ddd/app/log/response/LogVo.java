@@ -22,12 +22,12 @@ public class LogVo {
     /**
      * 业务模块（user/team/dept/session）
      */
-    private String module;
+    private String opModule;
 
     /**
      * 操作类型（create/update/delete/login/logout）
      */
-    private String action;
+    private String opType;
 
     /**
      * 目标对象类型

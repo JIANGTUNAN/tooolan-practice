@@ -19,12 +19,12 @@ public class PageLogParam extends PageRequest {
     /**
      * 业务模块（精确查询）
      */
-    private String module;
+    private String opModule;
 
     /**
      * 操作类型（精确查询）
      */
-    private String action;
+    private String opType;
 
     /**
      * 目标对象类型（精确查询）

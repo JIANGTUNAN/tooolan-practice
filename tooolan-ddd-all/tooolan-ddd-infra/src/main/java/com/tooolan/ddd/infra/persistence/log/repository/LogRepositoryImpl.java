@@ -48,8 +48,8 @@ public class LogRepositoryImpl extends ServiceImpl<SysLogMapper, SysLogEntity> i
     @Override
     public PageQueryResult<Log> pageLog(PageLogParam pageLogParam) {
         IPage<Log> page = super.lambdaQuery()
-                .eq(StrUtil.isNotBlank(pageLogParam.getModule()), SysLogEntity::getModule, pageLogParam.getModule())
-                .eq(StrUtil.isNotBlank(pageLogParam.getAction()), SysLogEntity::getAction, pageLogParam.getAction())
+                .eq(StrUtil.isNotBlank(pageLogParam.getOpModule()), SysLogEntity::getOpModule, pageLogParam.getOpModule())
+                .eq(StrUtil.isNotBlank(pageLogParam.getOpType()), SysLogEntity::getOpType, pageLogParam.getOpType())
                 .eq(StrUtil.isNotBlank(pageLogParam.getTargetType()), SysLogEntity::getTargetType, pageLogParam.getTargetType())
                 .like(StrUtil.isNotBlank(pageLogParam.getOperatorName()), SysLogEntity::getOperatorName, pageLogParam.getOperatorName())
                 .ge(ObjUtil.isNotNull(pageLogParam.getCreatedAtStart()), SysLogEntity::getCreatedAt, pageLogParam.getCreatedAtStart())

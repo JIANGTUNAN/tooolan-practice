@@ -40,8 +40,8 @@ public class LogEventListener {
 
             // 构建日志领域模型
             Log logModel = new Log();
-            logModel.setModule("session");
-            logModel.setAction("login");
+            logModel.setOpModule("session");
+            logModel.setOpType("login");
             logModel.setTargetType(user.getClass().getTypeName());
             logModel.setTargetId(user.getId().toString());
             logModel.setTargetName(user.getUsername());

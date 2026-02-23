@@ -5,9 +5,8 @@
     <!--@mbg.generated-->
     <!--@Table sys_log-->
     <id column="log_id" jdbcType="BIGINT" property="logId" />
-    <result column="trace_id" jdbcType="VARCHAR" property="traceId" />
-    <result column="module" jdbcType="VARCHAR" property="module" />
-    <result column="action" jdbcType="VARCHAR" property="action" />
+    <result column="op_module" jdbcType="VARCHAR" property="opModule" />
+    <result column="op_type" jdbcType="VARCHAR" property="opType" />
     <result column="target_type" jdbcType="VARCHAR" property="targetType" />
     <result column="target_id" jdbcType="VARCHAR" property="targetId" />
     <result column="target_name" jdbcType="VARCHAR" property="targetName" />
@@ -19,7 +18,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    log_id, trace_id, `module`, `action`, target_type, target_id, target_name, content, 
+    log_id, op_module, op_type, target_type, target_id, target_name, content,
     operator_id, operator_name, operator_ip, created_at
   </sql>
 </mapper>

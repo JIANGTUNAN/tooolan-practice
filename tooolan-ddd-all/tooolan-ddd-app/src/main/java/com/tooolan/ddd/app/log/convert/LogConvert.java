@@ -30,8 +30,8 @@ public class LogConvert {
         }
         LogVo vo = new LogVo();
         vo.setId(log.getId());
-        vo.setModule(log.getModule());
-        vo.setAction(log.getAction());
+        vo.setOpModule(log.getOpModule());
+        vo.setOpType(log.getOpType());
         vo.setTargetType(log.getTargetType());
         vo.setTargetId(log.getTargetId());
         vo.setTargetName(log.getTargetName());
@@ -56,8 +56,8 @@ public class LogConvert {
         PageLogParam param = new PageLogParam();
         param.setPageNum(bo.getPageNum());
         param.setPageSize(bo.getPageSize());
-        param.setModule(bo.getModule());
-        param.setAction(bo.getAction());
+        param.setOpModule(bo.getOpModule());
+        param.setOpType(bo.getOpType());
         param.setTargetType(bo.getTargetType());
         param.setOperatorName(bo.getOperatorName());
         param.setCreatedAtStart(bo.getCreatedAtStart());
