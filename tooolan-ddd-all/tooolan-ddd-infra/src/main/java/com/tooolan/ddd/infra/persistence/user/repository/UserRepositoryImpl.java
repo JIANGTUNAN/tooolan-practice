@@ -149,4 +149,23 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
                 .count();
     }
 
+    /**
+     * 查询用户选项列表
+     * 用于下拉框选择，支持按昵称模糊查询
+     *
+     * @param nickName 昵称（可选，模糊匹配）
+     * @return 用户列表（仅包含 ID 和昵称）
+     */
+    @Override
+    public List<User> listUserOptions(String nickName) {
+        return super.lambdaQuery()
+                .select(SysUserEntity::getUserId, SysUserEntity::getNickName)
+                .like(StrUtil.isNotBlank(nickName), SysUserEntity::getNickName, nickName)
+                .orderByDesc(SysUserEntity::getCreatedAt)
+                .list()
+                .stream()
+                .map(UserConverter::toDomain)
+                .toList();
+    }
+
 }

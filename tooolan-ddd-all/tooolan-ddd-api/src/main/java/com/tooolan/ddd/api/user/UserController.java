@@ -6,6 +6,7 @@ import com.tooolan.ddd.api.user.request.PageUserDTO;
 import com.tooolan.ddd.api.user.request.SaveUserDTO;
 import com.tooolan.ddd.api.user.request.UpdateUserDTO;
 import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.app.user.service.UserApplicationService;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
@@ -28,6 +29,18 @@ public class UserController {
 
     private final UserApplicationService userApplicationService;
 
+
+    /**
+     * 获取用户选项列表
+     *
+     * @param nickName 昵称（可选，模糊匹配）
+     * @return 用户选项列表
+     */
+    @GetMapping("/options")
+    public ResultVo<OptionVo<Integer>> options(@RequestParam(required = false) String nickName) {
+        OptionVo<Integer> options = userApplicationService.getUserOptions(nickName);
+        return ResultVo.success(options);
+    }
 
     /**
      * 根据ID查询用户信息

@@ -1,7 +1,9 @@
 package com.tooolan.ddd.app.user.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.user.convert.UserConvert;
 import com.tooolan.ddd.app.user.request.DeleteUserBo;
 import com.tooolan.ddd.app.user.request.PageUserBo;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -57,6 +60,24 @@ public class UserApplicationService {
     public Optional<UserVo> getUserById(Integer userId) {
         Optional<User> user = userRepository.getUser(userId);
         return user.map(UserConvert::toVo);
+    }
+
+    /**
+     * 获取用户选项列表
+     * 用于下拉框选择，支持按昵称模糊查询
+     *
+     * @param nickName 昵称（可选，模糊匹配）
+     * @return 用户选项列表
+     */
+    public OptionVo<Integer> getUserOptions(String nickName) {
+        List<User> users = userRepository.listUserOptions(nickName);
+        OptionVo<Integer> optionVo = new OptionVo<>();
+        if (CollUtil.isNotEmpty(users)) {
+            for (User user : users) {
+                optionVo.addOption(user.getId(), user.getNickName());
+            }
+        }
+        return optionVo;
     }
 
     /**
