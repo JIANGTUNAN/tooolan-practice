@@ -44,7 +44,7 @@ public class LogEventListener {
     public void handleUserLoginEvent(UserLoginEvent event) {
         try {
             User user = event.getUser();
-            logApplicationService.logUserLogin(user);
+            logApplicationService.logUserLogin(user, event.getBusinessData());
             log.info("用户登录日志记录成功: userId={}, username={}, operator={}, ip={}",
                     user.getId(), user.getUsername(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -63,7 +63,7 @@ public class LogEventListener {
     public void handleUserCreatedEvent(UserCreatedEvent event) {
         try {
             User user = event.getUser();
-            logApplicationService.logUserCreated(user);
+            logApplicationService.logUserCreated(user, event.getBusinessData());
             log.info("用户创建日志记录成功: userId={}, username={}, operator={}, ip={}",
                     user.getId(), user.getUsername(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -82,7 +82,7 @@ public class LogEventListener {
     public void handleUserUpdatedEvent(UserUpdatedEvent event) {
         try {
             User user = event.getUser();
-            logApplicationService.logUserUpdated(user);
+            logApplicationService.logUserUpdated(user, event.getBusinessData());
             log.info("用户更新日志记录成功: userId={}, username={}, operator={}, ip={}",
                     user.getId(), user.getUsername(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -101,7 +101,7 @@ public class LogEventListener {
     public void handleUserDeletedEvent(UserDeletedEvent event) {
         try {
             List<Integer> userIds = event.getUserIds();
-            logApplicationService.logUserDeleted(userIds);
+            logApplicationService.logUserDeleted(userIds, event.getBusinessData());
             log.info("用户删除日志记录成功: userIds={}, operator={}, ip={}",
                     userIds, ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {

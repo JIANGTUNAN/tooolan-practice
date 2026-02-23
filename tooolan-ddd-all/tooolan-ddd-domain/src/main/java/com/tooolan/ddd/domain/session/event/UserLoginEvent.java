@@ -26,8 +26,9 @@ public class UserLoginEvent {
     private final User user;
 
     /**
-     * 登录令牌
+     * 业务数据（携带登录请求参数）
+     * 用于日志记录，在 app 层进行 JSON 序列化
      */
-    private final String token;
+    private final Object businessData;
 
 }

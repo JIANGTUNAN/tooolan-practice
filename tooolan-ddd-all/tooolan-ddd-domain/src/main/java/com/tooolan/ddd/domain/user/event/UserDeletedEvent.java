@@ -26,4 +26,10 @@ public class UserDeletedEvent {
      */
     private final List<Integer> userIds;
 
+    /**
+     * 业务数据（携带删除用户的请求参数）
+     * 用于日志记录，在 app 层进行 JSON 序列化
+     */
+    private final Object businessData;
+
 }

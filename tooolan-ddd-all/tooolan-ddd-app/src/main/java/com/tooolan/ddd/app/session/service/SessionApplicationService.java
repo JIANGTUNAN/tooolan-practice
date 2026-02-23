@@ -54,8 +54,8 @@ public class SessionApplicationService {
         UserBean userBean = new UserBean(user.getId(), user.getUsername(), user.getNickName());
         ContextHolder.setContext(userBean);
 
-        // 4. 发布事件、返回结果
-        eventPublisher.publishEvent(UserLoginEvent.of(user, token));
+        // 4. 发布事件、返回结果（携带业务数据用于日志记录）
+        eventPublisher.publishEvent(UserLoginEvent.of(user, bo));
         return SessionConvert.toLoginVo(token, user);
     }
 

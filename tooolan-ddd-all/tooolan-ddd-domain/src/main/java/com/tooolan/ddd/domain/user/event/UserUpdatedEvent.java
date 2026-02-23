@@ -25,4 +25,10 @@ public class UserUpdatedEvent {
      */
     private final User user;
 
+    /**
+     * 业务数据（携带更新用户的请求参数）
+     * 用于日志记录，在 app 层进行 JSON 序列化
+     */
+    private final Object businessData;
+
 }

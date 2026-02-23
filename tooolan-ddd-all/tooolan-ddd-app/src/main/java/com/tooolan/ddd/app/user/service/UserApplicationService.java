@@ -97,8 +97,8 @@ public class UserApplicationService {
         }
         // 调用领域服务保存用户（主键会通过引用回填）
         userDomainService.saveUser(user, team);
-        // 发布用户创建事件
-        eventPublisher.publishEvent(UserCreatedEvent.of(user));
+        // 发布用户创建事件（携带业务数据用于日志记录）
+        eventPublisher.publishEvent(UserCreatedEvent.of(user, bo));
     }
 
     /**
@@ -133,8 +133,8 @@ public class UserApplicationService {
         // 5. 调用领域服务
         userDomainService.updateUser(existingUser, updatedUser, newTeam);
 
-        // 6. 发布用户更新事件
-        eventPublisher.publishEvent(UserUpdatedEvent.of(updatedUser));
+        // 6. 发布用户更新事件（携带业务数据用于日志记录）
+        eventPublisher.publishEvent(UserUpdatedEvent.of(updatedUser, bo));
     }
 
     /**
@@ -147,8 +147,8 @@ public class UserApplicationService {
     public void deleteUsers(DeleteUserBo bo) throws BusinessRuleException {
         // 调用领域服务执行删除
         userDomainService.deleteUsers(bo.getUserIds());
-        // 发布用户删除事件
-        eventPublisher.publishEvent(UserDeletedEvent.of(bo.getUserIds()));
+        // 发布用户删除事件（携带业务数据用于日志记录）
+        eventPublisher.publishEvent(UserDeletedEvent.of(bo.getUserIds(), bo));
     }
 
     /**
