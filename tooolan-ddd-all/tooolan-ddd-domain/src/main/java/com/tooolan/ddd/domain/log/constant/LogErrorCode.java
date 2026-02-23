@@ -18,7 +18,12 @@ public enum LogErrorCode implements ErrorCode {
     /**
      * 日志不存在
      */
-    NOT_FOUND("日志不存在");
+    NOT_FOUND("日志不存在"),
+
+    /**
+     * 日志保存失败
+     */
+    SAVE_FAILED("日志保存失败");
 
     private final String message;
 
