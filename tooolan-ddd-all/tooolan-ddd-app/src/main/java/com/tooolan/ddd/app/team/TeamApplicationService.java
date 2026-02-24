@@ -1,6 +1,7 @@
 package com.tooolan.ddd.app.team;
 
 import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.team.convert.TeamConvert;
 import com.tooolan.ddd.app.team.request.PageTeamBo;
 import com.tooolan.ddd.app.team.response.TeamVo;
@@ -12,6 +13,7 @@ import com.tooolan.ddd.domain.team.service.TeamDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,6 +30,17 @@ public class TeamApplicationService {
     private final TeamRepository teamRepository;
     private final TeamDomainService teamDomainService;
 
+
+    /**
+     * 获取小组选项列表
+     *
+     * @param teamName 小组名称（可选，模糊匹配）
+     * @return 小组选项列表
+     */
+    public OptionVo<Integer> getTeamOptions(String teamName) {
+        List<Team> teams = teamRepository.listTeamOptions(teamName);
+        return OptionVo.from(teams, Team::getId, Team::getTeamName);
+    }
 
     /**
      * 根据小组ID获取小组信息

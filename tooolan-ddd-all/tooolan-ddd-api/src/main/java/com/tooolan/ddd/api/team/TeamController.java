@@ -3,16 +3,17 @@ package com.tooolan.ddd.api.team;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.team.request.PageTeamDTO;
 import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.team.TeamApplicationService;
 import com.tooolan.ddd.app.team.response.TeamVo;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
 import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
+import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 /**
  * 小组管理控制器
@@ -28,6 +29,34 @@ public class TeamController {
 
     private final TeamApplicationService teamApplicationService;
 
+
+    /**
+     * 获取小组状态枚举选项列表
+     * 用于下拉框选择，支持按描述模糊筛选
+     *
+     * @param desc 状态描述（可选，用于模糊筛选）
+     * @return 状态选项列表
+     */
+    @GetMapping("/optionsStatus")
+    public ResultVo<OptionVo<Integer>> optionsStatus(@RequestParam(required = false) String desc) {
+        OptionVo<Integer> options = new OptionVo<>();
+        Arrays.stream(TeamStatusEnum.values())
+                .filter(status -> desc == null || status.getDesc().contains(desc))
+                .forEach(status -> options.addOption(status.getValue(), status.getDesc()));
+        return ResultVo.success(options);
+    }
+
+    /**
+     * 获取小组选项列表
+     *
+     * @param teamName 小组名称（可选，模糊匹配）
+     * @return 小组选项列表
+     */
+    @GetMapping("/options")
+    public ResultVo<OptionVo<Integer>> options(@RequestParam(required = false) String teamName) {
+        OptionVo<Integer> options = teamApplicationService.getTeamOptions(teamName);
+        return ResultVo.success(options);
+    }
 
     /**
      * 根据ID查询小组信息

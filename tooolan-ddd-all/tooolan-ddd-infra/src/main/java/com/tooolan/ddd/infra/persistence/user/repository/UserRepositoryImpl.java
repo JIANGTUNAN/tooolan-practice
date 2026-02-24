@@ -42,8 +42,6 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
 
     /**
      * 分页查询用户信息
-     * 支持按用户账户、昵称、邮箱、备注进行模糊查询
-     * 支持按创建时间范围进行筛选
      *
      * @param pageUserParam 分页查询参数
      * @return 分页查询结果

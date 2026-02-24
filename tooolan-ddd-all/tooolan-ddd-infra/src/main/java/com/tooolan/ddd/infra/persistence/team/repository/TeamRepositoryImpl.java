@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;
@@ -16,6 +17,7 @@ import com.tooolan.ddd.infra.persistence.team.entity.SysTeamEntity;
 import com.tooolan.ddd.infra.persistence.team.mapper.SysTeamMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,6 +62,27 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
         PageQueryResult<Team> pageQueryResult = new PageQueryResult<>();
         BeanUtil.copyProperties(page, pageQueryResult);
         return pageQueryResult;
+    }
+
+    /**
+     * 查询小组选项列表
+     * 用于下拉框选择，支持按小组名称模糊查询
+     * 只返回正常状态的小组
+     *
+     * @param teamName 小组名称（可选，模糊匹配）
+     * @return 小组列表（仅包含 ID 和名称）
+     */
+    @Override
+    public List<Team> listTeamOptions(String teamName) {
+        return super.lambdaQuery()
+                .select(SysTeamEntity::getTeamId, SysTeamEntity::getTeamName)
+                .like(StrUtil.isNotBlank(teamName), SysTeamEntity::getTeamName, teamName)
+                .eq(SysTeamEntity::getStatus, TeamStatusEnum.NORMAL.getValue())
+                .orderByDesc(SysTeamEntity::getCreatedAt)
+                .list()
+                .stream()
+                .map(TeamConverter::toDomain)
+                .toList();
     }
 
 }
