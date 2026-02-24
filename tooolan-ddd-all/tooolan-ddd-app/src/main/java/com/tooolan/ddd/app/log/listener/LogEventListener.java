@@ -5,6 +5,7 @@ import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.session.event.UserLoginEvent;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
 import com.tooolan.ddd.domain.user.event.UserDeletedEvent;
+import com.tooolan.ddd.domain.user.event.UserPasswordChangedEvent;
 import com.tooolan.ddd.domain.user.event.UserUpdatedEvent;
 import com.tooolan.ddd.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
@@ -106,6 +107,25 @@ public class LogEventListener {
                     userIds, ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
             log.error("处理用户删除事件失败", e);
+        }
+    }
+
+    /**
+     * 监听用户密码修改事件
+     *
+     * @param event 用户密码修改事件
+     */
+    @Async("systemTaskExecutor")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleUserPasswordChangedEvent(UserPasswordChangedEvent event) {
+        try {
+            User user = event.getUser();
+            logApplicationService.logUserPasswordChanged(user);
+            log.info("用户密码修改日志记录成功: userId={}, username={}, operator={}, ip={}",
+                    user.getId(), user.getUsername(),
+                    ContextHolder.getUsername(), ContextHolder.getClientIp());
+        } catch (Exception e) {
+            log.error("处理用户密码修改事件失败", e);
         }
     }
 

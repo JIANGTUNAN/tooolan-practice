@@ -3,9 +3,12 @@ package com.tooolan.ddd.domain.user.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.tooolan.ddd.domain.common.annotation.DomainService;
 import com.tooolan.ddd.domain.common.constant.MiscConstants;
 import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
+import com.tooolan.ddd.domain.common.exception.SessionException;
+import com.tooolan.ddd.domain.session.service.PasswordEncryptor;
 import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
@@ -29,20 +32,22 @@ public class UserDomainService {
 
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+    private final PasswordEncryptor passwordEncryptor;
 
 
     /**
      * 保存用户
      * 保存成功后会将生成的 ID 回填到 user 对象中
      *
-     * @param user 用户领域模型
+     * @param user 用户领域模型（password 字段应为 RSA 加密的密码）
      * @param team 用户所属小组
      * @throws BusinessRuleException 用户名已存在时抛出
      * @throws BusinessRuleException 小组不可用时抛出
      * @throws BusinessRuleException 小组已满员时抛出
      * @throws BusinessRuleException 保存失败时抛出
+     * @throws SessionException      密码解密失败时抛出
      */
-    public void saveUser(User user, Team team) throws BusinessRuleException {
+    public void saveUser(User user, Team team) throws BusinessRuleException, SessionException {
         // 校验用户名唯一性
         userRepository.getUserByUsername(user.getUsername())
                 .ifPresent(u -> {
@@ -61,6 +66,12 @@ public class UserDomainService {
                 throw new BusinessRuleException(TeamErrorCode.FULL);
             }
         }
+
+        // 密码处理：从 User 实体获取加密密码，解密后哈希
+        String encryptedPassword = user.getPassword();
+        String sha256Password = passwordEncryptor.decryptPassword(encryptedPassword);
+        String encodedPassword = passwordEncryptor.encodePassword(sha256Password);
+        user.setPassword(encodedPassword);
 
         // 保存用户，失败时抛出异常触发事务回滚
         boolean saved = userRepository.save(user);
@@ -108,6 +119,42 @@ public class UserDomainService {
         boolean updated = userRepository.updateById(updatedUser);
         if (BooleanUtil.isFalse(updated)) {
             throw new BusinessRuleException(UserErrorCode.UPDATE_FAILED);
+        }
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @param user                 用户领域模型
+     * @param encryptedOldPassword RSA 加密的原始密码
+     * @param encryptedNewPassword RSA 加密的新密码
+     * @throws BusinessRuleException 原密码错误时抛出
+     * @throws BusinessRuleException 新旧密码相同时抛出
+     * @throws SessionException      密码解密失败时抛出
+     */
+    public void changePassword(User user, String encryptedOldPassword, String encryptedNewPassword)
+            throws BusinessRuleException, SessionException {
+
+        // 1. 解密并验证原始密码
+        String oldSha256Password = passwordEncryptor.decryptPassword(encryptedOldPassword);
+        boolean oldPasswordMatch = passwordEncryptor.verifyPassword(oldSha256Password, user.getPassword());
+        if (BooleanUtil.isFalse(oldPasswordMatch)) {
+            throw new BusinessRuleException(UserErrorCode.OLD_PASSWORD_MISMATCH);
+        }
+
+        // 2. 解密新密码并校验是否与原密码相同
+        String newSha256Password = passwordEncryptor.decryptPassword(encryptedNewPassword);
+        if (StrUtil.equals(oldSha256Password, newSha256Password)) {
+            throw new BusinessRuleException(UserErrorCode.PASSWORD_SAME_AS_OLD);
+        }
+
+        // 3. 加密新密码并保存
+        String encodedNewPassword = passwordEncryptor.encodePassword(newSha256Password);
+        user.setPassword(encodedNewPassword);
+
+        boolean updated = userRepository.updateById(user);
+        if (BooleanUtil.isFalse(updated)) {
+            throw new BusinessRuleException(UserErrorCode.PASSWORD_CHANGE_FAILED);
         }
     }
 

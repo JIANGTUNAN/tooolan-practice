@@ -4,20 +4,18 @@ import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.user.convert.UserConvert;
-import com.tooolan.ddd.app.user.request.DeleteUserBo;
-import com.tooolan.ddd.app.user.request.PageUserBo;
-import com.tooolan.ddd.app.user.request.SaveUserBo;
-import com.tooolan.ddd.app.user.request.UpdateUserBo;
+import com.tooolan.ddd.app.user.request.*;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.domain.common.constant.FieldClearValues;
 import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
+import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
-import com.tooolan.ddd.domain.session.service.PasswordEncryptor;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
 import com.tooolan.ddd.domain.user.event.UserDeletedEvent;
+import com.tooolan.ddd.domain.user.event.UserPasswordChangedEvent;
 import com.tooolan.ddd.domain.user.event.UserUpdatedEvent;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
@@ -46,7 +44,6 @@ public class UserApplicationService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final UserDomainService userDomainService;
-    private final PasswordEncryptor passwordEncryptor;
     private final ApplicationEventPublisher eventPublisher;
 
 
@@ -92,17 +89,12 @@ public class UserApplicationService {
      * @param bo 保存用户 BO
      * @throws NotFoundException     指定的小组不存在时抛出
      * @throws BusinessRuleException 用户名已存在或保存失败时抛出
+     * @throws SessionException      密码解密失败时抛出
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void saveUser(SaveUserBo bo) throws BusinessRuleException {
+    public void saveUser(SaveUserBo bo) throws BusinessRuleException, SessionException {
         // 转换为领域模型
         User user = UserConvert.toDomain(bo);
-
-        // 处理密码：RSA 解密 + BCrypt 哈希
-        String sha256Password = passwordEncryptor.decryptPassword(bo.getPassword());
-        String encodedPassword = passwordEncryptor.encodePassword(sha256Password);
-        user.setPassword(encodedPassword);
-
         Team team = null;
         // 应用层校验：如果指定了小组，校验小组是否存在
         if (ObjUtil.isNotNull(bo.getTeamId())) {
@@ -149,6 +141,28 @@ public class UserApplicationService {
 
         // 6. 发布用户更新事件（携带业务数据用于日志记录）
         eventPublisher.publishEvent(UserUpdatedEvent.of(updatedUser, bo));
+    }
+
+    /**
+     * 修改用户密码
+     * 包含用户存在性校验、密码验证和事件发布
+     *
+     * @param bo 修改密码 BO
+     * @throws NotFoundException     用户不存在时抛出
+     * @throws BusinessRuleException 原密码错误、新旧密码相同或修改失败时抛出
+     * @throws SessionException      密码解密失败时抛出
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void changePassword(ChangePasswordBo bo) throws BusinessRuleException, SessionException {
+        // 1. 查询用户
+        User user = userRepository.getUser(bo.getUserId())
+                .orElseThrow(() -> new NotFoundException("用户不存在"));
+
+        // 2. 调用领域服务修改密码（包含原密码验证、新旧密码相同校验）
+        userDomainService.changePassword(user, bo.getOldPassword(), bo.getNewPassword());
+
+        // 3. 发布用户密码修改事件（不携带业务数据，因为只包含敏感密码字段）
+        eventPublisher.publishEvent(UserPasswordChangedEvent.of(user));
     }
 
     /**

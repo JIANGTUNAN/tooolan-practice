@@ -73,7 +73,7 @@ public class LogApplicationService {
      */
     public void logUserCreated(User user, Object businessData) {
         Log logModel = this.buildLog(LogOpModule.USER, LogOpType.CREATE, user);
-        logModel.setContent(toLogContent(businessData));
+        logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);
     }
 
@@ -85,7 +85,7 @@ public class LogApplicationService {
      */
     public void logUserUpdated(User user, Object businessData) {
         Log logModel = this.buildLog(LogOpModule.USER, LogOpType.UPDATE, user);
-        logModel.setContent(toLogContent(businessData));
+        logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);
     }
 
@@ -99,7 +99,7 @@ public class LogApplicationService {
         Log logModel = this.buildLog(LogOpModule.USER, LogOpType.DELETE, null);
         logModel.setTargetId(userIds.toString());
         logModel.setTargetName("批量删除用户");
-        logModel.setContent(toLogContent(businessData));
+        logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);
     }
 
@@ -111,7 +111,19 @@ public class LogApplicationService {
      */
     public void logUserLogin(User user, Object businessData) {
         Log logModel = this.buildLog(LogOpModule.SESSION, LogOpType.LOGIN, user);
-        logModel.setContent(toLogContent(businessData));
+        logModel.setContent(this.toLogContent(businessData));
+        logDomainService.saveLog(logModel);
+    }
+
+    /**
+     * 记录用户密码修改日志
+     * 不记录请求体数据，因为只包含敏感密码字段
+     *
+     * @param user 修改密码的用户
+     */
+    public void logUserPasswordChanged(User user) {
+        Log logModel = this.buildLog(LogOpModule.USER, LogOpType.UPDATE, user);
+        // 不设置 content，因为请求体只包含敏感密码字段
         logDomainService.saveLog(logModel);
     }
 

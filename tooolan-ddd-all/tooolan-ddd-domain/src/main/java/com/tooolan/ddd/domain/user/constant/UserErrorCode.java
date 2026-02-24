@@ -48,7 +48,22 @@ public enum UserErrorCode implements ErrorCode {
     /**
      * 不能删除管理员账户
      */
-    CANNOT_DELETE_ADMIN("不能删除管理员账户");
+    CANNOT_DELETE_ADMIN("不能删除管理员账户"),
+
+    /**
+     * 原密码错误
+     */
+    OLD_PASSWORD_MISMATCH("原密码错误，请重新输入"),
+
+    /**
+     * 新旧密码相同
+     */
+    PASSWORD_SAME_AS_OLD("新密码不能与原密码相同"),
+
+    /**
+     * 修改密码失败
+     */
+    PASSWORD_CHANGE_FAILED("修改密码失败，请联系管理员");
 
     private final String message;
 

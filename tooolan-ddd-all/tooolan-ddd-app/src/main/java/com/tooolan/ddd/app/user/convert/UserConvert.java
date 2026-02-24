@@ -32,6 +32,7 @@ public class UserConvert {
         User user = new User();
         user.setUsername(bo.getUsername());
         user.setNickName(bo.getNickName());
+        user.setPassword(bo.getPassword());
         user.setEmail(bo.getEmail());
         user.setTeamId(bo.getTeamId());
         user.setRemark(bo.getRemark());

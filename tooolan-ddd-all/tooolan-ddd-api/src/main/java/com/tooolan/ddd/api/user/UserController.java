@@ -1,10 +1,7 @@
 package com.tooolan.ddd.api.user;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
-import com.tooolan.ddd.api.user.request.DeleteUserDTO;
-import com.tooolan.ddd.api.user.request.PageUserDTO;
-import com.tooolan.ddd.api.user.request.SaveUserDTO;
-import com.tooolan.ddd.api.user.request.UpdateUserDTO;
+import com.tooolan.ddd.api.user.request.*;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.user.UserApplicationService;
@@ -89,6 +86,18 @@ public class UserController {
     @PutMapping("/update")
     public ResultVo<Void> update(@Validated @RequestBody UpdateUserDTO dto) {
         userApplicationService.updateUser(dto);
+        return ResultVo.success();
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @param dto 修改密码请求参数
+     * @return 操作结果
+     */
+    @PutMapping("/password")
+    public ResultVo<Void> changePassword(@Validated @RequestBody ChangePasswordDTO dto) {
+        userApplicationService.changePassword(dto);
         return ResultVo.success();
     }
 
