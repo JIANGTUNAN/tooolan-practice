@@ -1,4 +1,4 @@
-package com.tooolan.ddd.app.dept.service;
+package com.tooolan.ddd.app.dept;
 
 import com.tooolan.ddd.domain.dept.repository.DeptRepository;
 import com.tooolan.ddd.domain.dept.service.DeptDomainService;

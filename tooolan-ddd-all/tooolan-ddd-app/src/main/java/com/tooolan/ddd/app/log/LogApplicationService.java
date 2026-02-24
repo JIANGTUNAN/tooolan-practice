@@ -1,4 +1,4 @@
-package com.tooolan.ddd.app.log.service;
+package com.tooolan.ddd.app.log;
 
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;

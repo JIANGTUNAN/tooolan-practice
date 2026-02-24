@@ -6,7 +6,8 @@
       "Bash(cmd.exe /c \"mvn compile -DskipTests -q\")",
       "Bash(cmd.exe /c \"mvn clean compile -q\")",
       "WebSearch",
-      "mcp__web-search-prime__webSearchPrime"
+      "mcp__web-search-prime__webSearchPrime",
+      "Bash(find:*)"
     ]
   }
 }

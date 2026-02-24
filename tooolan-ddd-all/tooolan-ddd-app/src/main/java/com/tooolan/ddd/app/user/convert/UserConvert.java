@@ -10,8 +10,6 @@ import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.param.PageUserParam;
 
-import java.util.List;
-
 /**
  * 用户转换器
  * 负责跨层对象转换
@@ -121,19 +119,7 @@ public class UserConvert {
      * @return 分页视图对象
      */
     public static PageVo<UserVo> toPageVo(PageQueryResult<User> result) {
-        if (result == null) {
-            return PageVo.empty();
-        }
-        List<UserVo> vos = result.getRecords().stream()
-                .map(UserConvert::toVo)
-                .toList();
-        PageVo<UserVo> vo = new PageVo<>();
-        vo.setPageNum(result.getPageNum());
-        vo.setPageSize(result.getPageSize());
-        vo.setPages(result.getPages());
-        vo.setTotal(result.getTotal());
-        vo.setRecords(vos);
-        return vo;
+        return PageVo.of(result, UserConvert::toVo);
     }
 
 }

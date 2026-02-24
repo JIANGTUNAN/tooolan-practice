@@ -1,6 +1,6 @@
 package com.tooolan.ddd.app.log.listener;
 
-import com.tooolan.ddd.app.log.service.LogApplicationService;
+import com.tooolan.ddd.app.log.LogApplicationService;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.session.event.UserLoginEvent;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;

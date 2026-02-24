@@ -7,8 +7,6 @@ import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.param.PageLogParam;
 
-import java.util.List;
-
 /**
  * 日志转换器
  * 负责跨层对象转换
@@ -72,19 +70,7 @@ public class LogConvert {
      * @return 分页视图对象
      */
     public static PageVo<LogVo> toPageVo(PageQueryResult<Log> result) {
-        if (result == null) {
-            return PageVo.empty();
-        }
-        List<LogVo> vos = result.getRecords().stream()
-                .map(LogConvert::toVo)
-                .toList();
-        PageVo<LogVo> vo = new PageVo<>();
-        vo.setPageNum(result.getPageNum());
-        vo.setPageSize(result.getPageSize());
-        vo.setPages(result.getPages());
-        vo.setTotal(result.getTotal());
-        vo.setRecords(vos);
-        return vo;
+        return PageVo.of(result, LogConvert::toVo);
     }
 
 }

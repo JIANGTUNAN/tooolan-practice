@@ -1,4 +1,4 @@
-package com.tooolan.ddd.app.session.service;
+package com.tooolan.ddd.app.session;
 
 import cn.hutool.core.util.BooleanUtil;
 import com.tooolan.ddd.app.session.convert.SessionConvert;

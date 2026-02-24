@@ -1,6 +1,6 @@
 package com.tooolan.ddd.api.dept;
 
-import com.tooolan.ddd.app.dept.service.DeptApplicationService;
+import com.tooolan.ddd.app.dept.DeptApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

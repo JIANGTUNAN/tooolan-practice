@@ -2,9 +2,9 @@ package com.tooolan.ddd.api.session;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.session.request.LoginDTO;
+import com.tooolan.ddd.app.session.SessionApplicationService;
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
-import com.tooolan.ddd.app.session.service.SessionApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

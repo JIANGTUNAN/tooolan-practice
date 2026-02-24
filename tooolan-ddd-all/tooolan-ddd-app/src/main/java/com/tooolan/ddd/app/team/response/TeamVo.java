@@ -1,6 +1,6 @@
-package com.tooolan.ddd.app.team.vo;
+package com.tooolan.ddd.app.team.response;
 
-import lombok.Value;
+import lombok.Data;
 
 /**
  * 小组视图对象
@@ -9,7 +9,7 @@ import lombok.Value;
  * @author tooolan
  * @since 2026年2月11日
  */
-@Value
+@Data
 public class TeamVo {
 
     /**

@@ -1,5 +1,6 @@
 package com.tooolan.ddd.app.common.response;
 
+import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * 通用选项视图对象
@@ -23,16 +25,22 @@ import java.util.Map;
 public class OptionVo<K> extends LinkedHashMap<K, String> {
 
     /**
-     * 静态工厂方法
+     * 从列表快速构造选项对象
      *
-     * @param key   选项值（ID）
-     * @param label 选项名（显示名）
-     * @param <K>   选项值类型
+     * @param list      原始数据列表
+     * @param keyFunc   提取选项值的函数
+     * @param labelFunc 提取选项名的函数
+     * @param <T>       列表元素类型
+     * @param <K>       选项值类型
      * @return OptionVo 对象
      */
-    public static <K> OptionVo<K> of(K key, String label) {
+    public static <T, K> OptionVo<K> from(List<T> list, Function<T, K> keyFunc, Function<T, String> labelFunc) {
         OptionVo<K> vo = new OptionVo<>();
-        vo.addOption(key, label);
+        if (CollUtil.isNotEmpty(list)) {
+            for (T item : list) {
+                vo.addOption(keyFunc.apply(item), labelFunc.apply(item));
+            }
+        }
         return vo;
     }
 

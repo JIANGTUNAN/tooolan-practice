@@ -1,8 +1,10 @@
 package com.tooolan.ddd.app.common.request;
 
+import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import lombok.Data;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 分页视图对象
@@ -55,6 +57,33 @@ public class PageVo<T> {
         vo.setPages(0);
         vo.setTotal(0);
         vo.setRecords(List.of());
+        return vo;
+    }
+
+    /**
+     * 根据 PageQueryResult 创建分页视图对象
+     * 自动处理分页信息复制和数据转换
+     *
+     * @param result 分页查询结果
+     * @param mapper 领域模型到视图对象的转换函数
+     * @param <T>    领域模型类型
+     * @param <R>    视图对象类型
+     * @return 分页视图对象
+     */
+    public static <T, R> PageVo<R> of(PageQueryResult<T> result, Function<T, R> mapper) {
+        if (result == null) {
+            return empty();
+        }
+        List<R> records = result.getRecords().stream()
+                .map(mapper)
+                .toList();
+
+        PageVo<R> vo = new PageVo<>();
+        vo.setPageNum(result.getPageNum());
+        vo.setPageSize(result.getPageSize());
+        vo.setPages(result.getPages());
+        vo.setTotal(result.getTotal());
+        vo.setRecords(records);
         return vo;
     }
 

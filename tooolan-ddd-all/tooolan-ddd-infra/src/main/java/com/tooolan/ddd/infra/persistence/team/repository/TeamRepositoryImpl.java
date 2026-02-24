@@ -1,8 +1,16 @@
 package com.tooolan.ddd.infra.persistence.team.repository;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tooolan.ddd.domain.common.param.PageQueryResult;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
+import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;
 import com.tooolan.ddd.infra.persistence.team.converter.TeamConverter;
 import com.tooolan.ddd.infra.persistence.team.entity.SysTeamEntity;
 import com.tooolan.ddd.infra.persistence.team.mapper.SysTeamMapper;
@@ -30,6 +38,28 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
     public Optional<Team> getTeam(Integer teamId) {
         return super.getOptById(teamId)
                 .map(TeamConverter::toDomain);
+    }
+
+    /**
+     * 分页查询小组信息
+     *
+     * @param pageTeamParam 分页查询参数
+     * @return 分页查询结果
+     */
+    @Override
+    public PageQueryResult<Team> pageTeam(PageTeamParam pageTeamParam) {
+        IPage<Team> page = super.lambdaQuery()
+                .like(StrUtil.isNotBlank(pageTeamParam.getTeamName()), SysTeamEntity::getTeamName, pageTeamParam.getTeamName())
+                .eq(StrUtil.isNotBlank(pageTeamParam.getTeamCode()), SysTeamEntity::getTeamCode, pageTeamParam.getTeamCode())
+                .in(CollUtil.isNotEmpty(pageTeamParam.getStatusList()), SysTeamEntity::getStatus, pageTeamParam.getStatusList())
+                .ge(ObjUtil.isNotNull(pageTeamParam.getCreatedAtStart()), SysTeamEntity::getCreatedAt, pageTeamParam.getCreatedAtStart())
+                .le(ObjUtil.isNotNull(pageTeamParam.getCreatedAtEnd()), SysTeamEntity::getCreatedAt, pageTeamParam.getCreatedAtEnd())
+                .page(PageDTO.of(pageTeamParam.getPageNum(), pageTeamParam.getPageSize()))
+                .convert(TeamConverter::toDomain);
+
+        PageQueryResult<Team> pageQueryResult = new PageQueryResult<>();
+        BeanUtil.copyProperties(page, pageQueryResult);
+        return pageQueryResult;
     }
 
 }

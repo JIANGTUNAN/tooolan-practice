@@ -1,6 +1,5 @@
-package com.tooolan.ddd.app.user.service;
+package com.tooolan.ddd.app.user;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.common.response.OptionVo;
@@ -71,13 +70,7 @@ public class UserApplicationService {
      */
     public OptionVo<Integer> getUserOptions(String nickName) {
         List<User> users = userRepository.listUserOptions(nickName);
-        OptionVo<Integer> optionVo = new OptionVo<>();
-        if (CollUtil.isNotEmpty(users)) {
-            for (User user : users) {
-                optionVo.addOption(user.getId(), user.getNickName());
-            }
-        }
-        return optionVo;
+        return OptionVo.from(users, User::getId, User::getNickName);
     }
 
     /**
