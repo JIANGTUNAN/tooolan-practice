@@ -35,6 +35,7 @@ public class TeamConverter {
                 .orElseThrow(() -> new IllegalStateException("小组状态异常，请联系管理员"));
         team.setStatus(teamStatusEnum);
         team.setMaxMembers(entity.getMaxMembers());
+        team.setRemark(entity.getRemark());
         return team;
     }
 
@@ -55,6 +56,7 @@ public class TeamConverter {
         entity.setTeamCode(team.getTeamCode());
         entity.setStatus(team.getStatus().getValue());
         entity.setMaxMembers(team.getMaxMembers());
+        entity.setRemark(team.getRemark());
         return entity;
     }
 

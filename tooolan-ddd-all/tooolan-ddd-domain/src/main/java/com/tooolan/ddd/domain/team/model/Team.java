@@ -45,6 +45,11 @@ public class Team {
      */
     private Integer maxMembers;
 
+    /**
+     * 备注信息
+     */
+    private String remark;
+
 
     /**
      * 判断小组是否可用（正常状态）

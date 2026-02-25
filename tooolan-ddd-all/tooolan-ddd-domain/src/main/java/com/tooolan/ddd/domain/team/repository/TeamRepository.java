@@ -42,4 +42,21 @@ public interface TeamRepository {
      */
     PageQueryResult<Team> pageTeam(PageTeamParam pageTeamParam);
 
+    /**
+     * 根据小组编码查询小组信息
+     *
+     * @param teamCode 小组编码
+     * @return 小组信息，不存在时返回空
+     */
+    Optional<Team> getTeamByCode(String teamCode);
+
+    /**
+     * 保存小组
+     * 保存成功后会回填小组ID
+     *
+     * @param team 小组领域模型
+     * @return 是否保存成功
+     */
+    boolean save(Team team);
+
 }

@@ -58,8 +58,8 @@ public class AsyncTaskConfig {
      * @return 包装了 TTL 的线程池执行器
      */
     @Primary
-    @Bean("systemTaskExecutor")
-    public Executor systemTaskExecutor() {
+    @Bean("taskExecutor")
+    public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
         executor.setCorePoolSize(CORE_POOL_SIZE);

@@ -85,4 +85,36 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
                 .toList();
     }
 
+    /**
+     * 根据小组编码查询小组信息
+     *
+     * @param teamCode 小组编码
+     * @return 小组信息，不存在时返回空
+     */
+    @Override
+    public Optional<Team> getTeamByCode(String teamCode) {
+        return super.lambdaQuery()
+                .eq(StrUtil.isNotBlank(teamCode), SysTeamEntity::getTeamCode, teamCode)
+                .oneOpt()
+                .map(TeamConverter::toDomain);
+    }
+
+    /**
+     * 保存小组
+     * 保存成功后会回填小组ID
+     *
+     * @param team 小组领域模型
+     * @return 是否保存成功
+     */
+    @Override
+    public boolean save(Team team) {
+        SysTeamEntity entity = TeamConverter.toEntity(team);
+        boolean saved = super.save(entity);
+        // 回填ID
+        if (saved && entity.getTeamId() != null) {
+            team.setId(entity.getTeamId());
+        }
+        return saved;
+    }
+
 }

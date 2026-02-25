@@ -11,8 +11,10 @@ import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
 import com.tooolan.ddd.domain.common.exception.NotFoundException;
 import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
+import com.tooolan.ddd.domain.user.constant.UserErrorCode;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
 import com.tooolan.ddd.domain.user.event.UserDeletedEvent;
 import com.tooolan.ddd.domain.user.event.UserPasswordChangedEvent;
@@ -99,7 +101,7 @@ public class UserApplicationService {
         // 应用层校验：如果指定了小组，校验小组是否存在
         if (ObjUtil.isNotNull(bo.getTeamId())) {
             team = teamRepository.getTeam(bo.getTeamId())
-                    .orElseThrow(() -> new NotFoundException("指定的小组不存在"));
+                    .orElseThrow(() -> new NotFoundException(TeamErrorCode.NOT_FOUND));
         }
         // 调用领域服务保存用户（主键会通过引用回填）
         userDomainService.saveUser(user, team);
@@ -119,7 +121,7 @@ public class UserApplicationService {
     public void updateUser(UpdateUserBo bo) throws BusinessRuleException {
         // 1. 查询现有用户
         User existingUser = userRepository.getUser(bo.getUserId())
-                .orElseThrow(() -> new NotFoundException("用户不存在"));
+                .orElseThrow(() -> new NotFoundException(UserErrorCode.NOT_FOUND));
         // 2. 转换为领域模型（传入现有用户实现部分更新）
         User updatedUser = UserConvert.toUpdateDomain(bo, existingUser);
         // 3. 处理字段清空
@@ -133,7 +135,7 @@ public class UserApplicationService {
 
         if (teamChanged && newTeamId != null) {
             newTeam = teamRepository.getTeam(newTeamId)
-                    .orElseThrow(() -> new NotFoundException("指定的小组不存在"));
+                    .orElseThrow(() -> new NotFoundException(TeamErrorCode.NOT_FOUND));
         }
 
         // 5. 调用领域服务
@@ -156,7 +158,7 @@ public class UserApplicationService {
     public void changePassword(ChangePasswordBo bo) throws BusinessRuleException, SessionException {
         // 1. 查询用户
         User user = userRepository.getUser(bo.getUserId())
-                .orElseThrow(() -> new NotFoundException("用户不存在"));
+                .orElseThrow(() -> new NotFoundException(UserErrorCode.NOT_FOUND));
 
         // 2. 调用领域服务修改密码（包含原密码验证、新旧密码相同校验）
         userDomainService.changePassword(user, bo.getOldPassword(), bo.getNewPassword());

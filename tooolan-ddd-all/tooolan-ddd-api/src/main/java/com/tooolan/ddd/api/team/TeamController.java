@@ -2,6 +2,7 @@ package com.tooolan.ddd.api.team;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.team.request.PageTeamDTO;
+import com.tooolan.ddd.api.team.request.SaveTeamDTO;
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.team.TeamApplicationService;
@@ -81,6 +82,18 @@ public class TeamController {
     public ResultVo<PageVo<TeamVo>> page(@Validated PageTeamDTO dto) {
         PageVo<TeamVo> pageVo = teamApplicationService.pageTeam(dto);
         return ResultVo.success(pageVo);
+    }
+
+    /**
+     * 新增小组信息
+     *
+     * @param dto 小组信息
+     * @return 操作结果
+     */
+    @PostMapping("/save")
+    public ResultVo<Void> save(@Validated @RequestBody SaveTeamDTO dto) {
+        teamApplicationService.saveTeam(dto);
+        return ResultVo.success();
     }
 
 }

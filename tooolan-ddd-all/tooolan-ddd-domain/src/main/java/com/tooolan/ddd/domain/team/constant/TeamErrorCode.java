@@ -28,7 +28,17 @@ public enum TeamErrorCode implements ErrorCode {
     /**
      * 小组不存在
      */
-    NOT_FOUND("小组不存在");
+    NOT_FOUND("小组不存在"),
+
+    /**
+     * 小组编码已存在
+     */
+    CODE_EXISTS("小组编码已存在"),
+
+    /**
+     * 保存小组失败
+     */
+    SAVE_FAILED("保存小组失败，请稍后再试");
 
     private final String message;
 

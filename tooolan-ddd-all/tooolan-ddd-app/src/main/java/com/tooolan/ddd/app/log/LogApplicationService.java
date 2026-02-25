@@ -14,6 +14,7 @@ import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.LogRepository;
 import com.tooolan.ddd.domain.log.repository.param.PageLogParam;
 import com.tooolan.ddd.domain.log.service.LogDomainService;
+import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -128,6 +129,18 @@ public class LogApplicationService {
     }
 
     /**
+     * 记录小组创建日志
+     *
+     * @param team         创建的小组
+     * @param businessData 业务数据（SaveTeamBo）
+     */
+    public void logTeamCreated(Team team, Object businessData) {
+        Log logModel = this.buildTeamLog(LogOpModule.TEAM, LogOpType.CREATE, team);
+        logModel.setContent(this.toLogContent(businessData));
+        logDomainService.saveLog(logModel);
+    }
+
+    /**
      * 构建日志模型
      *
      * @param opModule 操作模块
@@ -143,6 +156,29 @@ public class LogApplicationService {
             logModel.setTargetType(user.getClass().getTypeName());
             logModel.setTargetId(user.getId().toString());
             logModel.setTargetName(user.getUsername());
+        }
+        logModel.setOperatorId(ContextHolder.getUserId());
+        logModel.setOperatorName(ContextHolder.getUsername());
+        logModel.setOperatorIp(ContextHolder.getClientIp());
+        return logModel;
+    }
+
+    /**
+     * 构建小组日志模型
+     *
+     * @param opModule 操作模块
+     * @param opType   操作类型
+     * @param team     目标小组（可为 null）
+     * @return 日志领域模型
+     */
+    private Log buildTeamLog(String opModule, String opType, Team team) {
+        Log logModel = new Log();
+        logModel.setOpModule(opModule);
+        logModel.setOpType(opType);
+        if (team != null) {
+            logModel.setTargetType(team.getClass().getTypeName());
+            logModel.setTargetId(team.getId().toString());
+            logModel.setTargetName(team.getTeamName());
         }
         logModel.setOperatorId(ContextHolder.getUserId());
         logModel.setOperatorName(ContextHolder.getUsername());

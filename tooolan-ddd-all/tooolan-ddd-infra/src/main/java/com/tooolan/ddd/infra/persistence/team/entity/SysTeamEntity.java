@@ -55,4 +55,10 @@ public class SysTeamEntity extends BaseEntity {
     @TableField(value = "max_members")
     private Integer maxMembers;
 
+    /**
+     * 备注信息
+     */
+    @TableField(value = "remark")
+    private String remark;
+
 }

@@ -1,5 +1,7 @@
 package com.tooolan.ddd.infra.persistence.dept.converter;
 
+import com.tooolan.ddd.domain.dept.model.Dept;
+import com.tooolan.ddd.infra.persistence.dept.entity.SysDeptEntity;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,5 +13,23 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DeptConverter {
+
+    /**
+     * 将数据库实体转换为领域模型
+     *
+     * @param entity 数据库实体
+     * @return 领域模型
+     */
+    public static Dept toDomain(SysDeptEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        Dept dept = new Dept();
+        dept.setId(entity.getDeptId());
+        dept.setDeptName(entity.getDeptName());
+        dept.setDeptCode(entity.getDeptCode());
+        dept.setParentId(entity.getParentId());
+        return dept;
+    }
 
 }

@@ -2,8 +2,10 @@ package com.tooolan.ddd.app.team.convert;
 
 import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.team.request.PageTeamBo;
+import com.tooolan.ddd.app.team.request.SaveTeamBo;
 import com.tooolan.ddd.app.team.response.TeamVo;
 import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;
 
@@ -34,7 +36,29 @@ public class TeamConvert {
         vo.setDeptId(team.getDeptId());
         vo.setDeptName(null);
         vo.setUserCount(null);
+        vo.setRemark(team.getRemark());
         return vo;
+    }
+
+    /**
+     * 将保存小组 BO 转换为领域模型
+     * 默认状态设置为正常
+     *
+     * @param bo 保存小组 BO
+     * @return 领域模型
+     */
+    public static Team toDomain(SaveTeamBo bo) {
+        if (bo == null) {
+            return null;
+        }
+        Team team = new Team();
+        team.setDeptId(bo.getDeptId());
+        team.setTeamName(bo.getTeamName());
+        team.setTeamCode(bo.getTeamCode());
+        team.setMaxMembers(bo.getMaxMembers());
+        team.setRemark(bo.getRemark());
+        team.setStatus(TeamStatusEnum.NORMAL);
+        return team;
     }
 
     /**

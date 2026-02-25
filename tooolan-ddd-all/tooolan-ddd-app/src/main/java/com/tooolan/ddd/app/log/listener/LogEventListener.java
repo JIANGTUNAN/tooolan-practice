@@ -3,6 +3,8 @@ package com.tooolan.ddd.app.log.listener;
 import com.tooolan.ddd.app.log.LogApplicationService;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.session.event.UserLoginEvent;
+import com.tooolan.ddd.domain.team.event.TeamCreatedEvent;
+import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
 import com.tooolan.ddd.domain.user.event.UserDeletedEvent;
 import com.tooolan.ddd.domain.user.event.UserPasswordChangedEvent;
@@ -41,7 +43,7 @@ public class LogEventListener {
      * @param event 用户登录事件
      */
     @EventListener
-    @Async("systemTaskExecutor")
+    @Async("taskExecutor")
     public void handleUserLoginEvent(UserLoginEvent event) {
         try {
             User user = event.getUser();
@@ -59,7 +61,7 @@ public class LogEventListener {
      *
      * @param event 用户创建事件
      */
-    @Async("systemTaskExecutor")
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleUserCreatedEvent(UserCreatedEvent event) {
         try {
@@ -78,7 +80,7 @@ public class LogEventListener {
      *
      * @param event 用户更新事件
      */
-    @Async("systemTaskExecutor")
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleUserUpdatedEvent(UserUpdatedEvent event) {
         try {
@@ -97,7 +99,7 @@ public class LogEventListener {
      *
      * @param event 用户删除事件
      */
-    @Async("systemTaskExecutor")
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleUserDeletedEvent(UserDeletedEvent event) {
         try {
@@ -115,7 +117,7 @@ public class LogEventListener {
      *
      * @param event 用户密码修改事件
      */
-    @Async("systemTaskExecutor")
+    @Async("taskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleUserPasswordChangedEvent(UserPasswordChangedEvent event) {
         try {
@@ -126,6 +128,25 @@ public class LogEventListener {
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
             log.error("处理用户密码修改事件失败", e);
+        }
+    }
+
+    /**
+     * 监听小组创建事件
+     *
+     * @param event 小组创建事件
+     */
+    @Async("taskExecutor")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleTeamCreatedEvent(TeamCreatedEvent event) {
+        try {
+            Team team = event.getTeam();
+            logApplicationService.logTeamCreated(team, event.getBusinessData());
+            log.info("小组创建日志记录成功: teamId={}, teamName={}, operator={}, ip={}",
+                    team.getId(), team.getTeamName(),
+                    ContextHolder.getUsername(), ContextHolder.getClientIp());
+        } catch (Exception e) {
+            log.error("处理小组创建事件失败", e);
         }
     }
 
