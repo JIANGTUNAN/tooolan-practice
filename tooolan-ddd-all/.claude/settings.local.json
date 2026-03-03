@@ -8,7 +8,8 @@
       "WebSearch",
       "mcp__web-search-prime__webSearchPrime",
       "Bash(find:*)",
-      "Bash(cmd.exe /c \"mvn clean compile -q -DskipTests\")"
+      "Bash(cmd.exe /c \"mvn clean compile -q -DskipTests\")",
+      "Bash(cmd.exe:*)"
     ]
   }
 }

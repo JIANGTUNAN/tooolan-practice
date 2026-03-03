@@ -1,10 +1,10 @@
 package com.tooolan.ddd.app.team.convert;
 
-import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.team.request.PageTeamBo;
 import com.tooolan.ddd.app.team.request.SaveTeamBo;
 import com.tooolan.ddd.app.team.response.TeamVo;
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;

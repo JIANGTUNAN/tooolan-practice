@@ -1,4 +1,4 @@
-package com.tooolan.ddd.app.common.response;
+package com.tooolan.ddd.app.common.request;
 
 import lombok.Data;
 

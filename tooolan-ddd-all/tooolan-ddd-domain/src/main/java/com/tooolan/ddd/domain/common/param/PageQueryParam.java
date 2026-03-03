@@ -1,4 +1,4 @@
-package com.tooolan.ddd.domain.common.result;
+package com.tooolan.ddd.domain.common.param;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import lombok.Data;
  * @since 2026年2月11日
  */
 @Data
-public abstract class PageRequest {
+public abstract class PageQueryParam {
 
     /**
      * 当前页码数

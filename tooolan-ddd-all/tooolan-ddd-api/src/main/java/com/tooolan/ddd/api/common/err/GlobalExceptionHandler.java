@@ -3,9 +3,8 @@ package com.tooolan.ddd.api.common.err;
 import com.tooolan.ddd.api.common.constant.ResponseCode;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.domain.common.constant.CommonErrorCode;
-import com.tooolan.ddd.domain.common.exception.BusinessRuleException;
-import com.tooolan.ddd.domain.common.exception.DomainException;
-import com.tooolan.ddd.domain.common.exception.NotFoundException;
+import com.tooolan.ddd.domain.common.exception.BaseException;
+import com.tooolan.ddd.domain.session.exception.SessionException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -31,30 +30,16 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     /**
-     * 处理资源不存在异常
+     * 处理会话异常
      *
      * @param e       异常对象
      * @param request HTTP 请求
      * @return 统一响应对象
      */
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ResultVo<Void>> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
-        log.warn("资源不存在: {} - {}", request.getRequestURI(), e.getMessage());
-        ResultVo<Void> result = ResultVo.error(ResponseCode.NOT_FOUND, e.getErrorCode(), e.getMessage());
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
-    /**
-     * 处理业务规则异常
-     *
-     * @param e       异常对象
-     * @param request HTTP 请求
-     * @return 统一响应对象
-     */
-    @ExceptionHandler(BusinessRuleException.class)
-    public ResponseEntity<ResultVo<Void>> handleBusinessRuleException(BusinessRuleException e, HttpServletRequest request) {
-        log.warn("业务规则校验失败: {} - {}", request.getRequestURI(), e.getMessage());
-        ResultVo<Void> result = ResultVo.error(ResponseCode.BAD_REQUEST, e.getErrorCode(), e.getMessage());
+    @ExceptionHandler(SessionException.class)
+    public ResponseEntity<ResultVo<Void>> handleSessionException(SessionException e, HttpServletRequest request) {
+        log.warn("会话异常: {} - {}", request.getRequestURI(), e.getMessage());
+        ResultVo<Void> result = ResultVo.error(ResponseCode.UNAUTHORIZED, e.getErrorCode(), e.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -65,8 +50,8 @@ public class GlobalExceptionHandler {
      * @param request HTTP 请求
      * @return 统一响应对象
      */
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<ResultVo<Void>> handleDomainException(DomainException e, HttpServletRequest request) {
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ResultVo<Void>> handleBaseException(BaseException e, HttpServletRequest request) {
         log.error("领域层异常: {} - {}", request.getRequestURI(), e.getMessage(), e);
         ResultVo<Void> result = ResultVo.error(ResponseCode.BAD_REQUEST, e.getErrorCode(), e.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(result);

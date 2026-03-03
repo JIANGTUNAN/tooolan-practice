@@ -6,11 +6,11 @@ import com.tooolan.ddd.app.session.request.LoginBo;
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
-import com.tooolan.ddd.domain.common.context.UserBean;
-import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
 import com.tooolan.ddd.domain.session.event.UserLoginEvent;
-import com.tooolan.ddd.domain.session.service.SecurityContext;
+import com.tooolan.ddd.domain.session.exception.SessionException;
+import com.tooolan.ddd.domain.session.model.UserBean;
+import com.tooolan.ddd.domain.session.service.SecurityContextProvider;
 import com.tooolan.ddd.domain.session.service.SessionDomainService;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 public class SessionApplicationService {
 
     private final UserRepository userRepository;
-    private final SecurityContext securityContext;
+    private final SecurityContextProvider securityContextProvider;
     private final SessionDomainService sessionDomainService;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -63,7 +63,7 @@ public class SessionApplicationService {
      * 用户登出
      */
     public void logout() {
-        securityContext.unregisterLogin();
+        securityContextProvider.unregisterLogin();
     }
 
     /**

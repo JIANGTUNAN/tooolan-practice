@@ -2,12 +2,12 @@ package com.tooolan.ddd.app.log;
 
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.log.convert.LogConvert;
 import com.tooolan.ddd.app.log.request.PageLogBo;
 import com.tooolan.ddd.app.log.response.LogVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.log.constant.LogOpModule;
 import com.tooolan.ddd.domain.log.constant.LogOpType;
 import com.tooolan.ddd.domain.log.model.Log;

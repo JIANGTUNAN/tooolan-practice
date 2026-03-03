@@ -2,8 +2,9 @@ package com.tooolan.ddd.domain.common.context;
 
 import cn.hutool.core.util.ObjUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
+import com.tooolan.ddd.domain.session.exception.SessionException;
+import com.tooolan.ddd.domain.session.model.UserBean;
 import lombok.experimental.UtilityClass;
 
 /**

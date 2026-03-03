@@ -2,11 +2,11 @@ package com.tooolan.ddd.api.log;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.log.request.PageLogDTO;
-import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.log.LogApplicationService;
 import com.tooolan.ddd.app.log.response.LogVo;
-import com.tooolan.ddd.domain.common.exception.NotFoundException;
 import com.tooolan.ddd.domain.log.constant.LogErrorCode;
+import com.tooolan.ddd.domain.log.exception.LogException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +38,7 @@ public class LogController {
     @GetMapping("/get/{logId}")
     public ResultVo<LogVo> get(@PathVariable Long logId) {
         LogVo logVo = logApplicationService.getLogById(logId)
-                .orElseThrow(() -> new NotFoundException(LogErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new LogException(LogErrorCode.NOT_FOUND));
         return ResultVo.success(logVo);
     }
 

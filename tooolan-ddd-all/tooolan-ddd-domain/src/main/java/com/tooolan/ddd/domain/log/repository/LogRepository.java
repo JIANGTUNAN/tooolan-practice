@@ -1,6 +1,6 @@
 package com.tooolan.ddd.domain.log.repository;
 
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.param.PageLogParam;
 

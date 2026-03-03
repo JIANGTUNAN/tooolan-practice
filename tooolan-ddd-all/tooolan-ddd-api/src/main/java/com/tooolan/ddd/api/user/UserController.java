@@ -2,12 +2,12 @@ package com.tooolan.ddd.api.user;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.user.request.*;
-import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.common.response.OptionVo;
+import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.user.UserApplicationService;
 import com.tooolan.ddd.app.user.response.UserVo;
-import com.tooolan.ddd.domain.common.exception.NotFoundException;
 import com.tooolan.ddd.domain.user.constant.UserErrorCode;
+import com.tooolan.ddd.domain.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +48,7 @@ public class UserController {
     @GetMapping("/get/{userId}")
     public ResultVo<UserVo> get(@PathVariable Integer userId) {
         UserVo user = userApplicationService.getUserById(userId)
-                .orElseThrow(() -> new NotFoundException(UserErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND));
         return ResultVo.success(user);
     }
 

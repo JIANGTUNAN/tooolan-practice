@@ -1,8 +1,10 @@
 package com.tooolan.ddd.infra.common.security;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.tooolan.ddd.domain.common.context.UserBean;
+import com.tooolan.ddd.domain.session.model.UserBean;
 import com.tooolan.ddd.domain.session.service.SecurityContextProvider;
+import com.tooolan.ddd.domain.user.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
  * @author tooolan
  * @since 2026年2月17日
  */
+@Slf4j
 @Component
 public class SaTokenSecurityContextProvider implements SecurityContextProvider {
 
@@ -63,6 +66,31 @@ public class SaTokenSecurityContextProvider implements SecurityContextProvider {
     @Override
     public String getToken() {
         return StpUtil.getTokenValue();
+    }
+
+    /**
+     * 注册登录状态到安全框架
+     *
+     * @param user 登录用户
+     * @return token
+     */
+    @Override
+    public String registerLogin(User user) {
+        StpUtil.login(user.getId());
+        StpUtil.getSession().set(UserBean.Fields.username, user.getUsername());
+        StpUtil.getSession().set(UserBean.Fields.nickname, user.getNickName());
+        return StpUtil.getTokenValue();
+    }
+
+    /**
+     * 注销安全框架的登录状态
+     */
+    @Override
+    public void unregisterLogin() {
+        if (StpUtil.isLogin()) {
+            log.info("用户登出成功: userId={}", StpUtil.getLoginIdAsInt());
+            StpUtil.logout();
+        }
     }
 
 }

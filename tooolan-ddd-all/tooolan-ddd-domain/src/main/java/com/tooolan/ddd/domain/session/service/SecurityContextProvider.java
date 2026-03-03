@@ -1,8 +1,10 @@
 package com.tooolan.ddd.domain.session.service;
 
+import com.tooolan.ddd.domain.user.model.User;
+
 /**
  * 安全上下文提供者接口
- * 用于从安全框架获取当前登录用户信息
+ * 用于从安全框架获取当前登录用户信息，以及注册/注销登录状态
  *
  * @author tooolan
  * @since 2026年2月17日
@@ -43,5 +45,20 @@ public interface SecurityContextProvider {
      * @return Token 值
      */
     String getToken();
+
+    /**
+     * 注册登录状态
+     * 将用户信息注册到安全框架会话中
+     *
+     * @param user 用户信息
+     * @return token
+     */
+    String registerLogin(User user);
+
+    /**
+     * 注销登录状态
+     * 从安全框架会话中清除用户信息
+     */
+    void unregisterLogin();
 
 }

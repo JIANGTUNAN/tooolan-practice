@@ -1,6 +1,6 @@
 package com.tooolan.ddd.app.user.request;
 
-import com.tooolan.ddd.app.common.response.PageQueryBo;
+import com.tooolan.ddd.app.common.request.PageQueryBo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

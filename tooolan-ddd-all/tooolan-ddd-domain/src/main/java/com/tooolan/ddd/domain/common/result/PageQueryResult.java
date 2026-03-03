@@ -1,4 +1,4 @@
-package com.tooolan.ddd.domain.common.param;
+package com.tooolan.ddd.domain.common.result;
 
 import lombok.Data;
 

@@ -3,7 +3,7 @@ package com.tooolan.ddd.app.session.convert;
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
-import com.tooolan.ddd.domain.common.context.UserBean;
+import com.tooolan.ddd.domain.session.model.UserBean;
 import com.tooolan.ddd.domain.user.model.User;
 
 /**

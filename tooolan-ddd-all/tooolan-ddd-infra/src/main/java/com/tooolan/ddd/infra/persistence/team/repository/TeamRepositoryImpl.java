@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;

@@ -1,6 +1,6 @@
 package com.tooolan.ddd.domain.log.constant;
 
-import com.tooolan.ddd.domain.common.constant.ErrorCode;
+import com.tooolan.ddd.domain.common.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

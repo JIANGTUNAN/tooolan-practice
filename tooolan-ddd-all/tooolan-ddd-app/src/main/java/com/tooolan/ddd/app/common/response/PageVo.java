@@ -1,6 +1,6 @@
-package com.tooolan.ddd.app.common.request;
+package com.tooolan.ddd.app.common.response;
 
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import lombok.Data;
 
 import java.util.List;

@@ -1,12 +1,12 @@
 package com.tooolan.ddd.app.user.convert;
 
 import cn.hutool.core.util.ObjUtil;
-import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.user.request.PageUserBo;
 import com.tooolan.ddd.app.user.request.SaveUserBo;
 import com.tooolan.ddd.app.user.request.UpdateUserBo;
 import com.tooolan.ddd.app.user.response.UserVo;
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.param.PageUserParam;
 

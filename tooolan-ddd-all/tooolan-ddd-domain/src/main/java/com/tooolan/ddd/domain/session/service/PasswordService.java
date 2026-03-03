@@ -5,8 +5,9 @@ import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.crypto.digest.BCrypt;
 import com.tooolan.ddd.domain.common.annotation.DomainService;
-import com.tooolan.ddd.domain.common.exception.SessionException;
+import com.tooolan.ddd.domain.session.config.RsaConfig;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
+import com.tooolan.ddd.domain.session.exception.SessionException;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -18,9 +19,9 @@ import lombok.RequiredArgsConstructor;
  */
 @DomainService
 @RequiredArgsConstructor
-public class PasswordEncryptor {
+public class PasswordService {
 
-    private final RsaKeyProvider rsaKeyProvider;
+    private final RsaConfig rsaConfig;
 
 
     /**
@@ -32,15 +33,15 @@ public class PasswordEncryptor {
      */
     public String decryptPassword(String encryptedPassword) {
         if (StrUtil.isBlank(encryptedPassword)) {
-            throw new SessionException(SessionErrorCode.PASSWORD_REQUIRED);
+            throw new SessionException(SessionErrorCode.LOGIN_FAILED);
         }
 
         try {
-            String privateKey = rsaKeyProvider.getPrivateKey();
+            String privateKey = rsaConfig.getPrivateKey();
             RSA rsa = new RSA(privateKey, null);
             return rsa.decryptStr(encryptedPassword, KeyType.PrivateKey);
         } catch (Exception e) {
-            throw new SessionException(SessionErrorCode.PASSWORD_DECRYPT_FAILED, e);
+            throw new SessionException(SessionErrorCode.LOGIN_FAILED, e);
         }
     }
 

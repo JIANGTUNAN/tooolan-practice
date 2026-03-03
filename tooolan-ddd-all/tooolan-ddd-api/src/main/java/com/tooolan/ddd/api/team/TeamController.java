@@ -3,13 +3,13 @@ package com.tooolan.ddd.api.team;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.team.request.PageTeamDTO;
 import com.tooolan.ddd.api.team.request.SaveTeamDTO;
-import com.tooolan.ddd.app.common.request.PageVo;
 import com.tooolan.ddd.app.common.response.OptionVo;
+import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.team.TeamApplicationService;
 import com.tooolan.ddd.app.team.response.TeamVo;
-import com.tooolan.ddd.domain.common.exception.NotFoundException;
 import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
 import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
+import com.tooolan.ddd.domain.team.exception.TeamException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +68,7 @@ public class TeamController {
     @GetMapping("/get/{teamId}")
     public ResultVo<TeamVo> get(@PathVariable Integer teamId) {
         TeamVo team = teamApplicationService.getTeamById(teamId)
-                .orElseThrow(() -> new NotFoundException(TeamErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
         return ResultVo.success(team);
     }
 

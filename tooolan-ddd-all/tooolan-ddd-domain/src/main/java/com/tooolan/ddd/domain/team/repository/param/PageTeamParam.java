@@ -1,6 +1,6 @@
 package com.tooolan.ddd.domain.team.repository.param;
 
-import com.tooolan.ddd.domain.common.result.PageRequest;
+import com.tooolan.ddd.domain.common.param.PageQueryParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PageTeamParam extends PageRequest {
+public class PageTeamParam extends PageQueryParam {
 
     /**
      * 小组名称（模糊查询）

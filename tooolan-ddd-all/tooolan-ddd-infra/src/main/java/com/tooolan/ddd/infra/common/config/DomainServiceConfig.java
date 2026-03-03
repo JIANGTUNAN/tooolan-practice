@@ -1,9 +1,10 @@
-package com.tooolan.ddd.app.common.config;
+package com.tooolan.ddd.infra.common.config;
 
 import com.tooolan.ddd.domain.common.annotation.DomainService;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 
 /**
  * 领域服务配置
@@ -22,5 +23,6 @@ import org.springframework.context.annotation.FilterType;
         ),
         useDefaultFilters = false  // 不使用默认过滤器，只识别自定义注解
 )
+@Import(PropertiesConfigRegistrar.class)
 public class DomainServiceConfig {
 }

@@ -1,9 +1,9 @@
 package com.tooolan.ddd.app.log.convert;
 
-import com.tooolan.ddd.app.common.request.PageVo;
+import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.log.request.PageLogBo;
 import com.tooolan.ddd.app.log.response.LogVo;
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.param.PageLogParam;
 

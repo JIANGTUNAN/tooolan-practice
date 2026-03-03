@@ -1,6 +1,6 @@
 package com.tooolan.ddd.domain.team.repository;
 
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;
 

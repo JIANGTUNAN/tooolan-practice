@@ -1,6 +1,6 @@
 package com.tooolan.ddd.domain.log.repository.param;
 
-import com.tooolan.ddd.domain.common.result.PageRequest;
+import com.tooolan.ddd.domain.common.param.PageQueryParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PageLogParam extends PageRequest {
+public class PageLogParam extends PageQueryParam {
 
     /**
      * 业务模块（精确查询）

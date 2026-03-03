@@ -2,8 +2,8 @@ package com.tooolan.ddd.domain.session.service;
 
 import cn.hutool.core.util.BooleanUtil;
 import com.tooolan.ddd.domain.common.annotation.DomainService;
-import com.tooolan.ddd.domain.common.exception.SessionException;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
+import com.tooolan.ddd.domain.session.exception.SessionException;
 import com.tooolan.ddd.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SessionDomainService {
 
-    private final SecurityContext securityContext;
-    private final PasswordEncryptor passwordEncryptor;
+    private final SecurityContextProvider securityContextProvider;
+    private final PasswordService passwordService;
 
 
     /**
@@ -33,15 +33,15 @@ public class SessionDomainService {
      */
     public String login(User user, String encryptedPassword) {
         // RSA 解密获取 SHA256 摘要
-        String sha256Password = passwordEncryptor.decryptPassword(encryptedPassword);
+        String sha256Password = passwordService.decryptPassword(encryptedPassword);
 
         // 校验密码
-        if (BooleanUtil.isFalse(passwordEncryptor.verifyPassword(sha256Password, user.getPassword()))) {
-            throw new SessionException(SessionErrorCode.PASSWORD_MISMATCH);
+        if (BooleanUtil.isFalse(passwordService.verifyPassword(sha256Password, user.getPassword()))) {
+            throw new SessionException(SessionErrorCode.LOGIN_FAILED);
         }
 
         // 注册安全上下文
-        return securityContext.registerLogin(user);
+        return securityContextProvider.registerLogin(user);
     }
 
 }

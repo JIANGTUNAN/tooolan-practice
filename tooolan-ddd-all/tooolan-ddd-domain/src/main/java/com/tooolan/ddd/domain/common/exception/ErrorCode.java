@@ -1,4 +1,4 @@
-package com.tooolan.ddd.domain.common.constant;
+package com.tooolan.ddd.domain.common.exception;
 
 /**
  * 错误码接口

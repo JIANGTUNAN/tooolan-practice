@@ -1,4 +1,4 @@
-package com.tooolan.ddd.domain.common.context;
+package com.tooolan.ddd.domain.session.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

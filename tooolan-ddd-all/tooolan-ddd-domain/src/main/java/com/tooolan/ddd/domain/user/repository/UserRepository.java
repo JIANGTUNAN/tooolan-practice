@@ -1,6 +1,6 @@
 package com.tooolan.ddd.domain.user.repository;
 
-import com.tooolan.ddd.domain.common.param.PageQueryResult;
+import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.param.PageUserParam;
 
