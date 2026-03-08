@@ -33,7 +33,7 @@ cmd.exe /c "java -jar target\tooolan-ddd-start-1.0-SNAPSHOT.jar"
 
 ### Maven 依赖说明
 
-**重要**：父项目 `/mnt/d/project/tooolan-practice/pom.xml` 统一管理所有依赖版本，包括：
+**重要**：本项目 `tooolan-ddd-all/pom.xml` 独立管理所有依赖版本（使用 BOM import 方式，不继承外部 parent），包括：
 - Spring Boot 3.5.8
 - MyBatis Plus 3.5.15
 - Hutool 5.8.43
@@ -42,7 +42,6 @@ cmd.exe /c "java -jar target\tooolan-ddd-start-1.0-SNAPSHOT.jar"
 - Sa-Token 1.39.0（权限认证）
 - Spring Security Crypto 6.4.2（密码加密）
 - Transmittable ThreadLocal 2.14.5（阿里 TTL，线程池上下文传递）
-- Commons Lang3 3.14.0
 
 子模块无需指定版本号，直接引用依赖即可。
 

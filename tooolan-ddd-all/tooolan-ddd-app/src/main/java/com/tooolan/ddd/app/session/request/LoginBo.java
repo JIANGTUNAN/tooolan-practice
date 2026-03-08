@@ -3,7 +3,7 @@ package com.tooolan.ddd.app.session.request;
 import lombok.Data;
 
 /**
- * 登录业务对象
+ * 登录请求 业务对象
  *
  * @author tooolan
  * @since 2026年2月17日
