@@ -7,6 +7,7 @@ import lombok.Getter;
 
 /**
  * 部门模块错误码枚举
+ * 模块编码：004
  *
  * @author tooolan
  * @since 2026年2月17日
@@ -18,13 +19,14 @@ public enum DeptErrorCode implements ErrorCode {
     /**
      * 部门不存在
      */
-    NOT_FOUND("部门不存在"),
+    NOT_FOUND("1-004-404-001", "部门不存在"),
 
     /**
      * 部门编码已存在
      */
-    CODE_EXISTS("部门编码已存在");
+    CODE_EXISTS("1-004-409-002", "部门编码已存在");
 
+    private final String code;
     private final String message;
 
 }
