@@ -9,7 +9,9 @@
       "mcp__web-search-prime__webSearchPrime",
       "Bash(find:*)",
       "Bash(cmd.exe /c \"mvn clean compile -q -DskipTests\")",
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe:*)",
+      "mcp__web-reader__webReader",
+      "mcp__web-search-prime__web_search_prime"
     ]
   }
 }

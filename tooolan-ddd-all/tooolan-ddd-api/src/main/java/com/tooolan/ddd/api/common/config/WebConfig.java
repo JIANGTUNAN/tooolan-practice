@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Web 配置类
- * 注册拦截器，路径控制统一在配置文件中管理
+ * 注册上下文拦截器，鉴权拦截器在 SaTokenConfig 中配置
  *
  * @author tooolan
  * @since 2026年2月17日
@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * 注册上下文拦截器
-     * 拦截所有请求，路径白名单由配置文件 security.auth.public-paths 管理
+     * 只负责上下文管理，不负责鉴权
      *
      * @param registry 拦截器注册表
      */

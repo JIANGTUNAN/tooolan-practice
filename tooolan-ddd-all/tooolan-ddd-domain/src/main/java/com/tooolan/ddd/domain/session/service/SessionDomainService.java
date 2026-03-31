@@ -18,20 +18,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SessionDomainService {
 
-    private final SecurityContextProvider securityContextProvider;
     private final PasswordService passwordService;
 
-
     /**
-     * 执行登录
-     * 校验密码并注册安全上下文
+     * 验证密码
      *
      * @param user              登录用户
      * @param encryptedPassword RSA 加密的密码
-     * @return token
      * @throws SessionException 密码错误时抛出
      */
-    public String login(User user, String encryptedPassword) {
+    public void verifyPassword(User user, String encryptedPassword) {
         // RSA 解密获取 SHA256 摘要
         String sha256Password = passwordService.decryptPassword(encryptedPassword);
 
@@ -39,9 +35,6 @@ public class SessionDomainService {
         if (BooleanUtil.isFalse(passwordService.verifyPassword(sha256Password, user.getPassword()))) {
             throw new SessionException(SessionErrorCode.LOGIN_FAILED);
         }
-
-        // 注册安全上下文
-        return securityContextProvider.registerLogin(user);
     }
 
 }

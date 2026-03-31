@@ -2,20 +2,15 @@ package com.tooolan.ddd.app.session;
 
 import cn.hutool.core.util.BooleanUtil;
 import com.tooolan.ddd.app.session.convert.SessionConvert;
-import com.tooolan.ddd.app.session.request.LoginBo;
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
-import com.tooolan.ddd.app.session.response.LoginVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
-import com.tooolan.ddd.domain.session.event.UserLoginEvent;
 import com.tooolan.ddd.domain.session.exception.SessionException;
 import com.tooolan.ddd.domain.session.model.UserBean;
-import com.tooolan.ddd.domain.session.service.SecurityContextProvider;
 import com.tooolan.ddd.domain.session.service.SessionDomainService;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,40 +25,26 @@ import org.springframework.stereotype.Service;
 public class SessionApplicationService {
 
     private final UserRepository userRepository;
-    private final SecurityContextProvider securityContextProvider;
     private final SessionDomainService sessionDomainService;
-    private final ApplicationEventPublisher eventPublisher;
-
 
     /**
-     * 用户登录
+     * 认证用户，返回用户信息
+     * 用于 Controller 层调用，验证密码后返回用户信息
      *
-     * @param bo 登录业务对象
-     * @return 登录结果
+     * @param username          用户名
+     * @param encryptedPassword RSA 加密的密码
+     * @return 用户信息
      * @throws SessionException 用户不存在或密码错误时抛出
      */
-    public LoginVo login(LoginBo bo) {
-        // 1. 应用层查询用户
-        User user = userRepository.getUserByUsername(bo.getUsername())
+    public User authenticate(String username, String encryptedPassword) {
+        // 1. 查询用户
+        User user = userRepository.getUserByUsername(username)
                 .orElseThrow(() -> new SessionException(SessionErrorCode.LOGIN_FAILED));
 
-        // 2. 调用领域服务执行登录（密码校验、注册上下文）
-        String token = sessionDomainService.login(user, bo.getPassword());
+        // 2. 验证密码
+        sessionDomainService.verifyPassword(user, encryptedPassword);
 
-        // 3. 初始化用户上下文（供后续事件监听等使用）
-        UserBean userBean = new UserBean(user.getId(), user.getUsername(), user.getNickName());
-        ContextHolder.setContext(userBean);
-
-        // 4. 发布事件、返回结果（携带业务数据用于日志记录）
-        eventPublisher.publishEvent(UserLoginEvent.of(user, bo));
-        return SessionConvert.toLoginVo(token, user);
-    }
-
-    /**
-     * 用户登出
-     */
-    public void logout() {
-        securityContextProvider.unregisterLogin();
+        return user;
     }
 
     /**
