@@ -20,10 +20,11 @@ import java.util.List;
 public class SecurityAuthProperties {
 
     /**
-     * 是否启用登录校验
-     * 开发环境可设置为 false 关闭鉴权
+     * 是否开启 Mock 身份功能
+     * 开启后，token 传入 test-{userId} 格式可自动以该用户身份登录
+     * 仅用于开发环境，生产环境必须关闭
      */
-    private boolean enabled = true;
+    private boolean mockEnabled = false;
 
     /**
      * 公开路径白名单

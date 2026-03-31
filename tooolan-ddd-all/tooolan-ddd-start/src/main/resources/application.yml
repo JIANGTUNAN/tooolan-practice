@@ -53,8 +53,6 @@ logging:
 # 鉴权配置
 security:
   auth:
-    # 是否启用登录校验（开发环境可关闭）
-    enabled: true
     # 公开路径白名单（不需要登录）
     public-paths:
       - /api/session/login
@@ -62,6 +60,9 @@ security:
       - /api/session/public-key
       - /api/error
       - /api/favicon.ico
+    # Mock 身份功能（开发环境可开启，生产环境必须关闭）
+    # 开启后 token 传入 test-{userId} 格式可自动以该用户身份登录
+    mock-enabled: true
     # RSA 密钥配置（纯 Base64，无 PEM 头尾）
     rsa:
       private-key: 'MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIt0C

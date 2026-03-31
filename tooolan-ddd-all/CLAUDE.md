@@ -337,6 +337,41 @@ user.setRemark(remark);
 - **掩盖异常**：前端传参错误被静默处理，产生脏数据，难以排查问题
 - **抛出异常**：立即阻断请求，强制前端修复传参，保证数据质量
 
+## 接口测试
+
+项目运行在 `127.0.0.1:8080`，Context Path 为 `/api`。
+
+### Mock 身份登录
+
+当 `security.auth.mock-enabled` 开启时，可通过 `test-{userId}` 格式的 token 模拟任意用户身份：
+
+```bash
+# 以 userId=1 的用户身份请求
+curl -s http://127.0.0.1:8080/api/session/status -H "Authorization: test-1"
+
+# 以其他用户身份请求
+curl -s http://127.0.0.1:8080/api/user/page -H "Authorization: test-2"
+
+# POST 请求示例
+curl -s -X POST http://127.0.0.1:8080/api/user/save \
+  -H "Authorization: test-1" \
+  -H "Content-Type: application/json" \
+  -d '{"userName":"test","password":"xxx"}'
+```
+
+### 常用测试接口
+
+```bash
+# 登录状态查询
+curl -s http://127.0.0.1:8080/api/session/status -H "Authorization: test-1"
+
+# 用户分页查询
+curl -s http://127.0.0.1:8080/api/user/page -H "Authorization: test-1"
+
+# 小组分页查询
+curl -s http://127.0.0.1:8080/api/team/page -H "Authorization: test-1"
+```
+
 ## 应用入口
 
 - **启动类**：`tooolan-ddd-start/src/main/java/com/tooolan/ddd/DddApplication.java`
