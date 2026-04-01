@@ -6,12 +6,16 @@ import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.team.convert.TeamConvert;
 import com.tooolan.ddd.app.team.request.PageTeamBo;
 import com.tooolan.ddd.app.team.request.SaveTeamBo;
+import com.tooolan.ddd.app.team.request.UpdateTeamBo;
 import com.tooolan.ddd.app.team.response.TeamVo;
 import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.dept.constant.DeptErrorCode;
 import com.tooolan.ddd.domain.dept.exception.DeptException;
 import com.tooolan.ddd.domain.dept.repository.DeptRepository;
+import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
 import com.tooolan.ddd.domain.team.event.TeamCreatedEvent;
+import com.tooolan.ddd.domain.team.event.TeamUpdatedEvent;
+import com.tooolan.ddd.domain.team.exception.TeamException;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;
@@ -90,13 +94,45 @@ public class TeamApplicationService {
         Team team = TeamConvert.toDomain(bo);
         // 应用层校验：如果指定了部门，校验部门是否存在
         if (ObjUtil.isNotNull(bo.getDeptId())) {
-            deptRepository.getDept(bo.getDeptId())
-                    .orElseThrow(() -> new DeptException(DeptErrorCode.NOT_FOUND));
+            if (!deptRepository.existById(bo.getDeptId())) {
+                throw new DeptException(DeptErrorCode.NOT_FOUND);
+            }
         }
         // 调用领域服务保存小组（主键会通过引用回填）
         teamDomainService.saveTeam(team);
         // 发布小组创建事件（携带业务数据用于日志记录）
         eventPublisher.publishEvent(TeamCreatedEvent.of(team, bo));
+    }
+
+    /**
+     * 更新小组信息
+     * 包含应用层校验、领域服务调用和事件发布
+     *
+     * @param bo 更新小组 BO
+     * @throws DeptException                                       指定的部门不存在时抛出
+     * @throws TeamException 小组不存在或状态变更冲突时抛出
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void updateTeam(UpdateTeamBo bo) {
+        // 1. 查询现有小组
+        Team existingTeam = teamRepository.getTeam(bo.getTeamId())
+                .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
+
+        // 2. 转换为领域模型（部分更新）
+        Team updatedTeam = TeamConvert.toUpdateDomain(bo);
+
+        // 3. 如果修改了部门，校验部门存在性
+        if (ObjUtil.notEqual(existingTeam.getDeptId(), bo.getDeptId())) {
+            if (!deptRepository.existById(bo.getDeptId())) {
+                throw new DeptException(DeptErrorCode.NOT_FOUND);
+            }
+        }
+
+        // 4. 调用领域服务更新小组（包含状态变更校验）
+        teamDomainService.updateTeam(existingTeam, updatedTeam);
+
+        // 5. 发布小组更新事件
+        eventPublisher.publishEvent(TeamUpdatedEvent.of(updatedTeam, bo));
     }
 
 }

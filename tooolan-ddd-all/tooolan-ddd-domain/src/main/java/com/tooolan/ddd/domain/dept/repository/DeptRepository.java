@@ -21,4 +21,12 @@ public interface DeptRepository {
      */
     Optional<Dept> getDept(Integer deptId);
 
+    /**
+     * 判断部门是否存在
+     *
+     * @param deptId 部门ID
+     * @return 是否存在
+     */
+    boolean existById(Integer deptId);
+
 }

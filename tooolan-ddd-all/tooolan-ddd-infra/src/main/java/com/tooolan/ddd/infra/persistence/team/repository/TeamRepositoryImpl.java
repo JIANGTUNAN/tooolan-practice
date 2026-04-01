@@ -117,4 +117,30 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
         return saved;
     }
 
+    /**
+     * 根据小组ID更新小组信息
+     * 仅更新非 null 字段，部分更新策略
+     *
+     * @param team 小组领域模型
+     * @return 是否更新成功
+     */
+    @Override
+    public boolean updateById(Team team) {
+        SysTeamEntity entity = TeamConverter.toEntity(team);
+        return super.updateById(entity);
+    }
+
+    /**
+     * 判断小组是否存在
+     *
+     * @param teamId 小组ID
+     * @return 是否存在
+     */
+    @Override
+    public boolean existById(Integer teamId) {
+        return super.lambdaQuery()
+                .eq(SysTeamEntity::getTeamId, teamId)
+                .exists();
+    }
+
 }

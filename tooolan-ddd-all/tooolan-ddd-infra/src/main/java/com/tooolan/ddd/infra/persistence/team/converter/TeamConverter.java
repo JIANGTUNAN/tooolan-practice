@@ -54,7 +54,9 @@ public class TeamConverter {
         entity.setDeptId(team.getDeptId());
         entity.setTeamName(team.getTeamName());
         entity.setTeamCode(team.getTeamCode());
-        entity.setStatus(team.getStatus().getValue());
+        if (team.getStatus() != null) {
+            entity.setStatus(team.getStatus().getValue());
+        }
         entity.setMaxMembers(team.getMaxMembers());
         entity.setRemark(team.getRemark());
         return entity;

@@ -3,6 +3,7 @@ package com.tooolan.ddd.api.team;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.team.request.PageTeamDTO;
 import com.tooolan.ddd.api.team.request.SaveTeamDTO;
+import com.tooolan.ddd.api.team.request.UpdateTeamDTO;
 import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.team.TeamApplicationService;
@@ -96,14 +97,16 @@ public class TeamController {
         return ResultVo.success();
     }
 
-    /*
-    TODO 编辑小组信息
-     允许编辑的字段：
-      所属部门ID
-      小组名称
-      小组状态（只允许传入停用和正常，如果传入停用需要检查小组内是否还有成员，有成员不允许停用；如果传入正常需要校验是否满员，如果是满员状态不允许改为正常）
-      小组人数上限（如果已经是满员状态就需要更新为正常，如果是停用就保持停用状态）
-      备注信息
+    /**
+     * 编辑小组信息
+     *
+     * @param dto 小组信息
+     * @return 操作结果
      */
+    @PutMapping("/update")
+    public ResultVo<Void> update(@Validated @RequestBody UpdateTeamDTO dto) {
+        teamApplicationService.updateTeam(dto);
+        return ResultVo.success();
+    }
 
 }

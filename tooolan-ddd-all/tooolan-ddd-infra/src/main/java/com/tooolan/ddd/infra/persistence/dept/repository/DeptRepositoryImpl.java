@@ -1,10 +1,11 @@
 package com.tooolan.ddd.infra.persistence.dept.repository;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tooolan.ddd.domain.dept.model.Dept;
 import com.tooolan.ddd.domain.dept.repository.DeptRepository;
 import com.tooolan.ddd.infra.persistence.dept.converter.DeptConverter;
+import com.tooolan.ddd.infra.persistence.dept.entity.SysDeptEntity;
 import com.tooolan.ddd.infra.persistence.dept.mapper.SysDeptMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,10 +18,7 @@ import java.util.Optional;
  * @since 2026年2月11日
  */
 @Repository
-@RequiredArgsConstructor
-public class DeptRepositoryImpl implements DeptRepository {
-
-    private final SysDeptMapper deptMapper;
+public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity> implements DeptRepository {
 
     /**
      * 根据部门ID查询部门信息
@@ -30,8 +28,21 @@ public class DeptRepositoryImpl implements DeptRepository {
      */
     @Override
     public Optional<Dept> getDept(Integer deptId) {
-        return Optional.ofNullable(deptMapper.selectById(deptId))
+        return super.getOptById(deptId)
                 .map(DeptConverter::toDomain);
+    }
+
+    /**
+     * 判断部门是否存在
+     *
+     * @param deptId 部门ID
+     * @return 是否存在
+     */
+    @Override
+    public boolean existById(Integer deptId) {
+        return super.lambdaQuery()
+                .eq(SysDeptEntity::getDeptId, deptId)
+                .exists();
     }
 
 }

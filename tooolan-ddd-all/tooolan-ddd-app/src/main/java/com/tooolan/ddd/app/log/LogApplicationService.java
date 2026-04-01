@@ -141,6 +141,18 @@ public class LogApplicationService {
     }
 
     /**
+     * 记录小组更新日志
+     *
+     * @param team         更新后的小组
+     * @param businessData 业务数据（UpdateTeamBo）
+     */
+    public void logTeamUpdated(Team team, Object businessData) {
+        Log logModel = this.buildTeamLog(LogOpModule.TEAM, LogOpType.UPDATE, team);
+        logModel.setContent(this.toLogContent(businessData));
+        logDomainService.saveLog(logModel);
+    }
+
+    /**
      * 构建日志模型
      *
      * @param opModule 操作模块

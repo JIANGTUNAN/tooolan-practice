@@ -22,17 +22,17 @@ public class UpdateUserBo {
     private String nickName;
 
     /**
-     * 邮箱（可选，支持清空）
+     * 邮箱（可选）
      */
     private String email;
 
     /**
-     * 所属小组ID（可选，支持清空）
+     * 所属小组ID（可选）
      */
     private Integer teamId;
 
     /**
-     * 备注信息（可选，支持清空）
+     * 备注信息（可选）
      */
     private String remark;
 

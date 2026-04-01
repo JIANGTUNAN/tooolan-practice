@@ -59,4 +59,21 @@ public interface TeamRepository {
      */
     boolean save(Team team);
 
+    /**
+     * 根据小组ID更新小组信息
+     * 仅更新非 null 字段，部分更新策略
+     *
+     * @param team 小组领域模型
+     * @return 是否更新成功
+     */
+    boolean updateById(Team team);
+
+    /**
+     * 判断小组是否存在
+     *
+     * @param teamId 小组ID
+     * @return 是否存在
+     */
+    boolean existById(Integer teamId);
+
 }

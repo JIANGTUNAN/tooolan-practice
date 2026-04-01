@@ -12,7 +12,8 @@
       "Bash(cmd.exe:*)",
       "mcp__web-reader__webReader",
       "mcp__web-search-prime__web_search_prime",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(mvn *)"
     ]
   }
 }

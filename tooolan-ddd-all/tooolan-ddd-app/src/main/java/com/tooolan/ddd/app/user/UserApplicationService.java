@@ -6,7 +6,6 @@ import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.user.convert.UserConvert;
 import com.tooolan.ddd.app.user.request.*;
 import com.tooolan.ddd.app.user.response.UserVo;
-import com.tooolan.ddd.domain.common.constant.FieldClearValues;
 import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.session.exception.SessionException;
 import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
@@ -111,7 +110,7 @@ public class UserApplicationService {
 
     /**
      * 更新用户
-     * 支持部分字段更新和字段清空功能
+     * 支持部分字段更新
      *
      * @param bo 更新用户 BO
      * @throws UserException 用户不存在或用户名被修改时抛出
@@ -124,10 +123,8 @@ public class UserApplicationService {
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND));
         // 2. 转换为领域模型（传入现有用户实现部分更新）
         User updatedUser = UserConvert.toUpdateDomain(bo, existingUser);
-        // 3. 处理字段清空
-        this.processClearFields(updatedUser);
 
-        // 4. 如果修改了小组，校验小组存在性
+        // 3. 如果修改了小组，校验小组存在性
         Team newTeam = null;
         Integer oldTeamId = existingUser.getTeamId();
         Integer newTeamId = updatedUser.getTeamId();
@@ -138,10 +135,10 @@ public class UserApplicationService {
                     .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
         }
 
-        // 5. 调用领域服务
+        // 4. 调用领域服务
         userDomainService.updateUser(existingUser, updatedUser, newTeam);
 
-        // 6. 发布用户更新事件（携带业务数据用于日志记录）
+        // 5. 发布用户更新事件（携带业务数据用于日志记录）
         eventPublisher.publishEvent(UserUpdatedEvent.of(updatedUser, bo));
     }
 
@@ -178,24 +175,6 @@ public class UserApplicationService {
         userDomainService.deleteUsers(bo.getUserIds());
         // 发布用户删除事件（携带业务数据用于日志记录）
         eventPublisher.publishEvent(UserDeletedEvent.of(bo.getUserIds(), bo));
-    }
-
-    /**
-     * 处理字段清空逻辑
-     * 将约定值转换为 null
-     *
-     * @param user 用户领域模型
-     */
-    private void processClearFields(User user) {
-        if (ObjUtil.isNotNull(user.getEmail())) {
-            user.setEmail(FieldClearValues.processField(user.getEmail()));
-        }
-        if (ObjUtil.isNotNull(user.getTeamId())) {
-            user.setTeamId(FieldClearValues.processField(user.getTeamId()));
-        }
-        if (ObjUtil.isNotNull(user.getRemark())) {
-            user.setRemark(FieldClearValues.processField(user.getRemark()));
-        }
     }
 
 }

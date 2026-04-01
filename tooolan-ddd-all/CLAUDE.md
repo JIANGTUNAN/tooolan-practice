@@ -12,23 +12,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### 构建与运行
 
-**重要**：由于项目在 WSL 环境中运行，构建时必须使用 `cmd.exe /c` 调用 Windows 下的 Maven，避免 WSL 环境兼容性问题。
-
 ```bash
 # 完整构建（从父项目目录）
-cmd.exe /c "mvn clean install"
+mvn clean install
 
 # 仅构建当前模块
-cmd.exe /c "mvn clean install"
+mvn clean install
 
 # 运行应用（开发环境）
-cmd.exe /c "mvn spring-boot:run"
+mvn spring-boot:run
 
 # 打包应用
-cmd.exe /c "mvn clean package"
+mvn clean package
 
 # 运行打包后的 JAR
-cmd.exe /c "java -jar target\tooolan-ddd-start-1.0-SNAPSHOT.jar"
+java -jar target\tooolan-ddd-start-1.0-SNAPSHOT.jar
 ```
 
 ### Maven 依赖说明
@@ -217,6 +215,8 @@ com.tooolan.ddd.{module}
 - `UserUpdatedEvent`：用户更新事件
 - `UserDeletedEvent`：用户删除事件
 - `UserLoginEvent`：用户登录事件
+- `TeamCreatedEvent`：小组创建事件
+- `TeamUpdatedEvent`：小组更新事件
 
 **事件发布**：
 
@@ -229,21 +229,6 @@ eventPublisher.publishEvent(UserCreatedEvent.of(user, bo));
 - 处理领域事件，记录操作日志
 - 使用 `@EventListener` 注解监听事件
 - 异步执行，避免影响主流程性能
-
-### 字段清空机制
-
-**关键文件**：`tooolan-ddd-domain/src/main/java/com/tooolan/ddd/domain/common/constant/FieldClearValues.java`
-
-- **清空约定值**：字符串 `"_clear"`、整数 `-1`
-- **处理方法**：`FieldClearValues.processField()` 静态方法
-- **应用场景**：`UserApplicationService.processClearFields()` 支持清空 `email`、`teamId`、`remark`
-
-**使用示例**：
-
-```java
-// 前端传递 "_clear" 表示清空可选字段
-FieldClearValues.processField(user::setEmail, email);
-```
 
 ### 上下文管理
 

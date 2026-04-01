@@ -3,9 +3,12 @@ package com.tooolan.ddd.app.team.convert;
 import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.team.request.PageTeamBo;
 import com.tooolan.ddd.app.team.request.SaveTeamBo;
+import com.tooolan.ddd.app.team.request.UpdateTeamBo;
 import com.tooolan.ddd.app.team.response.TeamVo;
 import com.tooolan.ddd.domain.common.result.PageQueryResult;
+import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
 import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
+import com.tooolan.ddd.domain.team.exception.TeamException;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;
 
@@ -58,6 +61,27 @@ public class TeamConvert {
         team.setMaxMembers(bo.getMaxMembers());
         team.setRemark(bo.getRemark());
         team.setStatus(TeamStatusEnum.NORMAL);
+        return team;
+    }
+
+    /**
+     * 将更新小组 BO 转换为领域模型（部分更新）
+     * 只设置传入的非 null 字段，null 字段不会被更新
+     *
+     * @param bo 更新小组 BO
+     * @return 领域模型
+     */
+    public static Team toUpdateDomain(UpdateTeamBo bo) {
+        Team team = new Team();
+        team.setId(bo.getTeamId());
+        team.setDeptId(bo.getDeptId());
+        team.setTeamName(bo.getTeamName());
+        team.setMaxMembers(bo.getMaxMembers());
+        team.setRemark(bo.getRemark());
+        if (bo.getStatus() != null) {
+            team.setStatus(TeamStatusEnum.fromValue(bo.getStatus())
+                    .orElseThrow(() -> new TeamException(TeamErrorCode.STATUS_CONFLICT)));
+        }
         return team;
     }
 

@@ -39,7 +39,22 @@ public enum TeamErrorCode implements ErrorCode {
     /**
      * 保存小组失败
      */
-    SAVE_FAILED("1-003-500-005", "保存小组失败，请稍后再试");
+    SAVE_FAILED("1-003-500-005", "保存小组失败，请稍后再试"),
+
+    /**
+     * 更新小组失败
+     */
+    UPDATE_FAILED("1-003-500-006", "更新小组失败，请稍后再试"),
+
+    /**
+     * 小组内仍有成员，无法停用
+     */
+    HAS_MEMBERS("1-003-400-007", "小组内仍有成员，无法停用"),
+
+    /**
+     * 小组状态变更冲突
+     */
+    STATUS_CONFLICT("1-003-400-008", "小组状态变更冲突，请刷新后重试");
 
     private final String code;
     private final String message;
