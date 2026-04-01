@@ -143,4 +143,28 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
                 .exists();
     }
 
+    /**
+     * 批量逻辑删除小组
+     *
+     * @param teamIds 小组ID列表
+     * @return 删除的记录数
+     */
+    @Override
+    public int deleteByIds(List<Integer> teamIds) {
+        return baseMapper.deleteByIds(teamIds);
+    }
+
+    /**
+     * 批量判断小组是否全部存在
+     *
+     * @param teamIds 小组ID列表
+     * @return 所有小组都存在返回 true，否则返回 false
+     */
+    @Override
+    public boolean existByIds(List<Integer> teamIds) {
+        return super.lambdaQuery()
+                .in(SysTeamEntity::getTeamId, teamIds)
+                .count() == teamIds.size();
+    }
+
 }

@@ -166,4 +166,17 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
                 .toList();
     }
 
+    /**
+     * 根据小组ID列表统计有效用户数量
+     *
+     * @param teamIds 小组ID列表
+     * @return 有效用户数量
+     */
+    @Override
+    public long countByTeamIds(List<Integer> teamIds) {
+        return super.lambdaQuery()
+                .in(SysUserEntity::getTeamId, teamIds)
+                .count();
+    }
+
 }

@@ -91,4 +91,12 @@ public interface UserRepository {
      */
     List<User> listUserOptions(String nickName);
 
+    /**
+     * 批量统计指定小组的用户总数
+     *
+     * @param teamIds 小组ID列表
+     * @return 用户总数
+     */
+    long countByTeamIds(List<Integer> teamIds);
+
 }

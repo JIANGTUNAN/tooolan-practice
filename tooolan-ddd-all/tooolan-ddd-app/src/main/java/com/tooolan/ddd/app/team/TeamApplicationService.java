@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.team.convert.TeamConvert;
+import com.tooolan.ddd.app.team.request.DeleteTeamBo;
 import com.tooolan.ddd.app.team.request.PageTeamBo;
 import com.tooolan.ddd.app.team.request.SaveTeamBo;
 import com.tooolan.ddd.app.team.request.UpdateTeamBo;
@@ -14,6 +15,7 @@ import com.tooolan.ddd.domain.dept.exception.DeptException;
 import com.tooolan.ddd.domain.dept.repository.DeptRepository;
 import com.tooolan.ddd.domain.team.constant.TeamErrorCode;
 import com.tooolan.ddd.domain.team.event.TeamCreatedEvent;
+import com.tooolan.ddd.domain.team.event.TeamDeletedEvent;
 import com.tooolan.ddd.domain.team.event.TeamUpdatedEvent;
 import com.tooolan.ddd.domain.team.exception.TeamException;
 import com.tooolan.ddd.domain.team.model.Team;
@@ -133,6 +135,25 @@ public class TeamApplicationService {
 
         // 5. 发布小组更新事件
         eventPublisher.publishEvent(TeamUpdatedEvent.of(updatedTeam, bo));
+    }
+
+    /**
+     * 批量删除小组
+     * 包含应用层校验、领域服务调用和事件发布
+     *
+     * @param bo 删除小组 BO
+     * @throws TeamException 小组不存在、有成员或删除失败时抛出
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void deleteTeams(DeleteTeamBo bo) {
+        // 应用层校验：小组是否存在
+        if (!teamRepository.existByIds(bo.getTeamIds())) {
+            throw new TeamException(TeamErrorCode.NOT_FOUND);
+        }
+        // 调用领域服务删除小组
+        teamDomainService.deleteTeams(bo.getTeamIds());
+        // 发布小组删除事件（携带业务数据用于日志记录）
+        eventPublisher.publishEvent(TeamDeletedEvent.of(bo.getTeamIds(), bo));
     }
 
 }

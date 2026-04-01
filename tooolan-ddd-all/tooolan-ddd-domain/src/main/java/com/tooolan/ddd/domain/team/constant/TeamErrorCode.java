@@ -54,7 +54,17 @@ public enum TeamErrorCode implements ErrorCode {
     /**
      * 小组状态变更冲突
      */
-    STATUS_CONFLICT("1-003-400-008", "小组状态变更冲突，请刷新后重试");
+    STATUS_CONFLICT("1-003-400-008", "小组状态变更冲突，请刷新后重试"),
+
+    /**
+     * 删除小组失败
+     */
+    DELETE_FAILED("1-003-500-009", "删除小组失败，请稍后再试"),
+
+    /**
+     * 小组内仍有成员，无法删除
+     */
+    HAS_MEMBERS_DELETE("1-003-400-010", "小组内仍有成员，请先调走用户再试");
 
     private final String code;
     private final String message;

@@ -1,6 +1,7 @@
 package com.tooolan.ddd.api.team;
 
 import com.tooolan.ddd.api.common.response.ResultVo;
+import com.tooolan.ddd.api.team.request.DeleteTeamDTO;
 import com.tooolan.ddd.api.team.request.PageTeamDTO;
 import com.tooolan.ddd.api.team.request.SaveTeamDTO;
 import com.tooolan.ddd.api.team.request.UpdateTeamDTO;
@@ -106,6 +107,18 @@ public class TeamController {
     @PutMapping("/update")
     public ResultVo<Void> update(@Validated @RequestBody UpdateTeamDTO dto) {
         teamApplicationService.updateTeam(dto);
+        return ResultVo.success();
+    }
+
+    /**
+     * 批量删除小组信息
+     *
+     * @param dto 小组ID列表
+     * @return 操作结果
+     */
+    @DeleteMapping("/delete")
+    public ResultVo<Void> delete(@Validated @RequestBody DeleteTeamDTO dto) {
+        teamApplicationService.deleteTeams(dto);
         return ResultVo.success();
     }
 

@@ -76,4 +76,20 @@ public interface TeamRepository {
      */
     boolean existById(Integer teamId);
 
+    /**
+     * 批量逻辑删除小组
+     *
+     * @param teamIds 小组ID列表
+     * @return 删除的记录数
+     */
+    int deleteByIds(List<Integer> teamIds);
+
+    /**
+     * 批量判断小组是否全部存在
+     *
+     * @param teamIds 小组ID列表
+     * @return 所有小组都存在返回 true，否则返回 false
+     */
+    boolean existByIds(List<Integer> teamIds);
+
 }

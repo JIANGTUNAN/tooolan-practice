@@ -10,6 +10,8 @@ import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 /**
  * 小组 领域服务（原子服务）
  * 提供小组相关的原子化业务逻辑
@@ -102,6 +104,27 @@ public class TeamDomainService {
         boolean updated = teamRepository.updateById(updatedTeam);
         if (BooleanUtil.isFalse(updated)) {
             throw new TeamException(TeamErrorCode.UPDATE_FAILED);
+        }
+    }
+
+    /**
+     * 批量删除小组
+     * 包含成员校验和删除执行
+     *
+     * @param teamIds 小组ID列表
+     * @throws TeamException 有成员或删除失败时抛出
+     */
+    public void deleteTeams(List<Integer> teamIds) {
+        // 1. 校验小组下是否有用户（批量查询，任意一个有用户则失败）
+        long memberCount = userRepository.countByTeamIds(teamIds);
+        if (memberCount > 0) {
+            throw new TeamException(TeamErrorCode.HAS_MEMBERS_DELETE);
+        }
+
+        // 2. 执行批量删除
+        int deletedCount = teamRepository.deleteByIds(teamIds);
+        if (deletedCount != teamIds.size()) {
+            throw new TeamException(TeamErrorCode.DELETE_FAILED);
         }
     }
 
