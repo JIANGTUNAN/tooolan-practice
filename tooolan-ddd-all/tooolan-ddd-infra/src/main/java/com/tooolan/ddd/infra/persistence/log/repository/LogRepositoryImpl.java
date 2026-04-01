@@ -34,7 +34,7 @@ public class LogRepositoryImpl extends ServiceImpl<SysLogMapper, SysLogEntity> i
      * @return 日志信息，不存在时返回空
      */
     @Override
-    public Optional<Log> getLog(Long logId) {
+    public Optional<Log> getById(Long logId) {
         return super.getOptById(logId)
                 .map(LogConverter::toDomain);
     }
@@ -46,7 +46,7 @@ public class LogRepositoryImpl extends ServiceImpl<SysLogMapper, SysLogEntity> i
      * @return 分页查询结果，按创建时间倒序排列
      */
     @Override
-    public PageQueryResult<Log> pageLog(PageLogParam pageLogParam) {
+    public PageQueryResult<Log> page(PageLogParam pageLogParam) {
         IPage<Log> page = super.lambdaQuery()
                 .eq(StrUtil.isNotBlank(pageLogParam.getOpModule()), SysLogEntity::getOpModule, pageLogParam.getOpModule())
                 .eq(StrUtil.isNotBlank(pageLogParam.getOpType()), SysLogEntity::getOpType, pageLogParam.getOpType())

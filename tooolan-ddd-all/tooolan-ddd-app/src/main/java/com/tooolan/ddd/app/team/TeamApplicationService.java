@@ -49,24 +49,13 @@ public class TeamApplicationService {
 
 
     /**
-     * 获取小组选项列表
-     *
-     * @param teamName 小组名称（可选，模糊匹配）
-     * @return 小组选项列表
-     */
-    public OptionVo<Integer> getTeamOptions(String teamName) {
-        List<Team> teams = teamRepository.listTeamOptions(teamName);
-        return OptionVo.from(teams, Team::getId, Team::getTeamName);
-    }
-
-    /**
      * 根据小组ID获取小组信息
      *
      * @param teamId 小组ID
      * @return 小组视图对象
      */
-    public Optional<TeamVo> getTeamById(Integer teamId) {
-        Optional<Team> team = teamRepository.getTeam(teamId);
+    public Optional<TeamVo> getById(Integer teamId) {
+        Optional<Team> team = teamRepository.getById(teamId);
         return team.map(TeamConvert::toVo);
     }
 
@@ -76,10 +65,21 @@ public class TeamApplicationService {
      * @param bo 查询条件
      * @return 分页结果
      */
-    public PageVo<TeamVo> pageTeam(PageTeamBo bo) {
+    public PageVo<TeamVo> page(PageTeamBo bo) {
         PageTeamParam pageTeamParam = TeamConvert.toParam(bo);
-        PageQueryResult<Team> pageQueryResult = teamRepository.pageTeam(pageTeamParam);
+        PageQueryResult<Team> pageQueryResult = teamRepository.page(pageTeamParam);
         return TeamConvert.toPageVo(pageQueryResult);
+    }
+
+    /**
+     * 获取小组选项列表
+     *
+     * @param teamName 小组名称（可选，模糊匹配）
+     * @return 小组选项列表
+     */
+    public OptionVo<Integer> getOptions(String teamName) {
+        List<Team> teams = teamRepository.listOptions(teamName);
+        return OptionVo.from(teams, Team::getId, Team::getTeamName);
     }
 
     /**
@@ -88,10 +88,10 @@ public class TeamApplicationService {
      *
      * @param bo 保存小组 BO
      * @throws DeptException 指定的部门不存在时抛出
-     * @throws com.tooolan.ddd.domain.team.exception.TeamException 小组编码已存在或保存失败时抛出
+     * @throws TeamException 小组编码已存在或保存失败时抛出
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void saveTeam(SaveTeamBo bo) {
+    public void save(SaveTeamBo bo) {
         // 转换为领域模型
         Team team = TeamConvert.toDomain(bo);
         // 应用层校验：如果指定了部门，校验部门是否存在
@@ -115,9 +115,9 @@ public class TeamApplicationService {
      * @throws TeamException 小组不存在或状态变更冲突时抛出
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void updateTeam(UpdateTeamBo bo) {
+    public void update(UpdateTeamBo bo) {
         // 1. 查询现有小组
-        Team existingTeam = teamRepository.getTeam(bo.getTeamId())
+        Team existingTeam = teamRepository.getById(bo.getTeamId())
                 .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
 
         // 2. 转换为领域模型（部分更新）
@@ -145,7 +145,7 @@ public class TeamApplicationService {
      * @throws TeamException 小组不存在、有成员或删除失败时抛出
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void deleteTeams(DeleteTeamBo bo) {
+    public void delete(DeleteTeamBo bo) {
         // 应用层校验：小组是否存在
         if (!teamRepository.existByIds(bo.getTeamIds())) {
             throw new TeamException(TeamErrorCode.NOT_FOUND);

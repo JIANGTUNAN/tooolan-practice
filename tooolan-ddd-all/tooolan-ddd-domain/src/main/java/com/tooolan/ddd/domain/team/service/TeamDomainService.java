@@ -35,7 +35,7 @@ public class TeamDomainService {
      */
     public void saveTeam(Team team) {
         // 1. 校验小组编码唯一性
-        teamRepository.getTeamByCode(team.getTeamCode())
+        teamRepository.getByCode(team.getTeamCode())
                 .ifPresent(t -> {
                     throw new TeamException(TeamErrorCode.CODE_EXISTS);
                 });

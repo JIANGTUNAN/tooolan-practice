@@ -48,7 +48,7 @@ public class LogEventListener {
     public void handleUserLoginEvent(UserLoginEvent event) {
         try {
             User user = event.getUser();
-            logApplicationService.logUserLogin(user, event.getBusinessData());
+            logApplicationService.onUserLogin(user, event.getBusinessData());
             log.info("用户登录日志记录成功: userId={}, username={}, operator={}, ip={}",
                     user.getId(), user.getUsername(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -67,7 +67,7 @@ public class LogEventListener {
     public void handleUserCreatedEvent(UserCreatedEvent event) {
         try {
             User user = event.getUser();
-            logApplicationService.logUserCreated(user, event.getBusinessData());
+            logApplicationService.onUserCreated(user, event.getBusinessData());
             log.info("用户创建日志记录成功: userId={}, username={}, operator={}, ip={}",
                     user.getId(), user.getUsername(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -86,7 +86,7 @@ public class LogEventListener {
     public void handleUserUpdatedEvent(UserUpdatedEvent event) {
         try {
             User user = event.getUser();
-            logApplicationService.logUserUpdated(user, event.getBusinessData());
+            logApplicationService.onUserUpdated(user, event.getBusinessData());
             log.info("用户更新日志记录成功: userId={}, username={}, operator={}, ip={}",
                     user.getId(), user.getUsername(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -105,7 +105,7 @@ public class LogEventListener {
     public void handleUserDeletedEvent(UserDeletedEvent event) {
         try {
             List<Integer> userIds = event.getUserIds();
-            logApplicationService.logUserDeleted(userIds, event.getBusinessData());
+            logApplicationService.onUserDeleted(userIds, event.getBusinessData());
             log.info("用户删除日志记录成功: userIds={}, operator={}, ip={}",
                     userIds, ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class LogEventListener {
     public void handleUserPasswordChangedEvent(UserPasswordChangedEvent event) {
         try {
             User user = event.getUser();
-            logApplicationService.logUserPasswordChanged(user);
+            logApplicationService.onUserPasswordChanged(user);
             log.info("用户密码修改日志记录成功: userId={}, username={}, operator={}, ip={}",
                     user.getId(), user.getUsername(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -142,7 +142,7 @@ public class LogEventListener {
     public void handleTeamCreatedEvent(TeamCreatedEvent event) {
         try {
             Team team = event.getTeam();
-            logApplicationService.logTeamCreated(team, event.getBusinessData());
+            logApplicationService.onTeamCreated(team, event.getBusinessData());
             log.info("小组创建日志记录成功: teamId={}, teamName={}, operator={}, ip={}",
                     team.getId(), team.getTeamName(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
@@ -161,7 +161,7 @@ public class LogEventListener {
     public void handleTeamUpdatedEvent(TeamUpdatedEvent event) {
         try {
             Team team = event.getTeam();
-            logApplicationService.logTeamUpdated(team, event.getBusinessData());
+            logApplicationService.onTeamUpdated(team, event.getBusinessData());
             log.info("小组更新日志记录成功: teamId={}, teamName={}, operator={}, ip={}",
                     team.getId(), team.getTeamName(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());

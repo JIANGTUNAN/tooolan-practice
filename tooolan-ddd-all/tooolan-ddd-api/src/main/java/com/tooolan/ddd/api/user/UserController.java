@@ -28,18 +28,6 @@ public class UserController {
 
 
     /**
-     * 获取用户选项列表
-     *
-     * @param nickName 昵称（可选，模糊匹配）
-     * @return 用户选项列表
-     */
-    @GetMapping("/options")
-    public ResultVo<OptionVo<Integer>> options(@RequestParam(required = false) String nickName) {
-        OptionVo<Integer> options = userApplicationService.getUserOptions(nickName);
-        return ResultVo.success(options);
-    }
-
-    /**
      * 根据ID查询用户信息
      *
      * @param userId 用户ID
@@ -47,7 +35,7 @@ public class UserController {
      */
     @GetMapping("/get/{userId}")
     public ResultVo<UserVo> get(@PathVariable Integer userId) {
-        UserVo user = userApplicationService.getUserById(userId)
+        UserVo user = userApplicationService.getById(userId)
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND));
         return ResultVo.success(user);
     }
@@ -60,8 +48,20 @@ public class UserController {
      */
     @GetMapping("/page")
     public ResultVo<PageVo<UserVo>> page(@Validated PageUserDTO dto) {
-        PageVo<UserVo> pageVo = userApplicationService.pageUser(dto);
+        PageVo<UserVo> pageVo = userApplicationService.page(dto);
         return ResultVo.success(pageVo);
+    }
+
+    /**
+     * 获取用户选项列表
+     *
+     * @param nickName 昵称（可选，模糊匹配）
+     * @return 用户选项列表
+     */
+    @GetMapping("/options")
+    public ResultVo<OptionVo<Integer>> options(@RequestParam(required = false) String nickName) {
+        OptionVo<Integer> options = userApplicationService.getOptions(nickName);
+        return ResultVo.success(options);
     }
 
     /**
@@ -72,7 +72,7 @@ public class UserController {
      */
     @PostMapping("/save")
     public ResultVo<Void> save(@Validated @RequestBody SaveUserDTO dto) {
-        userApplicationService.saveUser(dto);
+        userApplicationService.save(dto);
         return ResultVo.success();
     }
 
@@ -85,7 +85,7 @@ public class UserController {
      */
     @PutMapping("/update")
     public ResultVo<Void> update(@Validated @RequestBody UpdateUserDTO dto) {
-        userApplicationService.updateUser(dto);
+        userApplicationService.update(dto);
         return ResultVo.success();
     }
 
@@ -109,7 +109,7 @@ public class UserController {
      */
     @DeleteMapping("/delete")
     public ResultVo<Void> delete(@Validated @RequestBody DeleteUserDTO dto) {
-        userApplicationService.deleteUsers(dto);
+        userApplicationService.delete(dto);
         return ResultVo.success();
     }
 

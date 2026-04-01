@@ -37,7 +37,7 @@ public class LogController {
      */
     @GetMapping("/get/{logId}")
     public ResultVo<LogVo> get(@PathVariable Long logId) {
-        LogVo logVo = logApplicationService.getLogById(logId)
+        LogVo logVo = logApplicationService.getById(logId)
                 .orElseThrow(() -> new LogException(LogErrorCode.NOT_FOUND));
         return ResultVo.success(logVo);
     }
@@ -50,7 +50,7 @@ public class LogController {
      */
     @GetMapping("/page")
     public ResultVo<PageVo<LogVo>> page(@Validated PageLogDTO dto) {
-        PageVo<LogVo> pageVo = logApplicationService.pageLog(dto);
+        PageVo<LogVo> pageVo = logApplicationService.page(dto);
         return ResultVo.success(pageVo);
     }
 

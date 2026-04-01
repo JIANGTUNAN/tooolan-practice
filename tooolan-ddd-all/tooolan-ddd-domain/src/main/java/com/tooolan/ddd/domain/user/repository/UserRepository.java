@@ -22,15 +22,7 @@ public interface UserRepository {
      * @param userId 用户ID
      * @return 用户信息，不存在时返回空
      */
-    Optional<User> getUser(Integer userId);
-
-    /**
-     * 分页查询用户信息
-     *
-     * @param pageUserParam 分页查询参数
-     * @return 分页查询结果
-     */
-    PageQueryResult<User> pageUser(PageUserParam pageUserParam);
+    Optional<User> getById(Integer userId);
 
     /**
      * 根据用户名查询用户
@@ -38,7 +30,48 @@ public interface UserRepository {
      * @param username 用户名
      * @return 用户信息，不存在时返回空
      */
-    Optional<User> getUserByUsername(String username);
+    Optional<User> getByUsername(String username);
+
+    /**
+     * 分页查询用户信息
+     *
+     * @param pageUserParam 分页查询参数
+     * @return 分页查询结果
+     */
+    PageQueryResult<User> page(PageUserParam pageUserParam);
+
+    /**
+     * 查询用户选项列表
+     * 用于下拉框选择，支持按昵称模糊查询
+     *
+     * @param nickName 昵称（可选，模糊匹配）
+     * @return 用户列表（仅包含 ID 和昵称）
+     */
+    List<User> listOptions(String nickName);
+
+    /**
+     * 统计指定小组的用户数量
+     *
+     * @param teamId 小组ID
+     * @return 用户数量
+     */
+    long countByTeamId(Integer teamId);
+
+    /**
+     * 根据用户ID列表统计有效用户数量
+     *
+     * @param userIds 用户ID列表
+     * @return 有效用户数量
+     */
+    long countByIds(List<Integer> userIds);
+
+    /**
+     * 批量统计指定小组的用户总数
+     *
+     * @param teamIds 小组ID列表
+     * @return 用户总数
+     */
+    long countByTeamIds(List<Integer> teamIds);
 
     /**
      * 保存用户
@@ -48,14 +81,6 @@ public interface UserRepository {
      * @return 是否保存成功
      */
     boolean save(User user);
-
-    /**
-     * 统计指定小组的用户数量
-     *
-     * @param teamId 小组ID
-     * @return 用户数量
-     */
-    long countByTeamId(Integer teamId);
 
     /**
      * 根据用户ID更新用户信息
@@ -73,30 +98,5 @@ public interface UserRepository {
      * @return 删除的记录数
      */
     int deleteByIds(List<Integer> userIds);
-
-    /**
-     * 根据用户ID列表统计有效用户数量
-     *
-     * @param userIds 用户ID列表
-     * @return 有效用户数量
-     */
-    long countByIds(List<Integer> userIds);
-
-    /**
-     * 查询用户选项列表
-     * 用于下拉框选择，支持按昵称模糊查询
-     *
-     * @param nickName 昵称（可选，模糊匹配）
-     * @return 用户列表（仅包含 ID 和昵称）
-     */
-    List<User> listUserOptions(String nickName);
-
-    /**
-     * 批量统计指定小组的用户总数
-     *
-     * @param teamIds 小组ID列表
-     * @return 用户总数
-     */
-    long countByTeamIds(List<Integer> teamIds);
 
 }

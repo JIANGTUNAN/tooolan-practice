@@ -21,7 +21,7 @@ public interface LogRepository {
      * @param logId 日志ID
      * @return 日志信息，不存在时返回空
      */
-    Optional<Log> getLog(Long logId);
+    Optional<Log> getById(Long logId);
 
     /**
      * 分页查询日志信息
@@ -32,7 +32,7 @@ public interface LogRepository {
      * @param pageLogParam 分页查询参数
      * @return 分页查询结果，按创建时间倒序排列
      */
-    PageQueryResult<Log> pageLog(PageLogParam pageLogParam);
+    PageQueryResult<Log> page(PageLogParam pageLogParam);
 
     /**
      * 保存日志

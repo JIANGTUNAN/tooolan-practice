@@ -27,7 +27,7 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
      * @return 部门信息，不存在时返回空
      */
     @Override
-    public Optional<Dept> getDept(Integer deptId) {
+    public Optional<Dept> getById(Integer deptId) {
         return super.getOptById(deptId)
                 .map(DeptConverter::toDomain);
     }

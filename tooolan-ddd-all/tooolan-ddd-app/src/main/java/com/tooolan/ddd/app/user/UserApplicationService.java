@@ -54,9 +54,21 @@ public class UserApplicationService {
      * @param userId 用户ID
      * @return 用户视图对象
      */
-    public Optional<UserVo> getUserById(Integer userId) {
-        Optional<User> user = userRepository.getUser(userId);
+    public Optional<UserVo> getById(Integer userId) {
+        Optional<User> user = userRepository.getById(userId);
         return user.map(UserConvert::toVo);
+    }
+
+    /**
+     * 分页查询用户信息
+     *
+     * @param dto 查询条件
+     * @return 分页结果
+     */
+    public PageVo<UserVo> page(PageUserBo dto) {
+        PageUserParam pageUserParam = UserConvert.toParam(dto);
+        PageQueryResult<User> pageQueryResult = userRepository.page(pageUserParam);
+        return UserConvert.toPageVo(pageQueryResult);
     }
 
     /**
@@ -66,21 +78,9 @@ public class UserApplicationService {
      * @param nickName 昵称（可选，模糊匹配）
      * @return 用户选项列表
      */
-    public OptionVo<Integer> getUserOptions(String nickName) {
-        List<User> users = userRepository.listUserOptions(nickName);
+    public OptionVo<Integer> getOptions(String nickName) {
+        List<User> users = userRepository.listOptions(nickName);
         return OptionVo.from(users, User::getId, User::getNickName);
-    }
-
-    /**
-     * 分页查询用户信息
-     *
-     * @param dto 查询条件
-     * @return 分页结果
-     */
-    public PageVo<UserVo> pageUser(PageUserBo dto) {
-        PageUserParam pageUserParam = UserConvert.toParam(dto);
-        PageQueryResult<User> pageQueryResult = userRepository.pageUser(pageUserParam);
-        return UserConvert.toPageVo(pageQueryResult);
     }
 
     /**
@@ -93,13 +93,13 @@ public class UserApplicationService {
      * @throws SessionException 密码解密失败时抛出
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void saveUser(SaveUserBo bo) throws SessionException {
+    public void save(SaveUserBo bo) throws SessionException {
         // 转换为领域模型
         User user = UserConvert.toDomain(bo);
         Team team = null;
         // 应用层校验：如果指定了小组，校验小组是否存在
         if (ObjUtil.isNotNull(bo.getTeamId())) {
-            team = teamRepository.getTeam(bo.getTeamId())
+            team = teamRepository.getById(bo.getTeamId())
                     .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
         }
         // 调用领域服务保存用户（主键会通过引用回填）
@@ -117,9 +117,9 @@ public class UserApplicationService {
      * @throws TeamException 目标小组不存在、不可用或已满员时抛出
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void updateUser(UpdateUserBo bo) {
+    public void update(UpdateUserBo bo) {
         // 1. 查询现有用户
-        User existingUser = userRepository.getUser(bo.getUserId())
+        User existingUser = userRepository.getById(bo.getUserId())
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND));
         // 2. 转换为领域模型（传入现有用户实现部分更新）
         User updatedUser = UserConvert.toUpdateDomain(bo, existingUser);
@@ -131,7 +131,7 @@ public class UserApplicationService {
         boolean teamChanged = ObjUtil.notEqual(oldTeamId, newTeamId);
 
         if (teamChanged && newTeamId != null) {
-            newTeam = teamRepository.getTeam(newTeamId)
+            newTeam = teamRepository.getById(newTeamId)
                     .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
         }
 
@@ -153,7 +153,7 @@ public class UserApplicationService {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void changePassword(ChangePasswordBo bo) throws SessionException {
         // 1. 查询用户
-        User user = userRepository.getUser(bo.getUserId())
+        User user = userRepository.getById(bo.getUserId())
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND));
 
         // 2. 调用领域服务修改密码（包含原密码验证、新旧密码相同校验）
@@ -170,7 +170,7 @@ public class UserApplicationService {
      * @throws UserException 包含管理员ID、用户不存在或删除失败时抛出
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void deleteUsers(DeleteUserBo bo) {
+    public void delete(DeleteUserBo bo) {
         // 调用领域服务执行删除
         userDomainService.deleteUsers(bo.getUserIds());
         // 发布用户删除事件（携带业务数据用于日志记录）

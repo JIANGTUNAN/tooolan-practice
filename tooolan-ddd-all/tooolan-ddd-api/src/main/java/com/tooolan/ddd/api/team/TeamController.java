@@ -50,18 +50,6 @@ public class TeamController {
     }
 
     /**
-     * 获取小组选项列表
-     *
-     * @param teamName 小组名称（可选，模糊匹配）
-     * @return 小组选项列表
-     */
-    @GetMapping("/options")
-    public ResultVo<OptionVo<Integer>> options(@RequestParam(required = false) String teamName) {
-        OptionVo<Integer> options = teamApplicationService.getTeamOptions(teamName);
-        return ResultVo.success(options);
-    }
-
-    /**
      * 根据ID查询小组信息
      *
      * @param teamId 小组ID
@@ -69,7 +57,7 @@ public class TeamController {
      */
     @GetMapping("/get/{teamId}")
     public ResultVo<TeamVo> get(@PathVariable Integer teamId) {
-        TeamVo team = teamApplicationService.getTeamById(teamId)
+        TeamVo team = teamApplicationService.getById(teamId)
                 .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
         return ResultVo.success(team);
     }
@@ -82,8 +70,20 @@ public class TeamController {
      */
     @GetMapping("/page")
     public ResultVo<PageVo<TeamVo>> page(@Validated PageTeamDTO dto) {
-        PageVo<TeamVo> pageVo = teamApplicationService.pageTeam(dto);
+        PageVo<TeamVo> pageVo = teamApplicationService.page(dto);
         return ResultVo.success(pageVo);
+    }
+
+    /**
+     * 获取小组选项列表
+     *
+     * @param teamName 小组名称（可选，模糊匹配）
+     * @return 小组选项列表
+     */
+    @GetMapping("/options")
+    public ResultVo<OptionVo<Integer>> options(@RequestParam(required = false) String teamName) {
+        OptionVo<Integer> options = teamApplicationService.getOptions(teamName);
+        return ResultVo.success(options);
     }
 
     /**
@@ -94,7 +94,7 @@ public class TeamController {
      */
     @PostMapping("/save")
     public ResultVo<Void> save(@Validated @RequestBody SaveTeamDTO dto) {
-        teamApplicationService.saveTeam(dto);
+        teamApplicationService.save(dto);
         return ResultVo.success();
     }
 
@@ -106,7 +106,7 @@ public class TeamController {
      */
     @PutMapping("/update")
     public ResultVo<Void> update(@Validated @RequestBody UpdateTeamDTO dto) {
-        teamApplicationService.updateTeam(dto);
+        teamApplicationService.update(dto);
         return ResultVo.success();
     }
 
@@ -118,7 +118,7 @@ public class TeamController {
      */
     @DeleteMapping("/delete")
     public ResultVo<Void> delete(@Validated @RequestBody DeleteTeamDTO dto) {
-        teamApplicationService.deleteTeams(dto);
+        teamApplicationService.delete(dto);
         return ResultVo.success();
     }
 

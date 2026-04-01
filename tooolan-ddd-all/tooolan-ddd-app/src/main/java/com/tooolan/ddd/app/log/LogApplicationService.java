@@ -49,8 +49,8 @@ public class LogApplicationService {
      * @param logId 日志ID
      * @return 日志视图对象，不存在时返回空
      */
-    public Optional<LogVo> getLogById(Long logId) {
-        Optional<Log> log = logRepository.getLog(logId);
+    public Optional<LogVo> getById(Long logId) {
+        Optional<Log> log = logRepository.getById(logId);
         return log.map(LogConvert::toVo);
     }
 
@@ -60,9 +60,9 @@ public class LogApplicationService {
      * @param bo 查询条件
      * @return 分页结果
      */
-    public PageVo<LogVo> pageLog(PageLogBo bo) {
+    public PageVo<LogVo> page(PageLogBo bo) {
         PageLogParam pageLogParam = LogConvert.toParam(bo);
-        PageQueryResult<Log> pageQueryResult = logRepository.pageLog(pageLogParam);
+        PageQueryResult<Log> pageQueryResult = logRepository.page(pageLogParam);
         return LogConvert.toPageVo(pageQueryResult);
     }
 
@@ -72,7 +72,7 @@ public class LogApplicationService {
      * @param user         创建的用户
      * @param businessData 业务数据（SaveUserBo）
      */
-    public void logUserCreated(User user, Object businessData) {
+    public void onUserCreated(User user, Object businessData) {
         Log logModel = this.buildLog(LogOpModule.USER, LogOpType.CREATE, user);
         logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);
@@ -84,7 +84,7 @@ public class LogApplicationService {
      * @param user         更新后的用户
      * @param businessData 业务数据（UpdateUserBo）
      */
-    public void logUserUpdated(User user, Object businessData) {
+    public void onUserUpdated(User user, Object businessData) {
         Log logModel = this.buildLog(LogOpModule.USER, LogOpType.UPDATE, user);
         logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);
@@ -96,7 +96,7 @@ public class LogApplicationService {
      * @param userIds      被删除的用户ID列表
      * @param businessData 业务数据（DeleteUserBo）
      */
-    public void logUserDeleted(List<Integer> userIds, Object businessData) {
+    public void onUserDeleted(List<Integer> userIds, Object businessData) {
         Log logModel = this.buildLog(LogOpModule.USER, LogOpType.DELETE, null);
         logModel.setTargetId(userIds.toString());
         logModel.setTargetName("批量删除用户");
@@ -110,7 +110,7 @@ public class LogApplicationService {
      * @param user         登录的用户
      * @param businessData 业务数据（LoginBo）
      */
-    public void logUserLogin(User user, Object businessData) {
+    public void onUserLogin(User user, Object businessData) {
         Log logModel = this.buildLog(LogOpModule.SESSION, LogOpType.LOGIN, user);
         logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);
@@ -122,7 +122,7 @@ public class LogApplicationService {
      *
      * @param user 修改密码的用户
      */
-    public void logUserPasswordChanged(User user) {
+    public void onUserPasswordChanged(User user) {
         Log logModel = this.buildLog(LogOpModule.USER, LogOpType.UPDATE, user);
         // 不设置 content，因为请求体只包含敏感密码字段
         logDomainService.saveLog(logModel);
@@ -134,7 +134,7 @@ public class LogApplicationService {
      * @param team         创建的小组
      * @param businessData 业务数据（SaveTeamBo）
      */
-    public void logTeamCreated(Team team, Object businessData) {
+    public void onTeamCreated(Team team, Object businessData) {
         Log logModel = this.buildTeamLog(LogOpModule.TEAM, LogOpType.CREATE, team);
         logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);
@@ -146,7 +146,7 @@ public class LogApplicationService {
      * @param team         更新后的小组
      * @param businessData 业务数据（UpdateTeamBo）
      */
-    public void logTeamUpdated(Team team, Object businessData) {
+    public void onTeamUpdated(Team team, Object businessData) {
         Log logModel = this.buildTeamLog(LogOpModule.TEAM, LogOpType.UPDATE, team);
         logModel.setContent(this.toLogContent(businessData));
         logDomainService.saveLog(logModel);

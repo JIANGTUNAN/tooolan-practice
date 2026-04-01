@@ -17,30 +17,12 @@ import java.util.Optional;
 public interface TeamRepository {
 
     /**
-     * 查询小组选项列表
-     * 用于下拉框选择，支持按小组名称模糊查询
-     * 只返回正常状态的小组
-     *
-     * @param teamName 小组名称（可选，模糊匹配）
-     * @return 小组列表（仅包含 ID 和名称）
-     */
-    List<Team> listTeamOptions(String teamName);
-
-    /**
      * 根据小组ID查询小组信息
      *
      * @param teamId 小组ID
      * @return 小组信息，不存在时返回空
      */
-    Optional<Team> getTeam(Integer teamId);
-
-    /**
-     * 分页查询小组信息
-     *
-     * @param pageTeamParam 分页查询参数
-     * @return 分页查询结果
-     */
-    PageQueryResult<Team> pageTeam(PageTeamParam pageTeamParam);
+    Optional<Team> getById(Integer teamId);
 
     /**
      * 根据小组编码查询小组信息
@@ -48,7 +30,41 @@ public interface TeamRepository {
      * @param teamCode 小组编码
      * @return 小组信息，不存在时返回空
      */
-    Optional<Team> getTeamByCode(String teamCode);
+    Optional<Team> getByCode(String teamCode);
+
+    /**
+     * 分页查询小组信息
+     *
+     * @param pageTeamParam 分页查询参数
+     * @return 分页查询结果
+     */
+    PageQueryResult<Team> page(PageTeamParam pageTeamParam);
+
+    /**
+     * 查询小组选项列表
+     * 用于下拉框选择，支持按小组名称模糊查询
+     * 只返回正常状态的小组
+     *
+     * @param teamName 小组名称（可选，模糊匹配）
+     * @return 小组列表（仅包含 ID 和名称）
+     */
+    List<Team> listOptions(String teamName);
+
+    /**
+     * 判断小组是否存在
+     *
+     * @param teamId 小组ID
+     * @return 是否存在
+     */
+    boolean existById(Integer teamId);
+
+    /**
+     * 批量判断小组是否全部存在
+     *
+     * @param teamIds 小组ID列表
+     * @return 所有小组都存在返回 true，否则返回 false
+     */
+    boolean existByIds(List<Integer> teamIds);
 
     /**
      * 保存小组
@@ -69,27 +85,11 @@ public interface TeamRepository {
     boolean updateById(Team team);
 
     /**
-     * 判断小组是否存在
-     *
-     * @param teamId 小组ID
-     * @return 是否存在
-     */
-    boolean existById(Integer teamId);
-
-    /**
      * 批量逻辑删除小组
      *
      * @param teamIds 小组ID列表
      * @return 删除的记录数
      */
     int deleteByIds(List<Integer> teamIds);
-
-    /**
-     * 批量判断小组是否全部存在
-     *
-     * @param teamIds 小组ID列表
-     * @return 所有小组都存在返回 true，否则返回 false
-     */
-    boolean existByIds(List<Integer> teamIds);
 
 }

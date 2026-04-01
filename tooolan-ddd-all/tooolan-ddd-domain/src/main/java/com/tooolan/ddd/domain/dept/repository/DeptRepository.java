@@ -19,7 +19,7 @@ public interface DeptRepository {
      * @param deptId 部门ID
      * @return 部门信息，不存在时返回空
      */
-    Optional<Dept> getDept(Integer deptId);
+    Optional<Dept> getById(Integer deptId);
 
     /**
      * 判断部门是否存在

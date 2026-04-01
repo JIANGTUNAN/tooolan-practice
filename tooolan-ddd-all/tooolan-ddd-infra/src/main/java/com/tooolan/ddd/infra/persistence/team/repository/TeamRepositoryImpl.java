@@ -37,8 +37,22 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
      * @return 小组信息，不存在时返回空
      */
     @Override
-    public Optional<Team> getTeam(Integer teamId) {
+    public Optional<Team> getById(Integer teamId) {
         return super.getOptById(teamId)
+                .map(TeamConverter::toDomain);
+    }
+
+    /**
+     * 根据小组编码查询小组信息
+     *
+     * @param teamCode 小组编码
+     * @return 小组信息，不存在时返回空
+     */
+    @Override
+    public Optional<Team> getByCode(String teamCode) {
+        return super.lambdaQuery()
+                .eq(StrUtil.isNotBlank(teamCode), SysTeamEntity::getTeamCode, teamCode)
+                .oneOpt()
                 .map(TeamConverter::toDomain);
     }
 
@@ -49,7 +63,7 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
      * @return 分页查询结果
      */
     @Override
-    public PageQueryResult<Team> pageTeam(PageTeamParam pageTeamParam) {
+    public PageQueryResult<Team> page(PageTeamParam pageTeamParam) {
         IPage<Team> page = super.lambdaQuery()
                 .like(StrUtil.isNotBlank(pageTeamParam.getTeamName()), SysTeamEntity::getTeamName, pageTeamParam.getTeamName())
                 .eq(StrUtil.isNotBlank(pageTeamParam.getTeamCode()), SysTeamEntity::getTeamCode, pageTeamParam.getTeamCode())
@@ -73,7 +87,7 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
      * @return 小组列表（仅包含 ID 和名称）
      */
     @Override
-    public List<Team> listTeamOptions(String teamName) {
+    public List<Team> listOptions(String teamName) {
         return super.lambdaQuery()
                 .select(SysTeamEntity::getTeamId, SysTeamEntity::getTeamName)
                 .like(StrUtil.isNotBlank(teamName), SysTeamEntity::getTeamName, teamName)
@@ -86,17 +100,29 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
     }
 
     /**
-     * 根据小组编码查询小组信息
+     * 判断小组是否存在
      *
-     * @param teamCode 小组编码
-     * @return 小组信息，不存在时返回空
+     * @param teamId 小组ID
+     * @return 是否存在
      */
     @Override
-    public Optional<Team> getTeamByCode(String teamCode) {
+    public boolean existById(Integer teamId) {
         return super.lambdaQuery()
-                .eq(StrUtil.isNotBlank(teamCode), SysTeamEntity::getTeamCode, teamCode)
-                .oneOpt()
-                .map(TeamConverter::toDomain);
+                .eq(SysTeamEntity::getTeamId, teamId)
+                .exists();
+    }
+
+    /**
+     * 批量判断小组是否全部存在
+     *
+     * @param teamIds 小组ID列表
+     * @return 所有小组都存在返回 true，否则返回 false
+     */
+    @Override
+    public boolean existByIds(List<Integer> teamIds) {
+        return super.lambdaQuery()
+                .in(SysTeamEntity::getTeamId, teamIds)
+                .count() == teamIds.size();
     }
 
     /**
@@ -131,19 +157,6 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
     }
 
     /**
-     * 判断小组是否存在
-     *
-     * @param teamId 小组ID
-     * @return 是否存在
-     */
-    @Override
-    public boolean existById(Integer teamId) {
-        return super.lambdaQuery()
-                .eq(SysTeamEntity::getTeamId, teamId)
-                .exists();
-    }
-
-    /**
      * 批量逻辑删除小组
      *
      * @param teamIds 小组ID列表
@@ -152,19 +165,6 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
     @Override
     public int deleteByIds(List<Integer> teamIds) {
         return baseMapper.deleteByIds(teamIds);
-    }
-
-    /**
-     * 批量判断小组是否全部存在
-     *
-     * @param teamIds 小组ID列表
-     * @return 所有小组都存在返回 true，否则返回 false
-     */
-    @Override
-    public boolean existByIds(List<Integer> teamIds) {
-        return super.lambdaQuery()
-                .in(SysTeamEntity::getTeamId, teamIds)
-                .count() == teamIds.size();
     }
 
 }

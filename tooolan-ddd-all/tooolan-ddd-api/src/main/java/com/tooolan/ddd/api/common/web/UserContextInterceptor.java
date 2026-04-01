@@ -114,7 +114,7 @@ public class UserContextInterceptor extends SaInterceptor {
 
         Integer userId = Integer.parseInt(userIdStr);
 
-        User user = userRepository.getUser(userId)
+        User user = userRepository.getById(userId)
                 .orElseThrow(() -> new SessionException(SessionErrorCode.LOGIN_FAILED));
 
         StpUtil.login(userId);

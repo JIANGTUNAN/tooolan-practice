@@ -31,9 +31,11 @@ public class TeamConverter {
         team.setDeptId(entity.getDeptId());
         team.setTeamName(entity.getTeamName());
         team.setTeamCode(entity.getTeamCode());
-        TeamStatusEnum teamStatusEnum = TeamStatusEnum.fromValue(entity.getStatus())
-                .orElseThrow(() -> new IllegalStateException("小组状态异常，请联系管理员"));
-        team.setStatus(teamStatusEnum);
+        if (entity.getStatus() != null) {
+            TeamStatusEnum teamStatusEnum = TeamStatusEnum.fromValue(entity.getStatus())
+                    .orElseThrow(() -> new IllegalStateException("小组状态异常，请联系管理员"));
+            team.setStatus(teamStatusEnum);
+        }
         team.setMaxMembers(entity.getMaxMembers());
         team.setRemark(entity.getRemark());
         return team;

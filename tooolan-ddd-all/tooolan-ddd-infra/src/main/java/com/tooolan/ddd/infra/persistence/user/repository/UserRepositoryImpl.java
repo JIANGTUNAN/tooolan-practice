@@ -35,8 +35,22 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
      * @return 用户信息，不存在时返回空
      */
     @Override
-    public Optional<User> getUser(Integer userId) {
+    public Optional<User> getById(Integer userId) {
         return super.getOptById(userId)
+                .map(UserConverter::toDomain);
+    }
+
+    /**
+     * 根据用户名查询用户
+     *
+     * @param username 用户名
+     * @return 用户信息，不存在时返回空
+     */
+    @Override
+    public Optional<User> getByUsername(String username) {
+        return super.lambdaQuery()
+                .eq(SysUserEntity::getUserName, username)
+                .oneOpt()
                 .map(UserConverter::toDomain);
     }
 
@@ -47,7 +61,7 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
      * @return 分页查询结果
      */
     @Override
-    public PageQueryResult<User> pageUser(PageUserParam pageUserParam) {
+    public PageQueryResult<User> page(PageUserParam pageUserParam) {
         IPage<User> page = super.lambdaQuery()
                 .like(StrUtil.isNotBlank(pageUserParam.getUsername()), SysUserEntity::getUserName, pageUserParam.getUsername())
                 .like(StrUtil.isNotBlank(pageUserParam.getNickName()), SysUserEntity::getNickName, pageUserParam.getNickName())
@@ -64,17 +78,61 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
     }
 
     /**
-     * 根据用户名查询用户
+     * 查询用户选项列表
+     * 用于下拉框选择，支持按昵称模糊查询
      *
-     * @param username 用户名
-     * @return 用户信息，不存在时返回空
+     * @param nickName 昵称（可选，模糊匹配）
+     * @return 用户列表（仅包含 ID 和昵称）
      */
     @Override
-    public Optional<User> getUserByUsername(String username) {
+    public List<User> listOptions(String nickName) {
         return super.lambdaQuery()
-                .eq(SysUserEntity::getUserName, username)
-                .oneOpt()
-                .map(UserConverter::toDomain);
+                .select(SysUserEntity::getUserId, SysUserEntity::getNickName)
+                .like(StrUtil.isNotBlank(nickName), SysUserEntity::getNickName, nickName)
+                .orderByDesc(SysUserEntity::getCreatedAt)
+                .list()
+                .stream()
+                .map(UserConverter::toDomain)
+                .toList();
+    }
+
+    /**
+     * 统计指定小组的用户数量
+     *
+     * @param teamId 小组ID
+     * @return 用户数量
+     */
+    @Override
+    public long countByTeamId(Integer teamId) {
+        return super.lambdaQuery()
+                .eq(SysUserEntity::getTeamId, teamId)
+                .count();
+    }
+
+    /**
+     * 根据用户ID列表统计有效用户数量
+     *
+     * @param userIds 用户ID列表
+     * @return 有效用户数量
+     */
+    @Override
+    public long countByIds(List<Integer> userIds) {
+        return super.lambdaQuery()
+                .in(SysUserEntity::getUserId, userIds)
+                .count();
+    }
+
+    /**
+     * 根据小组ID列表统计有效用户数量
+     *
+     * @param teamIds 小组ID列表
+     * @return 有效用户数量
+     */
+    @Override
+    public long countByTeamIds(List<Integer> teamIds) {
+        return super.lambdaQuery()
+                .in(SysUserEntity::getTeamId, teamIds)
+                .count();
     }
 
     /**
@@ -92,19 +150,6 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
             user.setId(entity.getUserId());
         }
         return saved;
-    }
-
-    /**
-     * 统计指定小组的用户数量
-     *
-     * @param teamId 小组ID
-     * @return 用户数量
-     */
-    @Override
-    public long countByTeamId(Integer teamId) {
-        return super.lambdaQuery()
-                .eq(SysUserEntity::getTeamId, teamId)
-                .count();
     }
 
     /**
@@ -132,51 +177,6 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
     @Override
     public int deleteByIds(List<Integer> userIds) {
         return super.removeByIds(userIds) ? userIds.size() : 0;
-    }
-
-    /**
-     * 根据用户ID列表统计有效用户数量
-     *
-     * @param userIds 用户ID列表
-     * @return 有效用户数量
-     */
-    @Override
-    public long countByIds(List<Integer> userIds) {
-        return super.lambdaQuery()
-                .in(SysUserEntity::getUserId, userIds)
-                .count();
-    }
-
-    /**
-     * 查询用户选项列表
-     * 用于下拉框选择，支持按昵称模糊查询
-     *
-     * @param nickName 昵称（可选，模糊匹配）
-     * @return 用户列表（仅包含 ID 和昵称）
-     */
-    @Override
-    public List<User> listUserOptions(String nickName) {
-        return super.lambdaQuery()
-                .select(SysUserEntity::getUserId, SysUserEntity::getNickName)
-                .like(StrUtil.isNotBlank(nickName), SysUserEntity::getNickName, nickName)
-                .orderByDesc(SysUserEntity::getCreatedAt)
-                .list()
-                .stream()
-                .map(UserConverter::toDomain)
-                .toList();
-    }
-
-    /**
-     * 根据小组ID列表统计有效用户数量
-     *
-     * @param teamIds 小组ID列表
-     * @return 有效用户数量
-     */
-    @Override
-    public long countByTeamIds(List<Integer> teamIds) {
-        return super.lambdaQuery()
-                .in(SysUserEntity::getTeamId, teamIds)
-                .count();
     }
 
 }

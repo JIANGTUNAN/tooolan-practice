@@ -48,7 +48,7 @@ public class UserDomainService {
      */
     public void saveUser(User user, Team team) throws SessionException {
         // 校验用户名唯一性
-        userRepository.getUserByUsername(user.getUsername())
+        userRepository.getByUsername(user.getUsername())
                 .ifPresent(u -> {
                     throw new UserException(UserErrorCode.USERNAME_EXISTS);
                 });

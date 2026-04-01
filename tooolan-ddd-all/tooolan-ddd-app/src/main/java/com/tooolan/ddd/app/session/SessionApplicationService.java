@@ -28,26 +28,6 @@ public class SessionApplicationService {
     private final SessionDomainService sessionDomainService;
 
     /**
-     * 认证用户，返回用户信息
-     * 用于 Controller 层调用，验证密码后返回用户信息
-     *
-     * @param username          用户名
-     * @param encryptedPassword RSA 加密的密码
-     * @return 用户信息
-     * @throws SessionException 用户不存在或密码错误时抛出
-     */
-    public User authenticate(String username, String encryptedPassword) {
-        // 1. 查询用户
-        User user = userRepository.getUserByUsername(username)
-                .orElseThrow(() -> new SessionException(SessionErrorCode.LOGIN_FAILED));
-
-        // 2. 验证密码
-        sessionDomainService.verifyPassword(user, encryptedPassword);
-
-        return user;
-    }
-
-    /**
      * 获取登录状态
      *
      * @return 登录状态
@@ -58,6 +38,26 @@ public class SessionApplicationService {
         }
         UserBean userBean = ContextHolder.getUserBean();
         return SessionConvert.toStatusVo(userBean);
+    }
+
+    /**
+     * 认证用户，返回用户信息
+     * 用于 Controller 层调用，验证密码后返回用户信息
+     *
+     * @param username          用户名
+     * @param encryptedPassword RSA 加密的密码
+     * @return 用户信息
+     * @throws SessionException 用户不存在或密码错误时抛出
+     */
+    public User authenticate(String username, String encryptedPassword) {
+        // 1. 查询用户
+        User user = userRepository.getByUsername(username)
+                .orElseThrow(() -> new SessionException(SessionErrorCode.LOGIN_FAILED));
+
+        // 2. 验证密码
+        sessionDomainService.verifyPassword(user, encryptedPassword);
+
+        return user;
     }
 
 }
