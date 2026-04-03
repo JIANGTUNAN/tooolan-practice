@@ -167,4 +167,20 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
         return baseMapper.deleteByIds(teamIds);
     }
 
+    /**
+     * 根据部门ID列表查询小组数量
+     *
+     * @param deptIds 部门ID列表
+     * @return 小组数量
+     */
+    @Override
+    public long countByDeptIds(List<Integer> deptIds) {
+        if (CollUtil.isEmpty(deptIds)) {
+            return 0;
+        }
+        return super.lambdaQuery()
+                .in(SysTeamEntity::getDeptId, deptIds)
+                .count();
+    }
+
 }

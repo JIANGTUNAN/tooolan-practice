@@ -29,7 +29,27 @@ public class DeptConverter {
         dept.setDeptName(entity.getDeptName());
         dept.setDeptCode(entity.getDeptCode());
         dept.setParentId(entity.getParentId());
+        dept.setRemark(entity.getRemark());
         return dept;
+    }
+
+    /**
+     * 将领域模型转换为数据库实体
+     *
+     * @param dept 领域模型
+     * @return 数据库实体
+     */
+    public static SysDeptEntity toEntity(Dept dept) {
+        if (dept == null) {
+            return null;
+        }
+        SysDeptEntity entity = new SysDeptEntity();
+        entity.setDeptId(dept.getId());
+        entity.setDeptName(dept.getDeptName());
+        entity.setDeptCode(dept.getDeptCode());
+        entity.setParentId(dept.getParentId());
+        entity.setRemark(dept.getRemark());
+        return entity;
     }
 
 }

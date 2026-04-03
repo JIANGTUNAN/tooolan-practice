@@ -92,4 +92,12 @@ public interface TeamRepository {
      */
     int deleteByIds(List<Integer> teamIds);
 
+    /**
+     * 根据部门ID列表查询小组数量
+     *
+     * @param deptIds 部门ID列表
+     * @return 小组数量
+     */
+    long countByDeptIds(List<Integer> deptIds);
+
 }
