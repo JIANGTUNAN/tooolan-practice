@@ -129,8 +129,9 @@ public class DeptApplicationService {
         Dept updatedDept = DeptConvert.toUpdateDomain(bo);
 
         // 3. 如果修改了父部门，校验父部门存在性
-        if (ObjUtil.notEqual(existingDept.getParentId(), bo.getParentId())) {
-            if (!deptRepository.existById(bo.getParentId())) {
+        Integer newParentId = bo.getParentId();
+        if (ObjUtil.notEqual(existingDept.getParentId(), newParentId) && newParentId != null) {
+            if (!deptRepository.existById(newParentId)) {
                 throw new DeptException(DeptErrorCode.PARENT_DEPT_NOT_FOUND);
             }
         }
