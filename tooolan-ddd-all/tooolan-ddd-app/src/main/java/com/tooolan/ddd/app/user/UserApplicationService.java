@@ -118,16 +118,14 @@ public class UserApplicationService {
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void update(UpdateUserBo bo) {
-        // 1. 查询现有用户
+        // 1. 查询现有用户（用于小组变更校验）
         User existingUser = userRepository.getById(bo.getUserId())
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND));
-        // 2. 转换为领域模型（传入现有用户实现部分更新）
-        User updatedUser = UserConvert.toUpdateDomain(bo, existingUser);
 
-        // 3. 如果修改了小组，校验小组存在性
+        // 2. 如果修改了小组，校验小组存在性
         Team newTeam = null;
         Integer oldTeamId = existingUser.getTeamId();
-        Integer newTeamId = updatedUser.getTeamId();
+        Integer newTeamId = bo.getTeamId();
         boolean teamChanged = ObjUtil.notEqual(oldTeamId, newTeamId);
 
         if (teamChanged && newTeamId != null) {
@@ -135,10 +133,11 @@ public class UserApplicationService {
                     .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
         }
 
-        // 4. 调用领域服务
+        // 3. 转换为领域模型并调用领域服务
+        User updatedUser = UserConvert.toUpdateDomain(bo);
         userDomainService.updateUser(existingUser, updatedUser, newTeam);
 
-        // 5. 发布用户更新事件（携带业务数据用于日志记录）
+        // 4. 发布用户更新事件（携带业务数据用于日志记录）
         eventPublisher.publishEvent(UserUpdatedEvent.of(updatedUser, bo));
     }
 

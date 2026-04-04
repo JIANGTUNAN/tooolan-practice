@@ -2,8 +2,13 @@ package com.tooolan.ddd.app.log.listener;
 
 import com.tooolan.ddd.app.log.LogApplicationService;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
+import com.tooolan.ddd.domain.dept.event.DeptCreatedEvent;
+import com.tooolan.ddd.domain.dept.event.DeptDeletedEvent;
+import com.tooolan.ddd.domain.dept.event.DeptUpdatedEvent;
+import com.tooolan.ddd.domain.dept.model.Dept;
 import com.tooolan.ddd.domain.session.event.UserLoginEvent;
 import com.tooolan.ddd.domain.team.event.TeamCreatedEvent;
+import com.tooolan.ddd.domain.team.event.TeamDeletedEvent;
 import com.tooolan.ddd.domain.team.event.TeamUpdatedEvent;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.user.event.UserCreatedEvent;
@@ -167,6 +172,80 @@ public class LogEventListener {
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
             log.error("处理小组更新事件失败", e);
+        }
+    }
+
+    /**
+     * 监听小组删除事件
+     *
+     * @param event 小组删除事件
+     */
+    @Async("taskExecutor")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleTeamDeletedEvent(TeamDeletedEvent event) {
+        try {
+            List<Integer> teamIds = event.getTeamIds();
+            logApplicationService.onTeamDeleted(teamIds, event.getBusinessData());
+            log.info("小组删除日志记录成功: teamIds={}, operator={}, ip={}",
+                    teamIds, ContextHolder.getUsername(), ContextHolder.getClientIp());
+        } catch (Exception e) {
+            log.error("处理小组删除事件失败", e);
+        }
+    }
+
+    /**
+     * 监听部门创建事件
+     *
+     * @param event 部门创建事件
+     */
+    @Async("taskExecutor")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleDeptCreatedEvent(DeptCreatedEvent event) {
+        try {
+            Dept dept = event.getDept();
+            logApplicationService.onDeptCreated(dept, event.getBusinessData());
+            log.info("部门创建日志记录成功: deptId={}, deptName={}, operator={}, ip={}",
+                    dept.getId(), dept.getDeptName(),
+                    ContextHolder.getUsername(), ContextHolder.getClientIp());
+        } catch (Exception e) {
+            log.error("处理部门创建事件失败", e);
+        }
+    }
+
+    /**
+     * 监听部门更新事件
+     *
+     * @param event 部门更新事件
+     */
+    @Async("taskExecutor")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleDeptUpdatedEvent(DeptUpdatedEvent event) {
+        try {
+            Dept dept = event.getDept();
+            logApplicationService.onDeptUpdated(dept, event.getBusinessData());
+            log.info("部门更新日志记录成功: deptId={}, deptName={}, operator={}, ip={}",
+                    dept.getId(), dept.getDeptName(),
+                    ContextHolder.getUsername(), ContextHolder.getClientIp());
+        } catch (Exception e) {
+            log.error("处理部门更新事件失败", e);
+        }
+    }
+
+    /**
+     * 监听部门删除事件
+     *
+     * @param event 部门删除事件
+     */
+    @Async("taskExecutor")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleDeptDeletedEvent(DeptDeletedEvent event) {
+        try {
+            List<Integer> deptIds = event.getDeptIds();
+            logApplicationService.onDeptDeleted(deptIds);
+            log.info("部门删除日志记录成功: deptIds={}, operator={}, ip={}",
+                    deptIds, ContextHolder.getUsername(), ContextHolder.getClientIp());
+        } catch (Exception e) {
+            log.error("处理部门删除事件失败", e);
         }
     }
 

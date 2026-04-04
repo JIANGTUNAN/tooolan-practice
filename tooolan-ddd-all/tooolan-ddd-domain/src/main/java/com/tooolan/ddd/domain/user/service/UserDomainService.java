@@ -82,37 +82,29 @@ public class UserDomainService {
     /**
      * 更新用户
      * 支持部分字段更新和小组转移
+     * MyBatis Plus updateById 只更新非 null 字段
      *
-     * @param existingUser 现有用户信息
+     * @param existingUser 现有用户信息（用于校验）
      * @param updatedUser  更新后的用户信息
      * @param newTeam      新小组（仅在小组转移时传入，否则为 null）
-     * @throws UserException 用户名被修改或更新失败时抛出
+     * @throws UserException 更新失败时抛出
      * @throws TeamException 目标小组不可用或已满员时抛出
      */
     public void updateUser(User existingUser, User updatedUser, Team newTeam) {
-        // 1. 校验用户名不可变性
-        if (ObjUtil.notEqual(existingUser.getUsername(), updatedUser.getUsername())) {
-            throw new UserException(UserErrorCode.USERNAME_IMMUTABLE);
-        }
-
-        // 2. 如果修改了小组，校验新小组
-        Integer oldTeamId = existingUser.getTeamId();
-        Integer newTeamId = updatedUser.getTeamId();
-        boolean teamChanged = ObjUtil.notEqual(oldTeamId, newTeamId);
-
-        if (teamChanged && ObjUtil.isNotNull(newTeam)) {
+        // 1. 如果修改了小组，校验新小组
+        if (ObjUtil.isNotNull(newTeam)) {
             if (BooleanUtil.isFalse(newTeam.isAvailable())) {
                 throw new TeamException(TeamErrorCode.UNAVAILABLE);
             }
             if (BooleanUtil.isTrue(newTeam.hasMemberLimit())) {
-                long currentCount = userRepository.countByTeamId(newTeamId);
+                long currentCount = userRepository.countByTeamId(updatedUser.getTeamId());
                 if (currentCount >= newTeam.getMaxMembers()) {
                     throw new TeamException(TeamErrorCode.FULL);
                 }
             }
         }
 
-        // 3. 执行更新，失败时抛出异常触发事务回滚
+        // 2. 执行更新，失败时抛出异常触发事务回滚
         boolean updated = userRepository.updateById(updatedUser);
         if (BooleanUtil.isFalse(updated)) {
             throw new UserException(UserErrorCode.UPDATE_FAILED);

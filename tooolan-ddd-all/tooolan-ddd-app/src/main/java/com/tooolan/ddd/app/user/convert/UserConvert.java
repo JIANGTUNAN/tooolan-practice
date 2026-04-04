@@ -1,6 +1,5 @@
 package com.tooolan.ddd.app.user.convert;
 
-import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.response.PageVo;
 import com.tooolan.ddd.app.user.request.PageUserBo;
 import com.tooolan.ddd.app.user.request.SaveUserBo;
@@ -41,30 +40,23 @@ public class UserConvert {
 
     /**
      * 将 UpdateUserBo 转换为 User 领域模型（用于更新）
-     * 采用部分更新策略：只覆盖传入的字段，未传入的字段保持原值
+     * 直接设置所有字段，MyBatis Plus updateById 只更新非 null 字段
+     * - null = 不更新该字段
+     * - "" (空字符串) = 清空该字段
      *
-     * @param bo           更新用户 BO
-     * @param existingUser 现有用户数据（用于合并）
+     * @param bo 更新用户 BO
      * @return 用户领域模型
      */
-    public static User toUpdateDomain(UpdateUserBo bo, User existingUser) {
+    public static User toUpdateDomain(UpdateUserBo bo) {
         if (bo == null) {
             return null;
         }
-        if (existingUser == null) {
-            throw new IllegalArgumentException("现有用户数据不能为空");
-        }
-
         User user = new User();
         user.setId(bo.getUserId());
-        user.setUsername(existingUser.getUsername()); // 保持原用户名
-
-        // 部分更新：只覆盖传入的字段（非 null）
-        user.setNickName(ObjUtil.defaultIfBlank(bo.getNickName(), existingUser.getNickName()));
-        user.setEmail(ObjUtil.defaultIfBlank(bo.getEmail(), existingUser.getEmail()));
-        user.setTeamId(ObjUtil.defaultIfNull(bo.getTeamId(), existingUser.getTeamId()));
-        user.setRemark(ObjUtil.defaultIfBlank(bo.getRemark(), existingUser.getRemark()));
-
+        user.setNickName(bo.getNickName());
+        user.setEmail(bo.getEmail());
+        user.setTeamId(bo.getTeamId());
+        user.setRemark(bo.getRemark());
         return user;
     }
 

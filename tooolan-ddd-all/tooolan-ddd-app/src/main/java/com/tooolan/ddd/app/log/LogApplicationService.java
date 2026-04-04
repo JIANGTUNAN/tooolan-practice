@@ -8,6 +8,7 @@ import com.tooolan.ddd.app.log.request.PageLogBo;
 import com.tooolan.ddd.app.log.response.LogVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.common.result.PageQueryResult;
+import com.tooolan.ddd.domain.dept.model.Dept;
 import com.tooolan.ddd.domain.log.constant.LogOpModule;
 import com.tooolan.ddd.domain.log.constant.LogOpType;
 import com.tooolan.ddd.domain.log.model.Log;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 系统操作日志 应用服务
@@ -153,6 +155,56 @@ public class LogApplicationService {
     }
 
     /**
+     * 记录小组删除日志
+     *
+     * @param teamIds      被删除的小组ID列表
+     * @param businessData 业务数据（DeleteTeamBo）
+     */
+    public void onTeamDeleted(List<Integer> teamIds, Object businessData) {
+        Log logModel = this.buildTeamLog(LogOpModule.TEAM, LogOpType.DELETE, null);
+        logModel.setTargetId(teamIds.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        logModel.setTargetName("批量删除小组");
+        logModel.setContent(this.toLogContent(businessData));
+        logDomainService.saveLog(logModel);
+    }
+
+    /**
+     * 记录部门创建日志
+     *
+     * @param dept         创建的部门
+     * @param businessData 业务数据（SaveDeptBo）
+     */
+    public void onDeptCreated(Dept dept, Object businessData) {
+        Log logModel = this.buildDeptLog(LogOpModule.DEPT, LogOpType.CREATE, dept);
+        logModel.setContent(this.toLogContent(businessData));
+        logDomainService.saveLog(logModel);
+    }
+
+    /**
+     * 记录部门更新日志
+     *
+     * @param dept         更新后的部门
+     * @param businessData 业务数据（UpdateDeptBo）
+     */
+    public void onDeptUpdated(Dept dept, Object businessData) {
+        Log logModel = this.buildDeptLog(LogOpModule.DEPT, LogOpType.UPDATE, dept);
+        logModel.setContent(this.toLogContent(businessData));
+        logDomainService.saveLog(logModel);
+    }
+
+    /**
+     * 记录部门删除日志
+     *
+     * @param deptIds 被删除的部门ID列表
+     */
+    public void onDeptDeleted(List<Integer> deptIds) {
+        Log logModel = this.buildDeptLog(LogOpModule.DEPT, LogOpType.DELETE, null);
+        logModel.setTargetId(deptIds.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        logModel.setTargetName("批量删除部门");
+        logDomainService.saveLog(logModel);
+    }
+
+    /**
      * 构建日志模型
      *
      * @param opModule 操作模块
@@ -191,6 +243,29 @@ public class LogApplicationService {
             logModel.setTargetType(team.getClass().getTypeName());
             logModel.setTargetId(team.getId().toString());
             logModel.setTargetName(team.getTeamName());
+        }
+        logModel.setOperatorId(ContextHolder.getUserId());
+        logModel.setOperatorName(ContextHolder.getUsername());
+        logModel.setOperatorIp(ContextHolder.getClientIp());
+        return logModel;
+    }
+
+    /**
+     * 构建部门日志模型
+     *
+     * @param opModule 操作模块
+     * @param opType   操作类型
+     * @param dept     目标部门（可为 null）
+     * @return 日志领域模型
+     */
+    private Log buildDeptLog(String opModule, String opType, Dept dept) {
+        Log logModel = new Log();
+        logModel.setOpModule(opModule);
+        logModel.setOpType(opType);
+        if (dept != null) {
+            logModel.setTargetType(dept.getClass().getTypeName());
+            logModel.setTargetId(dept.getId().toString());
+            logModel.setTargetName(dept.getDeptName());
         }
         logModel.setOperatorId(ContextHolder.getUserId());
         logModel.setOperatorName(ContextHolder.getUsername());
