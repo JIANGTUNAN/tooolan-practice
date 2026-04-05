@@ -71,27 +71,27 @@ public interface DeptAppConverter {
     List<DeptTree> toTreeList(List<Dept> depts);
 
     /**
-     * 将保存部门 BO 转换为领域模型
+     * 将保存部门业务类转换为领域模型
      *
-     * @param bo 保存部门 BO
+     * @param bo 保存部门业务类
      * @return 领域模型
      */
     @Mapping(target = "deptId", ignore = true)
     Dept toSaveDomain(SaveDeptBo bo);
 
     /**
-     * 将更新部门 BO 转换为领域模型（部分更新）
+     * 将更新部门业务类转换为领域模型（部分更新）
      *
-     * @param bo 更新部门 BO
+     * @param bo 更新部门业务类
      * @return 领域模型
      */
     Dept toUpdateDomain(UpdateDeptBo bo);
 
     /**
-     * 将 BO 转换为 Param
+     * 将分页部门业务类转换为查询参数类
      *
-     * @param bo BO 对象
-     * @return Param 对象
+     * @param bo 分页部门业务类
+     * @return 查询参数类
      */
     PageDeptParam toParam(PageDeptBo bo);
 

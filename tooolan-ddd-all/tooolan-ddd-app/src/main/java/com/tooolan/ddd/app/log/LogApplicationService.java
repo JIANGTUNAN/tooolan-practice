@@ -241,7 +241,7 @@ public class LogApplicationService {
         logModel.setOpType(opType);
         if (team != null) {
             logModel.setTargetType(team.getClass().getTypeName());
-            logModel.setTargetId(team.getId().toString());
+            logModel.setTargetId(team.getTeamId().toString());
             logModel.setTargetName(team.getTeamName());
         }
         logModel.setOperatorId(ContextHolder.getUserId());

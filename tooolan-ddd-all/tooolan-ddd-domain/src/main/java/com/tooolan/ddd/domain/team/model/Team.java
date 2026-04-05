@@ -18,7 +18,7 @@ public class Team {
     /**
      * 小组ID
      */
-    private Integer id;
+    private Integer teamId;
 
     /**
      * 所属部门ID

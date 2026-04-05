@@ -149,7 +149,7 @@ public class LogEventListener {
             Team team = event.getTeam();
             logApplicationService.onTeamCreated(team, event.getBusinessData());
             log.info("小组创建日志记录成功: teamId={}, teamName={}, operator={}, ip={}",
-                    team.getId(), team.getTeamName(),
+                    team.getTeamId(), team.getTeamName(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
             log.error("处理小组创建事件失败", e);
@@ -168,7 +168,7 @@ public class LogEventListener {
             Team team = event.getTeam();
             logApplicationService.onTeamUpdated(team, event.getBusinessData());
             log.info("小组更新日志记录成功: teamId={}, teamName={}, operator={}, ip={}",
-                    team.getId(), team.getTeamName(),
+                    team.getTeamId(), team.getTeamName(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
             log.error("处理小组更新事件失败", e);

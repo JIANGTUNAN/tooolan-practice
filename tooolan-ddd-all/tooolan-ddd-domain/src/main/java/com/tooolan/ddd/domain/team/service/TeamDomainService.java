@@ -72,7 +72,7 @@ public class TeamDomainService {
 
             // 停用需要检查小组内是否还有成员
             if (targetStatus == TeamStatusEnum.DISABLED) {
-                long memberCount = userRepository.countByTeamId(existingTeam.getId());
+                long memberCount = userRepository.countByTeamId(existingTeam.getTeamId());
                 if (memberCount > 0) {
                     throw new TeamException(TeamErrorCode.HAS_MEMBERS);
                 }
@@ -86,13 +86,13 @@ public class TeamDomainService {
 
             if (currentStatus == TeamStatusEnum.FULL) {
                 // 满员状态下增大上限 → 自动更新为正常（除非是停用状态）
-                long memberCount = userRepository.countByTeamId(existingTeam.getId());
+                long memberCount = userRepository.countByTeamId(existingTeam.getTeamId());
                 if (!updatedTeam.isFull((int) memberCount) && updatedTeam.getStatus() != TeamStatusEnum.DISABLED) {
                     updatedTeam.setStatus(TeamStatusEnum.NORMAL);
                 }
             } else if (currentStatus == TeamStatusEnum.NORMAL) {
                 // 正常状态下减小上限 → 检查是否需要变为满员
-                long memberCount = userRepository.countByTeamId(existingTeam.getId());
+                long memberCount = userRepository.countByTeamId(existingTeam.getTeamId());
                 if (updatedTeam.isFull((int) memberCount)) {
                     updatedTeam.setStatus(TeamStatusEnum.FULL);
                 }

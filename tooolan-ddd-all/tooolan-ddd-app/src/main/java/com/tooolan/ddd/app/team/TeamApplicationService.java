@@ -3,7 +3,7 @@ package com.tooolan.ddd.app.team;
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.common.response.PageVo;
-import com.tooolan.ddd.app.team.convert.TeamConvert;
+import com.tooolan.ddd.app.team.convert.TeamAppConverter;
 import com.tooolan.ddd.app.team.request.DeleteTeamBo;
 import com.tooolan.ddd.app.team.request.PageTeamBo;
 import com.tooolan.ddd.app.team.request.SaveTeamBo;
@@ -46,6 +46,7 @@ public class TeamApplicationService {
     private final DeptRepository deptRepository;
     private final TeamDomainService teamDomainService;
     private final ApplicationEventPublisher eventPublisher;
+    private final TeamAppConverter teamAppConverter;
 
 
     /**
@@ -56,7 +57,7 @@ public class TeamApplicationService {
      */
     public Optional<TeamVo> getById(Integer teamId) {
         Optional<Team> team = teamRepository.getById(teamId);
-        return team.map(TeamConvert::toVo);
+        return team.map(teamAppConverter::toVo);
     }
 
     /**
@@ -66,9 +67,9 @@ public class TeamApplicationService {
      * @return 分页结果
      */
     public PageVo<TeamVo> page(PageTeamBo bo) {
-        PageTeamParam pageTeamParam = TeamConvert.toParam(bo);
+        PageTeamParam pageTeamParam = teamAppConverter.toParam(bo);
         PageQueryResult<Team> pageQueryResult = teamRepository.page(pageTeamParam);
-        return TeamConvert.toPageVo(pageQueryResult);
+        return teamAppConverter.toPageVo(pageQueryResult);
     }
 
     /**
@@ -79,7 +80,7 @@ public class TeamApplicationService {
      */
     public OptionVo<Integer> getOptions(String teamName) {
         List<Team> teams = teamRepository.listOptions(teamName);
-        return OptionVo.from(teams, Team::getId, Team::getTeamName);
+        return OptionVo.from(teams, Team::getTeamId, Team::getTeamName);
     }
 
     /**
@@ -93,7 +94,7 @@ public class TeamApplicationService {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void save(SaveTeamBo bo) {
         // 转换为领域模型
-        Team team = TeamConvert.toDomain(bo);
+        Team team = teamAppConverter.toSaveDomain(bo);
         // 应用层校验：如果指定了部门，校验部门是否存在
         if (ObjUtil.isNotNull(bo.getDeptId())) {
             if (!deptRepository.existById(bo.getDeptId())) {
@@ -121,7 +122,7 @@ public class TeamApplicationService {
                 .orElseThrow(() -> new TeamException(TeamErrorCode.NOT_FOUND));
 
         // 2. 转换为领域模型（部分更新）
-        Team updatedTeam = TeamConvert.toUpdateDomain(bo);
+        Team updatedTeam = teamAppConverter.toUpdateDomain(bo);
 
         // 3. 如果修改了部门，校验部门存在性
         if (ObjUtil.notEqual(existingTeam.getDeptId(), bo.getDeptId())) {

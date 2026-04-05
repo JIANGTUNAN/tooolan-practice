@@ -12,9 +12,10 @@ import com.tooolan.ddd.domain.team.enums.TeamStatusEnum;
 import com.tooolan.ddd.domain.team.model.Team;
 import com.tooolan.ddd.domain.team.repository.TeamRepository;
 import com.tooolan.ddd.domain.team.repository.param.PageTeamParam;
-import com.tooolan.ddd.infra.persistence.team.converter.TeamConverter;
+import com.tooolan.ddd.infra.persistence.team.converter.TeamInfraConverter;
 import com.tooolan.ddd.infra.persistence.team.entity.SysTeamEntity;
 import com.tooolan.ddd.infra.persistence.team.mapper.SysTeamMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,7 +29,10 @@ import java.util.Optional;
  * @since 2026年2月11日
  */
 @Repository
+@RequiredArgsConstructor
 public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity> implements TeamRepository {
+
+    private final TeamInfraConverter teamConverter;
 
     /**
      * 根据小组ID查询小组信息
@@ -39,7 +43,7 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
     @Override
     public Optional<Team> getById(Integer teamId) {
         return super.getOptById(teamId)
-                .map(TeamConverter::toDomain);
+                .map(teamConverter::toDomain);
     }
 
     /**
@@ -53,7 +57,7 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
         return super.lambdaQuery()
                 .eq(StrUtil.isNotBlank(teamCode), SysTeamEntity::getTeamCode, teamCode)
                 .oneOpt()
-                .map(TeamConverter::toDomain);
+                .map(teamConverter::toDomain);
     }
 
     /**
@@ -71,7 +75,7 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
                 .ge(ObjUtil.isNotNull(pageTeamParam.getCreatedAtStart()), SysTeamEntity::getCreatedAt, pageTeamParam.getCreatedAtStart())
                 .le(ObjUtil.isNotNull(pageTeamParam.getCreatedAtEnd()), SysTeamEntity::getCreatedAt, pageTeamParam.getCreatedAtEnd())
                 .page(PageDTO.of(pageTeamParam.getPageNum(), pageTeamParam.getPageSize()))
-                .convert(TeamConverter::toDomain);
+                .convert(teamConverter::toDomain);
 
         PageQueryResult<Team> pageQueryResult = new PageQueryResult<>();
         BeanUtil.copyProperties(page, pageQueryResult);
@@ -95,7 +99,7 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
                 .orderByDesc(SysTeamEntity::getCreatedAt)
                 .list()
                 .stream()
-                .map(TeamConverter::toDomain)
+                .map(teamConverter::toDomain)
                 .toList();
     }
 
@@ -134,11 +138,11 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
      */
     @Override
     public boolean save(Team team) {
-        SysTeamEntity entity = TeamConverter.toEntity(team);
+        SysTeamEntity entity = teamConverter.toEntity(team);
         boolean saved = super.save(entity);
         // 回填ID
         if (saved && entity.getTeamId() != null) {
-            team.setId(entity.getTeamId());
+            team.setTeamId(entity.getTeamId());
         }
         return saved;
     }
@@ -152,7 +156,7 @@ public class TeamRepositoryImpl extends ServiceImpl<SysTeamMapper, SysTeamEntity
      */
     @Override
     public boolean updateById(Team team) {
-        SysTeamEntity entity = TeamConverter.toEntity(team);
+        SysTeamEntity entity = teamConverter.toEntity(team);
         return super.updateById(entity);
     }
 
