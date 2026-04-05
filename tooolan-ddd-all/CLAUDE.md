@@ -358,10 +358,10 @@ curl -s -X POST http://127.0.0.1:8080/api/user/save \
 curl -s http://127.0.0.1:8080/api/session/status -H "Authorization: test-1"
 
 # 用户分页查询
-curl -s http://127.0.0.1:8080/api/user/page -H "Authorization: test-1"
+curl -s http://127.0.0.1:8080/api/sys/user/page -H "Authorization: test-1"
 
 # 小组分页查询
-curl -s http://127.0.0.1:8080/api/team/page -H "Authorization: test-1"
+curl -s http://127.0.0.1:8080/api/sys/team/page -H "Authorization: test-1"
 ```
 
 ## 应用入口

@@ -3,8 +3,6 @@ package com.tooolan.ddd.domain.dept.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 /**
  * 部门 实体
  * 纯数据模型，不含业务方法
@@ -19,7 +17,7 @@ public class Dept {
     /**
      * 部门ID
      */
-    private Integer id;
+    private Integer deptId;
 
     /**
      * 部门名称
@@ -35,11 +33,6 @@ public class Dept {
      * 父部门ID，支持层级结构
      */
     private Integer parentId;
-
-    /**
-     * 子部门列表（构建树结构时使用）
-     */
-    private List<Dept> children;
 
     /**
      * 备注信息

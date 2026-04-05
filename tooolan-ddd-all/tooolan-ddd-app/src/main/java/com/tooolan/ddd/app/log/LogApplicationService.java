@@ -264,7 +264,7 @@ public class LogApplicationService {
         logModel.setOpType(opType);
         if (dept != null) {
             logModel.setTargetType(dept.getClass().getTypeName());
-            logModel.setTargetId(dept.getId().toString());
+            logModel.setTargetId(dept.getDeptId().toString());
             logModel.setTargetName(dept.getDeptName());
         }
         logModel.setOperatorId(ContextHolder.getUserId());

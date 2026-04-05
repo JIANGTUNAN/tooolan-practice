@@ -10,9 +10,10 @@ import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.dept.model.Dept;
 import com.tooolan.ddd.domain.dept.repository.DeptRepository;
 import com.tooolan.ddd.domain.dept.repository.param.PageDeptParam;
-import com.tooolan.ddd.infra.persistence.dept.converter.DeptConverter;
+import com.tooolan.ddd.infra.persistence.dept.converter.DeptInfraConverter;
 import com.tooolan.ddd.infra.persistence.dept.entity.SysDeptEntity;
 import com.tooolan.ddd.infra.persistence.dept.mapper.SysDeptMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -27,7 +28,10 @@ import java.util.Optional;
  * @since 2026年2月11日
  */
 @Repository
+@RequiredArgsConstructor
 public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity> implements DeptRepository {
+
+    private final DeptInfraConverter deptConverter;
 
     /**
      * 根据部门ID查询部门信息
@@ -38,7 +42,7 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
     @Override
     public Optional<Dept> getById(Integer deptId) {
         return super.getOptById(deptId)
-                .map(DeptConverter::toDomain);
+                .map(deptConverter::toDomain);
     }
 
     /**
@@ -52,7 +56,7 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
         return super.lambdaQuery()
                 .eq(StrUtil.isNotBlank(deptCode), SysDeptEntity::getDeptCode, deptCode)
                 .oneOpt()
-                .map(DeptConverter::toDomain);
+                .map(deptConverter::toDomain);
     }
 
     /**
@@ -82,7 +86,7 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
                 .eq(param.getParentId() != null, SysDeptEntity::getParentId, param.getParentId())
                 .orderByDesc(SysDeptEntity::getCreatedAt)
                 .page(PageDTO.of(param.getPageNum(), param.getPageSize()))
-                .convert(DeptConverter::toDomain);
+                .convert(deptConverter::toDomain);
 
         PageQueryResult<Dept> pageQueryResult = new PageQueryResult<>();
         BeanUtil.copyProperties(page, pageQueryResult);
@@ -100,7 +104,7 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
                 .orderByDesc(SysDeptEntity::getCreatedAt)
                 .list()
                 .stream()
-                .map(DeptConverter::toDomain)
+                .map(deptConverter::toDomain)
                 .toList();
     }
 
@@ -139,11 +143,11 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
      */
     @Override
     public boolean save(Dept dept) {
-        SysDeptEntity entity = DeptConverter.toEntity(dept);
+        SysDeptEntity entity = deptConverter.toEntity(dept);
         boolean saved = super.save(entity);
         // 回填ID
         if (saved && entity.getDeptId() != null) {
-            dept.setId(entity.getDeptId());
+            dept.setDeptId(entity.getDeptId());
         }
         return saved;
     }
@@ -157,7 +161,7 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
      */
     @Override
     public boolean updateById(Dept dept) {
-        SysDeptEntity entity = DeptConverter.toEntity(dept);
+        SysDeptEntity entity = deptConverter.toEntity(dept);
         return super.updateById(entity);
     }
 
@@ -216,7 +220,7 @@ public class DeptRepositoryImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
                 .in(SysDeptEntity::getDeptId, deptIds)
                 .list()
                 .stream()
-                .map(DeptConverter::toDomain)
+                .map(deptConverter::toDomain)
                 .toList();
     }
 

@@ -2,7 +2,7 @@ package com.tooolan.ddd.app.dept;
 
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.response.PageVo;
-import com.tooolan.ddd.app.dept.convert.DeptConvert;
+import com.tooolan.ddd.app.dept.convert.DeptAppConverter;
 import com.tooolan.ddd.app.dept.request.DeleteDeptBo;
 import com.tooolan.ddd.app.dept.request.PageDeptBo;
 import com.tooolan.ddd.app.dept.request.SaveDeptBo;
@@ -16,6 +16,7 @@ import com.tooolan.ddd.domain.dept.event.DeptDeletedEvent;
 import com.tooolan.ddd.domain.dept.event.DeptUpdatedEvent;
 import com.tooolan.ddd.domain.dept.exception.DeptException;
 import com.tooolan.ddd.domain.dept.model.Dept;
+import com.tooolan.ddd.domain.dept.model.DeptTree;
 import com.tooolan.ddd.domain.dept.repository.DeptRepository;
 import com.tooolan.ddd.domain.dept.repository.param.PageDeptParam;
 import com.tooolan.ddd.domain.dept.service.DeptDomainService;
@@ -44,6 +45,7 @@ public class DeptApplicationService {
     private final TeamRepository teamRepository;
     private final DeptDomainService deptDomainService;
     private final ApplicationEventPublisher eventPublisher;
+    private final DeptAppConverter deptAppConverter;
 
     /**
      * 根据部门ID获取部门信息
@@ -54,7 +56,7 @@ public class DeptApplicationService {
     public Optional<DeptVo> getById(Integer deptId) {
         Optional<Dept> dept = deptRepository.getById(deptId);
         return dept.map(d -> {
-            DeptVo vo = DeptConvert.toVo(d);
+            DeptVo vo = deptAppConverter.toVo(d);
             // 填充父部门名称
             fillParentNames(Collections.singletonList(vo));
             return vo;
@@ -68,15 +70,15 @@ public class DeptApplicationService {
      * @return 分页结果
      */
     public PageVo<DeptVo> page(PageDeptBo bo) {
-        PageDeptParam param = DeptConvert.toParam(bo);
+        PageDeptParam param = deptAppConverter.toParam(bo);
         PageQueryResult<Dept> result = deptRepository.page(param);
         if (result.getRecords().isEmpty()) {
             return PageVo.empty();
         }
-        List<DeptVo> voList = DeptConvert.toVoList(result.getRecords());
+        List<DeptVo> voList = deptAppConverter.toVoList(result.getRecords());
         // 批量填充父部门名称
         fillParentNames(voList);
-        return DeptConvert.toPageVo(result, voList);
+        return deptAppConverter.toPageVo(result, voList);
     }
 
     /**
@@ -86,7 +88,9 @@ public class DeptApplicationService {
      */
     public List<DeptTreeVo> tree() {
         List<Dept> allDepts = deptRepository.listAll();
-        return DeptTreeVo.buildTree(allDepts);
+        // 先转换为 DeptTree 列表
+        List<DeptTree> deptTrees = deptAppConverter.toTreeList(allDepts);
+        return DeptTreeVo.buildTree(deptTrees, deptAppConverter);
     }
 
     /**
@@ -105,7 +109,7 @@ public class DeptApplicationService {
             }
         }
         // 转换为领域模型
-        Dept dept = DeptConvert.toDomain(bo);
+        Dept dept = deptAppConverter.toSaveDomain(bo);
         // 调用领域服务保存部门（主键会通过引用回填）
         deptDomainService.saveDept(dept);
         // 发布部门创建事件（携带业务数据用于日志记录）
@@ -126,7 +130,7 @@ public class DeptApplicationService {
                 .orElseThrow(() -> new DeptException(DeptErrorCode.NOT_FOUND));
 
         // 2. 转换为领域模型（部分更新）
-        Dept updatedDept = DeptConvert.toUpdateDomain(bo);
+        Dept updatedDept = deptAppConverter.toUpdateDomain(bo);
 
         // 3. 如果修改了父部门，校验父部门存在性
         Integer newParentId = bo.getParentId();
@@ -181,7 +185,7 @@ public class DeptApplicationService {
 
         List<Dept> parentDepts = deptRepository.queryByIds(parentIds);
         Map<Integer, String> parentNameMap = parentDepts.stream()
-                .collect(Collectors.toMap(Dept::getId, Dept::getDeptName));
+                .collect(Collectors.toMap(Dept::getDeptId, Dept::getDeptName));
 
         voList.forEach(vo -> {
             if (vo.getParentId() != null) {

@@ -45,7 +45,7 @@ public class DeptDomainService {
      */
     public void updateDept(Dept existingDept, Dept updatedDept) {
         // 校验：不能将自己设为父部门
-        if (updatedDept.getParentId() != null && updatedDept.getParentId().equals(existingDept.getId())) {
+        if (updatedDept.getParentId() != null && updatedDept.getParentId().equals(existingDept.getDeptId())) {
             throw new DeptException(DeptErrorCode.CANNOT_SET_SELF_AS_PARENT);
         }
 

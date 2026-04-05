@@ -205,7 +205,7 @@ public class LogEventListener {
             Dept dept = event.getDept();
             logApplicationService.onDeptCreated(dept, event.getBusinessData());
             log.info("部门创建日志记录成功: deptId={}, deptName={}, operator={}, ip={}",
-                    dept.getId(), dept.getDeptName(),
+                    dept.getDeptId(), dept.getDeptName(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
             log.error("处理部门创建事件失败", e);
@@ -224,7 +224,7 @@ public class LogEventListener {
             Dept dept = event.getDept();
             logApplicationService.onDeptUpdated(dept, event.getBusinessData());
             log.info("部门更新日志记录成功: deptId={}, deptName={}, operator={}, ip={}",
-                    dept.getId(), dept.getDeptName(),
+                    dept.getDeptId(), dept.getDeptName(),
                     ContextHolder.getUsername(), ContextHolder.getClientIp());
         } catch (Exception e) {
             log.error("处理部门更新事件失败", e);
