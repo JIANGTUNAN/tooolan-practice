@@ -10,9 +10,10 @@ import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.user.model.User;
 import com.tooolan.ddd.domain.user.repository.UserRepository;
 import com.tooolan.ddd.domain.user.repository.param.PageUserParam;
-import com.tooolan.ddd.infra.persistence.user.converter.UserConverter;
+import com.tooolan.ddd.infra.persistence.user.converter.UserInfraConverter;
 import com.tooolan.ddd.infra.persistence.user.entity.SysUserEntity;
 import com.tooolan.ddd.infra.persistence.user.mapper.SysUserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,7 +27,10 @@ import java.util.Optional;
  * @since 2026年2月11日
  */
 @Repository
+@RequiredArgsConstructor
 public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity> implements UserRepository {
+
+    private final UserInfraConverter userInfraConverter;
 
     /**
      * 根据用户ID查询用户信息
@@ -37,7 +41,7 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
     @Override
     public Optional<User> getById(Integer userId) {
         return super.getOptById(userId)
-                .map(UserConverter::toDomain);
+                .map(userInfraConverter::toDomain);
     }
 
     /**
@@ -51,7 +55,7 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
         return super.lambdaQuery()
                 .eq(SysUserEntity::getUserName, username)
                 .oneOpt()
-                .map(UserConverter::toDomain);
+                .map(userInfraConverter::toDomain);
     }
 
     /**
@@ -70,7 +74,7 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
                 .ge(ObjUtil.isNotNull(pageUserParam.getCreatedAtStart()), SysUserEntity::getCreatedAt, pageUserParam.getCreatedAtStart())
                 .le(ObjUtil.isNotNull(pageUserParam.getCreatedAtEnd()), SysUserEntity::getCreatedAt, pageUserParam.getCreatedAtEnd())
                 .page(PageDTO.of(pageUserParam.getPageNum(), pageUserParam.getPageSize()))
-                .convert(UserConverter::toDomain);
+                .convert(userInfraConverter::toDomain);
 
         PageQueryResult<User> pageQueryResult = new PageQueryResult<>();
         BeanUtil.copyProperties(page, pageQueryResult);
@@ -92,7 +96,7 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
                 .orderByDesc(SysUserEntity::getCreatedAt)
                 .list()
                 .stream()
-                .map(UserConverter::toDomain)
+                .map(userInfraConverter::toDomain)
                 .toList();
     }
 
@@ -144,7 +148,7 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
      */
     @Override
     public boolean save(User user) {
-        SysUserEntity entity = UserConverter.toEntity(user);
+        SysUserEntity entity = userInfraConverter.toEntity(user);
         boolean saved = super.save(entity);
         if (saved) {
             user.setId(entity.getUserId());
@@ -164,7 +168,7 @@ public class UserRepositoryImpl extends ServiceImpl<SysUserMapper, SysUserEntity
         if (ObjUtil.hasNull(user, user.getId())) {
             return false;
         }
-        SysUserEntity entity = UserConverter.toEntity(user);
+        SysUserEntity entity = userInfraConverter.toEntity(user);
         return super.updateById(entity);
     }
 

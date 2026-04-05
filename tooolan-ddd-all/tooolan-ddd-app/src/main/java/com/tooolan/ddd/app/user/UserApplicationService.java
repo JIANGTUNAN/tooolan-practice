@@ -3,7 +3,7 @@ package com.tooolan.ddd.app.user;
 import cn.hutool.core.util.ObjUtil;
 import com.tooolan.ddd.app.common.response.OptionVo;
 import com.tooolan.ddd.app.common.response.PageVo;
-import com.tooolan.ddd.app.user.convert.UserConvert;
+import com.tooolan.ddd.app.user.convert.UserAppConverter;
 import com.tooolan.ddd.app.user.request.*;
 import com.tooolan.ddd.app.user.response.UserVo;
 import com.tooolan.ddd.domain.common.result.PageQueryResult;
@@ -46,6 +46,7 @@ public class UserApplicationService {
     private final TeamRepository teamRepository;
     private final UserDomainService userDomainService;
     private final ApplicationEventPublisher eventPublisher;
+    private final UserAppConverter userAppConverter;
 
 
     /**
@@ -56,7 +57,7 @@ public class UserApplicationService {
      */
     public Optional<UserVo> getById(Integer userId) {
         Optional<User> user = userRepository.getById(userId);
-        return user.map(UserConvert::toVo);
+        return user.map(userAppConverter::toVo);
     }
 
     /**
@@ -66,9 +67,9 @@ public class UserApplicationService {
      * @return 分页结果
      */
     public PageVo<UserVo> page(PageUserBo dto) {
-        PageUserParam pageUserParam = UserConvert.toParam(dto);
+        PageUserParam pageUserParam = userAppConverter.toParam(dto);
         PageQueryResult<User> pageQueryResult = userRepository.page(pageUserParam);
-        return UserConvert.toPageVo(pageQueryResult);
+        return userAppConverter.toPageVo(pageQueryResult);
     }
 
     /**
@@ -95,7 +96,7 @@ public class UserApplicationService {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void save(SaveUserBo bo) throws SessionException {
         // 转换为领域模型
-        User user = UserConvert.toDomain(bo);
+        User user = userAppConverter.toSaveDomain(bo);
         Team team = null;
         // 应用层校验：如果指定了小组，校验小组是否存在
         if (ObjUtil.isNotNull(bo.getTeamId())) {
@@ -134,7 +135,7 @@ public class UserApplicationService {
         }
 
         // 3. 转换为领域模型并调用领域服务
-        User updatedUser = UserConvert.toUpdateDomain(bo);
+        User updatedUser = userAppConverter.toUpdateDomain(bo);
         userDomainService.updateUser(existingUser, updatedUser, newTeam);
 
         // 4. 发布用户更新事件（携带业务数据用于日志记录）
