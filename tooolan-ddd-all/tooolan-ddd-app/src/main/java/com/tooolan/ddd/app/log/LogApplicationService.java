@@ -3,7 +3,7 @@ package com.tooolan.ddd.app.log;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import com.tooolan.ddd.app.common.response.PageVo;
-import com.tooolan.ddd.app.log.convert.LogConvert;
+import com.tooolan.ddd.app.log.convert.LogAppConverter;
 import com.tooolan.ddd.app.log.request.PageLogBo;
 import com.tooolan.ddd.app.log.response.LogVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
@@ -36,6 +36,7 @@ public class LogApplicationService {
 
     private final LogRepository logRepository;
     private final LogDomainService logDomainService;
+    private final LogAppConverter logAppConverter;
 
     /**
      * 敏感字段集合（这些字段在日志中需要脱敏或排除）
@@ -53,7 +54,7 @@ public class LogApplicationService {
      */
     public Optional<LogVo> getById(Long logId) {
         Optional<Log> log = logRepository.getById(logId);
-        return log.map(LogConvert::toVo);
+        return log.map(logAppConverter::toVo);
     }
 
     /**
@@ -63,9 +64,9 @@ public class LogApplicationService {
      * @return 分页结果
      */
     public PageVo<LogVo> page(PageLogBo bo) {
-        PageLogParam pageLogParam = LogConvert.toParam(bo);
+        PageLogParam pageLogParam = logAppConverter.toParam(bo);
         PageQueryResult<Log> pageQueryResult = logRepository.page(pageLogParam);
-        return LogConvert.toPageVo(pageQueryResult);
+        return logAppConverter.toPageVo(pageQueryResult);
     }
 
     /**

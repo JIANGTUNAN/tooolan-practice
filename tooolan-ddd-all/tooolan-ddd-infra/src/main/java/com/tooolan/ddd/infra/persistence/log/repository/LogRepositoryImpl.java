@@ -10,9 +10,10 @@ import com.tooolan.ddd.domain.common.result.PageQueryResult;
 import com.tooolan.ddd.domain.log.model.Log;
 import com.tooolan.ddd.domain.log.repository.LogRepository;
 import com.tooolan.ddd.domain.log.repository.param.PageLogParam;
-import com.tooolan.ddd.infra.persistence.log.converter.LogConverter;
+import com.tooolan.ddd.infra.persistence.log.converter.LogInfraConverter;
 import com.tooolan.ddd.infra.persistence.log.entity.SysLogEntity;
 import com.tooolan.ddd.infra.persistence.log.mapper.SysLogMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -25,7 +26,10 @@ import java.util.Optional;
  * @since 2026年2月19日
  */
 @Repository
+@RequiredArgsConstructor
 public class LogRepositoryImpl extends ServiceImpl<SysLogMapper, SysLogEntity> implements LogRepository {
+
+    private final LogInfraConverter logInfraConverter;
 
     /**
      * 根据日志ID查询日志信息
@@ -36,7 +40,7 @@ public class LogRepositoryImpl extends ServiceImpl<SysLogMapper, SysLogEntity> i
     @Override
     public Optional<Log> getById(Long logId) {
         return super.getOptById(logId)
-                .map(LogConverter::toDomain);
+                .map(logInfraConverter::toDomain);
     }
 
     /**
@@ -56,7 +60,7 @@ public class LogRepositoryImpl extends ServiceImpl<SysLogMapper, SysLogEntity> i
                 .le(ObjUtil.isNotNull(pageLogParam.getCreatedAtEnd()), SysLogEntity::getCreatedAt, pageLogParam.getCreatedAtEnd())
                 .orderByDesc(SysLogEntity::getCreatedAt)
                 .page(PageDTO.of(pageLogParam.getPageNum(), pageLogParam.getPageSize()))
-                .convert(LogConverter::toDomain);
+                .convert(logInfraConverter::toDomain);
 
         PageQueryResult<Log> pageQueryResult = new PageQueryResult<>();
         BeanUtil.copyProperties(page, pageQueryResult);
@@ -72,7 +76,7 @@ public class LogRepositoryImpl extends ServiceImpl<SysLogMapper, SysLogEntity> i
      */
     @Override
     public boolean save(Log log) {
-        SysLogEntity entity = LogConverter.toEntity(log);
+        SysLogEntity entity = logInfraConverter.toEntity(log);
         boolean saved = super.save(entity);
         if (saved) {
             log.setId(entity.getLogId());

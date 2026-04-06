@@ -1,7 +1,7 @@
 package com.tooolan.ddd.app.session;
 
 import cn.hutool.core.util.BooleanUtil;
-import com.tooolan.ddd.app.session.convert.SessionConvert;
+import com.tooolan.ddd.app.session.convert.SessionAppConverter;
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
 import com.tooolan.ddd.domain.session.constant.SessionErrorCode;
@@ -26,6 +26,7 @@ public class SessionApplicationService {
 
     private final UserRepository userRepository;
     private final SessionDomainService sessionDomainService;
+    private final SessionAppConverter sessionAppConverter;
 
     /**
      * 获取登录状态
@@ -34,10 +35,10 @@ public class SessionApplicationService {
      */
     public LoginStatusVo getStatus() {
         if (BooleanUtil.isFalse(ContextHolder.isLoggedIn())) {
-            return SessionConvert.toNotLoggedInVo();
+            return sessionAppConverter.toNotLoggedInVo();
         }
         UserBean userBean = ContextHolder.getUserBean();
-        return SessionConvert.toStatusVo(userBean);
+        return sessionAppConverter.toStatusVo(userBean);
     }
 
     /**

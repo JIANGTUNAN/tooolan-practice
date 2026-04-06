@@ -5,7 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.tooolan.ddd.api.common.response.ResultVo;
 import com.tooolan.ddd.api.session.request.LoginDTO;
 import com.tooolan.ddd.app.session.SessionApplicationService;
-import com.tooolan.ddd.app.session.convert.SessionConvert;
+import com.tooolan.ddd.app.session.convert.SessionAppConverter;
 import com.tooolan.ddd.app.session.response.LoginStatusVo;
 import com.tooolan.ddd.app.session.response.LoginVo;
 import com.tooolan.ddd.domain.common.context.ContextHolder;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class SessionController {
 
     private final SessionApplicationService sessionApplicationService;
+    private final SessionAppConverter sessionAppConverter;
     private final ApplicationEventPublisher eventPublisher;
 
     /**
@@ -56,7 +57,7 @@ public class SessionController {
         eventPublisher.publishEvent(UserLoginEvent.of(user, request));
 
         // 5. 返回结果
-        LoginVo vo = SessionConvert.toLoginVo(StpUtil.getTokenValue(), user);
+        LoginVo vo = sessionAppConverter.toLoginVo(StpUtil.getTokenValue(), user);
         return ResultVo.success(vo);
     }
 
