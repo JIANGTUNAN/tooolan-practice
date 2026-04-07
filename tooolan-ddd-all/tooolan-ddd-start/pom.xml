@@ -27,10 +27,16 @@
             <artifactId>tooolan-ddd-app</artifactId>
         </dependency>
 
-        <!-- DDD Infra: 基础设施层 -->
+        <!-- DDD Infra Core: 异步任务、领域服务扫描、属性配置 -->
         <dependency>
             <groupId>com.tooolan.practice</groupId>
-            <artifactId>tooolan-ddd-infra</artifactId>
+            <artifactId>tooolan-ddd-infra-core</artifactId>
+        </dependency>
+
+        <!-- DDD Infra DB: 数据库持久化、MyBatis配置 -->
+        <dependency>
+            <groupId>com.tooolan.practice</groupId>
+            <artifactId>tooolan-ddd-infra-db</artifactId>
         </dependency>
 
         <!-- Spring Boot Web: Web应用支持 -->

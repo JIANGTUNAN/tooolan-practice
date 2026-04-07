@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tooolan.ddd.infra.db.persistence.team.mapper.SysTeamMapper">
+  <resultMap id="BaseResultMap" type="com.tooolan.ddd.infra.db.persistence.team.entity.SysTeamEntity">
+    <!--@mbg.generated-->
+    <!--@Table sys_team-->
+    <id column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="team_name" jdbcType="VARCHAR" property="teamName" />
+    <result column="team_code" jdbcType="VARCHAR" property="teamCode" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="max_members" jdbcType="INTEGER" property="maxMembers" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="deleted" jdbcType="BOOLEAN" property="deleted" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="created_by" jdbcType="INTEGER" property="createdBy" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="updated_by" jdbcType="INTEGER" property="updatedBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    team_id, dept_id, team_name, team_code, status, max_members, remark, deleted, created_at,
+    created_by, updated_at, updated_by
+  </sql>
+</mapper>

@@ -79,6 +79,20 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- ddd-infra-core: 核心配置模块（异步任务、领域服务扫描、属性配置） -->
+            <dependency>
+                <groupId>com.tooolan.practice</groupId>
+                <artifactId>tooolan-ddd-infra-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- ddd-infra-db: 数据库持久化模块（MyBatis配置、Mapper） -->
+            <dependency>
+                <groupId>com.tooolan.practice</groupId>
+                <artifactId>tooolan-ddd-infra-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- ddd-start: 启动模块 -->
             <dependency>
                 <groupId>com.tooolan.practice</groupId>

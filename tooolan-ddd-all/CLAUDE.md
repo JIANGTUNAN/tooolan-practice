@@ -54,8 +54,9 @@ tooolan-ddd-api（门面层，依赖 app）
     ↓
 tooolan-ddd-app（应用层，依赖 domain）
     ↓
-
-tooolan-ddd-infra（基础设施层，依赖 domain）
+tooolan-ddd-infra（pom 父模块）
+    ├── tooolan-ddd-infra-core（核心配置）
+    └── tooolan-ddd-infra-db（数据库持久化）
     ↓
 tooolan-ddd-domain（领域层，无业务层依赖）
 ```
@@ -67,15 +68,18 @@ tooolan-ddd-domain（领域层，无业务层依赖）
 | **tooolan-ddd-api** | 门面层 | API 接口定义、DTO 对象、请求响应对象 |
 | **tooolan-ddd-app** | 应用层 | 应用服务、业务编排、DTO 转换 |
 | **tooolan-ddd-domain** | 领域层 | 实体、值对象、领域服务、仓储接口 |
-| **tooolan-ddd-infra** | 基础设施层 | 仓储实现、数据访问、MyBatis Plus Mapper |
+| **tooolan-ddd-infra** | 基础设施父模块 | pom 类型，管理 core 和 db 子模块 |
+| **tooolan-ddd-infra-core** | 核心配置模块 | 异步任务线程池、领域服务扫描、属性配置注册 |
+| **tooolan-ddd-infra-db** | 数据库持久化模块 | 实体基类、MyBatis 配置、仓储实现 |
 | **tooolan-ddd-start** | 启动层 | Spring Boot 应用入口，整合所有层 |
 
 ### 依赖规则
 
-- **start** 依赖 api 和 infra
+- **start** 依赖 api、infra-core、infra-db
 - **api** 依赖 app（Controller 直接注入 ApplicationService）
 - **app** 依赖 domain（编排领域服务）
-- **infra** 依赖 domain（实现仓储接口）
+- **infra-core** 和 **infra-db** 都依赖 domain（实现仓储接口）
+- **infra-core** 和 **infra-db** 相互独立，无依赖
 - **domain** 不依赖任何业务层（纯粹的核心业务逻辑）
 
 ## 代码组织规范
@@ -86,19 +90,26 @@ tooolan-ddd-domain（领域层，无业务层依赖）
 
 ```
 com.tooolan.ddd.{module}
-├── common/        # 通用组件（infra 模块）
-│   ├── config/    # 配置类
-│   ├── entity/    # 基础实体
-│   ├── context/   # 上下文管理
-│   └── enums/     # 枚举定义
-├── persistence/   # 数据持久化（infra 模块）
-│   ├── {domain}/  # 按业务域划分
-│   │   ├── entity/    # 实体类
-│   │   ├── mapper/    # MyBatis Mapper
-│   │   └── converter/ # 转换器
-└── resources/
-    ├── mapper/    # MyBatis XML 映射文件
-    └── sql/       # 数据库脚本
+
+# infra-core 模块
+com.tooolan.ddd.infra.core
+└── config/           # 核心配置：AsyncTaskConfig、DomainServiceConfig、PropertiesConfigRegistrar
+
+# infra-db 模块
+com.tooolan.ddd.infra.db
+├── common/           # 公共组件
+│   ├── entity/       # 基础实体 BaseEntity
+│   └── enums/        # 枚举定义 DeletedStatusEnum
+├── config/           # MyBatis 配置：MyBatisPlusConfig、MyMetaObjectHandler
+└── persistence/      # 数据持久化
+    ├── {domain}/     # 按业务域划分（user、team、dept、log）
+    │   ├── entity/       # 实体类
+    │   ├── mapper/       # MyBatis Mapper
+    │   ├── converter/    # 转换器
+    │   └── repository/   # 仓储实现
+    └── resources/
+        ├── mapper/       # MyBatis XML 映射文件
+        └── sql/          # 数据库脚本
 ```
 
 ### 实体类命名规范
@@ -110,12 +121,20 @@ com.tooolan.ddd.{module}
 
 ### 基础设施层核心类
 
-| 类                     | 路径                       | 作用                                           |
-|-----------------------|--------------------------|----------------------------------------------|
-| `BaseEntity`          | `infra/common/entity/`   | 所有实体基类，提供审计字段                                |
-| `MyMetaObjectHandler` | `infra/common/config/`   | 自动填充 createdBy/createdAt/updatedBy/updatedAt |
-| `MyBatisPlusConfig`   | `infra/common/config/`   | 分页插件配置，Mapper 扫描                             |
-| `SecurityContextImpl` | `infra/common/security/` | 安全上下文实现，存储当前用户信息                             |
+**infra-core 模块**：
+| 类 | 路径 | 作用 |
+|---|---|---|
+| `AsyncTaskConfig` | `infra-core/config/` | 异步任务线程池配置 |
+| `DomainServiceConfig` | `infra-core/config/` | 领域服务扫描配置 |
+| `PropertiesConfigRegistrar` | `infra-core/config/` | 属性配置注册器 |
+
+**infra-db 模块**：
+| 类 | 路径 | 作用 |
+|---|---|---|
+| `BaseEntity` | `infra-db/common/entity/` | 所有实体基类，提供审计字段 |
+| `DeletedStatusEnum` | `infra-db/common/enums/` | 逻辑删除状态枚举 |
+| `MyMetaObjectHandler` | `infra-db/config/` | 自动填充 createdBy/createdAt/updatedBy/updatedAt |
+| `MyBatisPlusConfig` | `infra-db/config/` | 分页插件配置，Mapper 扫描 |
 
 ## 配置文件说明
 
@@ -164,7 +183,7 @@ com.tooolan.ddd.{module}
 
 ### 数据库脚本
 
-初始化脚本位于：`tooolan-ddd-infra/src/main/resources/sql/practice-ddd.sql`
+初始化脚本位于：`tooolan-ddd-infra/tooolan-ddd-infra-db/src/main/resources/sql/practice-ddd.sql`
 
 ### 小组状态枚举
 
@@ -358,10 +377,13 @@ curl -s -X POST http://127.0.0.1:8080/api/user/save \
 curl -s http://127.0.0.1:8080/api/session/status -H "Authorization: test-1"
 
 # 用户分页查询
-curl -s http://127.0.0.1:8080/api/sys/user/page -H "Authorization: test-1"
+curl -s "http://127.0.0.1:8080/api/sys/users/page?pageNum=1&pageSize=10" -H "Authorization: test-1"
 
 # 小组分页查询
-curl -s http://127.0.0.1:8080/api/sys/team/page -H "Authorization: test-1"
+curl -s "http://127.0.0.1:8080/api/sys/team/page?pageNum=1&pageSize=10" -H "Authorization: test-1"
+
+# 部门分页查询
+curl -s "http://127.0.0.1:8080/api/sys/depts/page?pageNum=1&pageSize=10" -H "Authorization: test-1"
 ```
 
 ## 应用入口
